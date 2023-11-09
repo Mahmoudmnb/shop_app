@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AddNewAddress extends StatefulWidget {
-  final LatLng pickedLocation;
-  const AddNewAddress({super.key, required this.pickedLocation});
+  final Map<String, dynamic> data;
+  const AddNewAddress({super.key, required this.data});
 
   @override
   State<AddNewAddress> createState() => _AddNewAddressState();
@@ -40,8 +41,13 @@ class _AddNewAddressState extends State<AddNewAddress> {
 
   @override
   void initState() {
-    latController.text = widget.pickedLocation.latitude.toString();
-    longController.text = widget.pickedLocation.longitude.toString();
+    LatLng sourceLocation = widget.data['sourceLocation'];
+    Placemark placemark = widget.data['placeMark'];
+    latController.text = sourceLocation.latitude.toString();
+    longController.text = sourceLocation.longitude.toString();
+    cityController.text = placemark.locality.toString();
+    countryController.text = placemark.country.toString();
+    addressController.text = '${placemark.locality}, ${placemark.subLocality}';
     super.initState();
   }
 
@@ -132,7 +138,11 @@ class _AddNewAddressState extends State<AddNewAddress> {
       margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       height: 50.h,
       child: TextField(
-        readOnly: title == 'longitude code' || title == 'latitude code'
+        readOnly: title == 'longitude code' ||
+                title == 'latitude code' ||
+                title == 'City' ||
+                title == 'Country' ||
+                title == 'Address'
             ? true
             : false,
         keyboardType: keyboardtype,

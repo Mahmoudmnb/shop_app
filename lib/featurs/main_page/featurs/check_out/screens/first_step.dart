@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/main_page/featurs/check_out/screens/add_another_address.dart';
 import 'package:shop_app/gogole_map.dart';
 
 import '../../profile/model/shopping_address_model.dart';
@@ -8,6 +7,7 @@ import '../widget/check_out_address.dart';
 import '../widget/check_out_method.dart';
 import '../widget/code_textfild.dart';
 import '../widget/point.dart';
+import 'add_another_address.dart';
 import 'second_step.dart';
 
 class CheckOutScreen1 extends StatelessWidget {
@@ -37,9 +37,7 @@ class CheckOutScreen1 extends StatelessWidget {
                       width: 40.w,
                       image: const AssetImage("assets/images/backicon.png"),
                     )),
-                SizedBox(
-                  width: 10.w,
-                ),
+                SizedBox(width: 10.w),
                 Text(
                   "Check out",
                   style: TextStyle(fontSize: 18.sp, fontFamily: 'Tenor Sans'),
@@ -61,9 +59,7 @@ class CheckOutScreen1 extends StatelessWidget {
                           height: 25.h,
                           image:
                               const AssetImage('assets/images/location.png')),
-                      SizedBox(
-                        width: 10.w,
-                      ),
+                      SizedBox(width: 10.w),
                       const CheckOutPoint(),
                       const CheckOutPoint(),
                       const CheckOutPoint(),
@@ -113,17 +109,16 @@ class CheckOutScreen1 extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(
+                      Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const GoogleMapScreen(),
-                      ))
-                          .then((pickedLocation) {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => AddNewAddress(
-                            pickedLocation: pickedLocation,
-                          ),
-                        ));
-                      });
+                      ));
+                      //     .then((pickedLocation) {
+                      //   Navigator.of(context).push(MaterialPageRoute(
+                      //     builder: (context) => AddNewAddress(
+                      //       pickedLocation: pickedLocation,
+                      //     ),
+                      //   ));
+                      // });
                     },
                     child: Container(
                       width: double.infinity,
