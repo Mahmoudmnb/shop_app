@@ -47,7 +47,8 @@ class _AddNewAddressState extends State<AddNewAddress> {
     longController.text = sourceLocation.longitude.toString();
     cityController.text = placemark.locality.toString();
     countryController.text = placemark.country.toString();
-    addressController.text = '${placemark.locality}, ${placemark.subLocality}';
+    addressController.text =
+        '${placemark.locality}, ${placemark.subLocality == '' ? placemark.street : placemark.subLocality}';
     super.initState();
   }
 
@@ -68,9 +69,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                     width: 40.w,
                     image: const AssetImage("assets/images/backicon.png"),
                   )),
-              SizedBox(
-                width: 10.w,
-              ),
+              SizedBox(width: 10.w),
               Text(
                 "Add New Address",
                 style: TextStyle(
@@ -105,22 +104,24 @@ class _AddNewAddressState extends State<AddNewAddress> {
               buildTextFeild(title: 'City', controller: cityController),
               buildTextFeild(title: 'Country', controller: countryController),
               buildTextFeild(title: 'Address', controller: addressController),
-              Container(
-                margin: EdgeInsets.only(
-                    left: 10.w, right: 10.w, bottom: 20.h, top: 20.h),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 15.h),
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Text(
-                  "Add new address",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 15.sp,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: "DM Sans"),
+              InkWell(
+                borderRadius: BorderRadius.circular(10),
+                onTap: () {},
+                child: Ink(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 15.h),
+                  decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text(
+                    "Add new address",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 15.sp,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "DM Sans"),
+                  ),
                 ),
               ),
             ],

@@ -25,9 +25,11 @@ class AuthPage extends StatelessWidget {
               myDataBase.insertReviewTable().then((value) {
                 myDataBase.insertData().then((value) {
                   myDataBase.createAddToCartTable().then((value) {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const MainPage(),
-                    ));
+                    MyDataBase().createLoactionsTable().then((value) {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => const MainPage(),
+                      ));
+                    });
                   });
                 });
               });

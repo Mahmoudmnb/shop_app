@@ -9,4 +9,10 @@ class MainPageCubit extends Cubit<MainPageState> {
     pageIndex = value;
     emit(PageIndex());
   }
+
+  bool isAddLocationLoading = false;
+  void changeIsAddLocationLoading(bool value) {
+    isAddLocationLoading = value;
+    emit(AddLocationLoading());
+  }
 }

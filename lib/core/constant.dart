@@ -31,6 +31,9 @@ class Constant {
       '/data/user/0/com.example.shop_app/databases/reviews.db';
   static String ordersDataBasePath =
       '/data/user/0/com.example.shop_app/databases/orders.db';
+
+  static String locationsDataBasePath =
+      '/data/user/0/com.example.shop_app/databases/orders.db';
   static List<Map<String, dynamic>> data = [
     {
       'name': 'white cotton shirt',

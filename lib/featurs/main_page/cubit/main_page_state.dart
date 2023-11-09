@@ -4,4 +4,8 @@ part of 'main_page_cubit.dart';
 sealed class MainPageState {}
 
 final class MainPageInitial extends MainPageState {}
-final class PageIndex extends MainPageState{}
+
+final class PageIndex extends MainPageState {}
+
+final class AddLocationLoading extends MainPageState {
+}
