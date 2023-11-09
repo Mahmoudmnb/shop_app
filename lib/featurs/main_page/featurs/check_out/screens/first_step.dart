@@ -74,9 +74,7 @@ class CheckOutScreen1 extends StatelessWidget {
                           height: 25.h,
                           image:
                               const AssetImage('assets/images/greycard.png')),
-                      SizedBox(
-                        width: 10.w,
-                      ),
+                      SizedBox(width: 10.w),
                       const CheckOutPoint(),
                       const CheckOutPoint(),
                       const CheckOutPoint(),
