@@ -7,11 +7,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/featurs/main_page/featurs/home/pages/home_pages.dart';
 import 'package:shop_app/featurs/main_page/featurs/search/pages/category_view_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:toast/toast.dart';
 
 import '../../home/models/product_model.dart';
 import '../../search/cubit/sreach_cubit.dart';
 import '../../search/pages/search_results_screen.dart';
 import '../cubits/product_screen/cubit.dart';
+import '../widgets/product_view/wishlist_view.dart';
 import '../widgets/product_view_widgets.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -137,7 +139,23 @@ class _ProductScreenState extends State<ProductScreen> {
                                   isFavorate ? const Color(0xFFFF6E6E) : null,
                             ),
                             onPressed: () async {
-                              cubit.changeFavorite(product.id).then((value) {});
+                              ToastContext().init(context);
+                            Toast.show(
+                                'Mohammed disconnect favorite for testing',
+                                duration: Toast.lengthLong);
+                            showModalBottomSheet(
+                                isScrollControlled: true,
+                                backgroundColor: const Color(0xFF484848),
+                                shape: const OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                  ),
+                                ),
+                                context: context,
+                                builder: (context) => const WishlistView());
+                              // cubit.changeFavorite(product.id).then((value) {});
                             },
                           );
                         },
