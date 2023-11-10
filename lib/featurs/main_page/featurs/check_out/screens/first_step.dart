@@ -7,7 +7,6 @@ import '../widget/check_out_address.dart';
 import '../widget/check_out_method.dart';
 import '../widget/code_textfild.dart';
 import '../widget/point.dart';
-import 'add_another_address.dart';
 import 'second_step.dart';
 
 class CheckOutScreen1 extends StatelessWidget {
@@ -109,7 +108,7 @@ class CheckOutScreen1 extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) => const GoogleMapScreen(),
                       ));
                       //     .then((pickedLocation) {

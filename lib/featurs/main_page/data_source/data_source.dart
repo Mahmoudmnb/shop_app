@@ -1,3 +1,5 @@
+import 'package:shop_app/featurs/main_page/featurs/check_out/models/address_model.dart';
+
 import '../featurs/products_view/models/add_to_cart_product_model.dart';
 import '../featurs/home/models/product_model.dart';
 import 'local_data_source.dart';
@@ -5,6 +7,10 @@ import 'local_data_source.dart';
 class DataSource {
   LocalDataSource localDataSource;
   DataSource({required this.localDataSource});
+  Future<void> addNewLocation(AddressModel address) async {
+    return localDataSource.addNewLocation(address);
+  }
+
   Future<List<Map<String, dynamic>>> getAddToCartProducts() async {
     return localDataSource.getAddToCartProduct();
   }

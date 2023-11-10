@@ -1,5 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/featurs/main_page/featurs/check_out/models/address_model.dart';
+import 'package:shop_app/injection.dart';
 part 'check_out_state.dart';
 
 class CheckOutCubit extends Cubit<CheckOutState> {
@@ -27,5 +30,9 @@ class CheckOutCubit extends Cubit<CheckOutState> {
   changeAgree(bool x) {
     agree = x;
     emit(ChangeAgreeState());
+  }
+
+  Future<void> addNewAdress(AddressModel address) async {
+    await sl.get<DataSource>().addNewLocation(address);
   }
 }

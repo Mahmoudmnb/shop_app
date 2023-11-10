@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shop_app/featurs/main_page/featurs/check_out/screens/first_step.dart';
+import '../cubit/check_out_cubit.dart';
+import '../models/address_model.dart';
 
 class AddNewAddress extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -106,7 +110,27 @@ class _AddNewAddressState extends State<AddNewAddress> {
               buildTextFeild(title: 'Address', controller: addressController),
               InkWell(
                 borderRadius: BorderRadius.circular(10),
-                onTap: () {},
+                onTap: () {
+                  AddressModel address = AddressModel(
+                      firstName: lastNameController.text.trim(),
+                      lastName: lastNameController.text.trim(),
+                      phoneNumber: phoneNuberController.text.trim(),
+                      emailAddress: emailAddressController.text.trim(),
+                      addressName: addressNameController.text.trim(),
+                      longitude: longController.text.trim(),
+                      latitude: latController.text.trim(),
+                      city: cityController.text.trim(),
+                      country: countryController.text.trim(),
+                      address: addressController.text.trim());
+                  context
+                      .read<CheckOutCubit>()
+                      .addNewAdress(address)
+                      .then((value) {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const CheckOutScreen1(),
+                    ));
+                  });
+                },
                 child: Ink(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(vertical: 15.h),

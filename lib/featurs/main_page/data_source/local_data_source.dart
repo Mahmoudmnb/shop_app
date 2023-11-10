@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import '../featurs/check_out/models/address_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../core/constant.dart';
@@ -7,6 +8,13 @@ import '../featurs/home/models/product_model.dart';
 import '../featurs/products_view/models/add_to_cart_product_model.dart';
 
 class LocalDataSource {
+  Future<void> addNewLocation(AddressModel address) async {
+    Database db = await openDatabase(Constant.locationsDataBasePath);
+    db.rawInsert(
+      "INSERT INTO locations (firstName, lastName, phoneNumber, emailAddress,addressName, longitude_code, latitude_code,city,country,address) VALUES ('${address.firstName}', '${address.lastName}','${address.phoneNumber}','${address.emailAddress}','${address.addressName}','${address.longitude}','${address.latitude}','${address.city}','${address.country}','${address.address}')",
+    );
+  }
+
   Future<List<Map<String, dynamic>>> getAddToCartProduct() async {
     Database db = await openDatabase(Constant.addToCartTable);
     List<Map<String, dynamic>> products = [];
