@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/gogole_map.dart';
@@ -9,8 +11,9 @@ import '../widget/code_textfild.dart';
 import '../widget/point.dart';
 import 'second_step.dart';
 
-class CheckOutScreen1 extends StatelessWidget {
-  const CheckOutScreen1({super.key});
+class FirstStep extends StatelessWidget {
+  final List<Map<String, dynamic>> locations;
+  const FirstStep({super.key, required this.locations});
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +104,14 @@ class CheckOutScreen1 extends StatelessWidget {
                         SizedBox(height: 15.h),
                     itemCount: addressInfo.length,
                     itemBuilder: (BuildContext context, int index) {
+                      //             AddressModel address =
+                      //     AddressModel.fromMap(locations[index]);
+                      // return CheckOutAddressCard(
+                      //     title: address.addressName,
+                      //     description: address.address);
+                      log(locations.toString());
                       return CheckOutAddressCard(
-                          title: addressInfo[index].title,
+                          title: addressInfo[index].description,
                           description: addressInfo[index].description);
                     },
                   ),

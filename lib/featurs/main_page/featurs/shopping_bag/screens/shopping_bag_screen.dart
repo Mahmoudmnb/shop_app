@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../check_out/screens/first_step.dart';
 
-import '../widgets/custom_button.dart';
+import '../../check_out/cubit/check_out_cubit.dart';
+import '../../check_out/screens/first_step.dart';
 import '../widgets/shopping_bag_body.dart';
+import '../widgets/custom_button.dart';
 
 class ShoppingBagScreen extends StatelessWidget {
   const ShoppingBagScreen({super.key});
@@ -28,9 +30,16 @@ class ShoppingBagScreen extends StatelessWidget {
                   child: CustomButton(
                     title: 'Proceed to checkout',
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const CheckOutScreen1(),
-                      ));
+                      context
+                          .read<CheckOutCubit>()
+                          .getLocations()
+                          .then((value) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => FirstStep(
+                            locations: value,
+                          ),
+                        ));
+                      });
                     },
                   ),
                 ),

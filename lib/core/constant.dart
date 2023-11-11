@@ -13,27 +13,19 @@ class Constant {
         int.parse(time[0]), int.parse(time[1]), int.parse(time[2]));
   }
 
-  static double deviceWidth = 0;
-  static double deviceHeight = 0;
   static UserModel? currentUser;
   static String supabaseUrl = 'https://eujauxjltyekeqyohodz.supabase.co';
   static String supabaseAnonkey =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1amF1eGpsdHlla2VxeW9ob2R6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODg2NDM3MzYsImV4cCI6MjAwNDIxOTczNn0.IsX_pZLfNmrYPYGhqH8yZ31Zz5mt9XSztN4Mv1MPlZw';
 
   static Duration duration = const Duration(milliseconds: 500);
-  static String productDataBasePath =
-      '/data/user/0/com.example.shop_app/databases/prducts.db';
-  static String addToCartTable =
-      '/data/user/0/com.example.shop_app/databases/AddToCartTable.db';
-  static String searchHistoryDataBasePath =
-      '/data/user/0/com.example.shop_app/databases/searchHistory.db';
-  static String reviewsDataBasePath =
-      '/data/user/0/com.example.shop_app/databases/reviews.db';
-  static String ordersDataBasePath =
-      '/data/user/0/com.example.shop_app/databases/orders.db';
-
-  static String locationsDataBasePath =
-      '/data/user/0/com.example.shop_app/databases/locations.db';
+  static String baseUrl = '/data/user/0/com.example.shop_app/databases/';
+  static String productDataBasePath = '${baseUrl}prducts.db';
+  static String addToCartTable = '${baseUrl}AddToCartTable.db';
+  static String searchHistoryDataBasePath = '${baseUrl}searchHistory.db';
+  static String reviewsDataBasePath = '${baseUrl}reviews.db';
+  static String ordersDataBasePath = '${baseUrl}orders.db';
+  static String locationsDataBasePath = '${baseUrl}locations.db';
   static List<Map<String, dynamic>> data = [
     {
       'name': 'white cotton shirt',

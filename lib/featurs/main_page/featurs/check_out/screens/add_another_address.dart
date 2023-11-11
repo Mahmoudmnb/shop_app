@@ -126,9 +126,11 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       .read<CheckOutCubit>()
                       .addNewAdress(address)
                       .then((value) {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const CheckOutScreen1(),
-                    ));
+                    context.read<CheckOutCubit>().getLocations().then((value) {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => FirstStep(locations: value),
+                      ));
+                    });
                   });
                 },
                 child: Ink(

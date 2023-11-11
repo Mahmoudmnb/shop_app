@@ -7,6 +7,10 @@ import 'local_data_source.dart';
 class DataSource {
   LocalDataSource localDataSource;
   DataSource({required this.localDataSource});
+  Future<List<Map<String, dynamic>>> getLocations() async {
+    return localDataSource.getLocations();
+  }
+
   Future<void> addNewLocation(AddressModel address) async {
     return localDataSource.addNewLocation(address);
   }
