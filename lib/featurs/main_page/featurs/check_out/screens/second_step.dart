@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_paypal_checkout/flutter_paypal_checkout.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../cubit/check_out_cubit.dart';
@@ -149,16 +150,12 @@ class CheckOutScreen2 extends StatelessWidget {
                     height: 15.h,
                   ),
                   BlocConsumer<CheckOutCubit, CheckOutState>(
-                    listener: (context, state) {
-                      // TODO: implement listener
-                    },
+                    listener: (context, state) {},
                     builder: (context, state) {
                       CheckOutCubit cubit = CheckOutCubit.get(context);
                       return Row(
                         children: [
-                          SizedBox(
-                            width: 50.w,
-                          ),
+                          SizedBox(width: 50.w),
                           Checkbox(
                               activeColor: const Color(0xFF5ECE7B),
                               value: cubit.agree,
@@ -179,8 +176,72 @@ class CheckOutScreen2 extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const CheckOutScreen3(),
+                        builder: (context) => PaypalCheckout(
+                          sandboxMode: true,
+                          clientId:
+                              "AQuqmSDLKtYJ5MWKpuxAO2zzIxIeBFlTN7nC2wDtzokwEqvzj-1rLUGEsDst9MIJmacfX4n69BK9CSna",
+                          secretKey:
+                              "EPq3lvVP9vliuW1fcfOyWArAlU_Zmbg6x-y_kHkgFzSlJGFNOQz6aila9mrzbUIl9UrxIiqcP5sHuzW4",
+                          returnURL: "success.snippetcoder.com",
+                          cancelURL: "cancel.snippetcoder.com",
+                          transactions: const [
+                            {
+                              "amount": {
+                                "total": '70',
+                                "currency": "USD",
+                                "details": {
+                                  "subtotal": '70',
+                                  "shipping": '0',
+                                  "shipping_discount": 0
+                                }
+                              },
+                              "description":
+                                  "The payment transaction description.",
+                              "item_list": {
+                                "items": [
+                                  {
+                                    "name": "Apple",
+                                    "quantity": 4,
+                                    "price": '5',
+                                    "currency": "USD"
+                                  },
+                                  {
+                                    "name": "Pineapple",
+                                    "quantity": 5,
+                                    "price": '10',
+                                    "currency": "USD"
+                                  }
+                                ],
+                                // shipping address is Optional
+                                "shipping_address": {
+                                  "recipient_name": "Raman Singh",
+                                  "line1": "Delhi",
+                                  "line2": "",
+                                  "city": "Delhi",
+                                  "country_code": "IN",
+                                  "postal_code": "11001",
+                                  "phone": "+00000000",
+                                  "state": "Texas"
+                                },
+                              }
+                            }
+                          ],
+                          note: "PAYMENT_NOTE",
+                          onSuccess: (Map params) async {
+                            print("onSuccess: $params");
+                          },
+                          onError: (error) {
+                            print("onError: $error");
+                            Navigator.pop(context);
+                          },
+                          onCancel: () {
+                            print('cancelled:');
+                          },
+                        ),
                       ));
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      //   builder: (context) => const CheckOutScreen3(),
+                      // ));
                     },
                     child: Container(
                       margin: EdgeInsets.symmetric(

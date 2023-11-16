@@ -10,7 +10,8 @@ import 'featurs/main_page/featurs/check_out/screens/add_another_address.dart';
 import 'package:toast/toast.dart';
 
 class GoogleMapScreen extends StatefulWidget {
-  const GoogleMapScreen({Key? key}) : super(key: key);
+  final LatLng? currentLocation;
+  const GoogleMapScreen({Key? key, this.currentLocation}) : super(key: key);
 
   @override
   State<GoogleMapScreen> createState() => GoogleMapScreenState();
@@ -50,7 +51,11 @@ class GoogleMapScreenState extends State<GoogleMapScreen> {
   @override
   void initState() {
     super.initState();
-    getUserLocation();
+    if (widget.currentLocation == null) {
+      getUserLocation();
+    } else {
+      sourceLocation = widget.currentLocation!;
+    }
     setCustomMarkerIcon();
   }
 

@@ -29,8 +29,8 @@ class AddressModel {
       'phoneNumber': phoneNumber,
       'emailAddress': emailAddress,
       'addressName': addressName,
-      'longitude': longitude,
-      'latitude': latitude,
+      'longitude_code': longitude,
+      'latitude_code': latitude,
       'city': city,
       'country': country,
       'address': address
@@ -39,15 +39,15 @@ class AddressModel {
 
   factory AddressModel.fromMap(Map<String, dynamic> locations) {
     return AddressModel(
-        firstName: locations['firstName'],
-        lastName: locations['lastName'],
-        phoneNumber: locations['phoneNumber'],
-        emailAddress: locations['emailAddress'],
-        addressName: locations['addressName'],
-        longitude: locations['longitude'],
-        latitude: locations['latitude'],
-        city: locations['city'],
-        country: locations['country'],
-        address: locations['address']);
+        firstName: locations['firstName'] as String,
+        lastName: locations['lastName'] as String,
+        phoneNumber: locations['phoneNumber'] as String,
+        emailAddress: locations['emailAddress'] as String,
+        addressName: locations['addressName'] as String,
+        longitude: locations['longitude_code'] as String,
+        latitude: locations['latitude_code'] as String,
+        city: locations['city'] as String,
+        country: locations['country'] as String,
+        address: locations['address'] as String);
   }
 }

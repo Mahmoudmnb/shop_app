@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/gogole_map.dart';
+import 'package:toast/toast.dart';
 
-import '../../profile/model/shopping_address_model.dart';
+import '../models/address_model.dart';
 import '../widget/check_out_address.dart';
 import '../widget/check_out_method.dart';
 import '../widget/code_textfild.dart';
@@ -17,12 +16,6 @@ class FirstStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List addressInfo = [
-      ShoppingAddressModel(
-          title: 'My Home', description: " 123 Building, Main Street"),
-      ShoppingAddressModel(
-          title: 'My Office', description: " 123 Building, Main Street"),
-    ];
     return Scaffold(
       body: Column(
         children: [
@@ -102,17 +95,13 @@ class FirstStep extends StatelessWidget {
                     physics: const BouncingScrollPhysics(),
                     separatorBuilder: (context, index) =>
                         SizedBox(height: 15.h),
-                    itemCount: addressInfo.length,
+                    itemCount: locations.length,
                     itemBuilder: (BuildContext context, int index) {
-                      //             AddressModel address =
-                      //     AddressModel.fromMap(locations[index]);
-                      // return CheckOutAddressCard(
-                      //     title: address.addressName,
-                      //     description: address.address);
-                      log(locations.toString());
+                      AddressModel address =
+                          AddressModel.fromMap(locations[index]);
                       return CheckOutAddressCard(
-                          title: addressInfo[index].description,
-                          description: addressInfo[index].description);
+                          title: address.addressName,
+                          description: address.address);
                     },
                   ),
                   GestureDetector(
@@ -120,13 +109,6 @@ class FirstStep extends StatelessWidget {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) => const GoogleMapScreen(),
                       ));
-                      //     .then((pickedLocation) {
-                      //   Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) => AddNewAddress(
-                      //       pickedLocation: pickedLocation,
-                      //     ),
-                      //   ));
-                      // });
                     },
                     child: Container(
                       width: double.infinity,
@@ -191,9 +173,25 @@ class FirstStep extends StatelessWidget {
                   const CodeTextFeild(),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const CheckOutScreen2(),
-                      ));
+                      if (locations.isNotEmpty) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const CheckOutScreen2(),
+                        ));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            shape: const OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10))),
+                            backgroundColor: Colors.grey,
+                            content: Center(
+                              child: Text(
+                                'You have to add address',
+                                style: TextStyle(fontSize: 18.sp),
+                              ),
+                            )));
+                      }
                     },
                     child: Container(
                       margin: EdgeInsets.symmetric(vertical: 24.h),

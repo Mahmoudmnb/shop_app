@@ -16,11 +16,7 @@ class ShoppingBagBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const CustomAppBar(),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25.w),
-          child: const Divider(color: Color(0xFFC6C6C6)),
-        ),
+       
         SizedBox(height: 34.h),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
