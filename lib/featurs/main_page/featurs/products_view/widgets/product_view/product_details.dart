@@ -42,7 +42,7 @@ class ProductDetails extends StatelessWidget {
       builder: (context, scrollController) => SingleChildScrollView(
         controller: scrollController,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          // padding: const EdgeInsets.symmetric(horizontal: 15),
           width: 393.w,
           decoration: const BoxDecoration(
               color: Colors.white,
@@ -54,7 +54,7 @@ class ProductDetails extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 11.w, right: 3.9.w),
+                    padding: EdgeInsets.only(left: 25.w, right: 15.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -84,7 +84,7 @@ class ProductDetails extends StatelessWidget {
                                     letterSpacing: .5,
                                     fontFamily: 'Tenor Sans',
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 16.w,
+                                    fontSize: 22.sp,
                                   ),
                                 ),
                                 SizedBox(width: 3.w),
@@ -281,7 +281,7 @@ class ProductDetails extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 2.h),
+              SizedBox(height: 25.h),
               SimilarProductsCard(
                 categoryName: categoryName,
                 fromPage: fromPage,

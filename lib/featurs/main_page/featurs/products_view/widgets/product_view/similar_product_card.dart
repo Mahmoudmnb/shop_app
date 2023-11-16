@@ -37,12 +37,12 @@ class SimilarProductsCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 19.5.w),
+                padding: EdgeInsets.only(left: 24.w),
                 child: Text(
                   'Similar Items',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 16.sp,
+                    fontSize: 18.sp,
                     fontFamily: 'Tenor Sans',
                     fontWeight: FontWeight.w600,
                     height: 1.06,
@@ -52,42 +52,46 @@ class SimilarProductsCard extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(right: 19.5.w),
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: const Color(0xFF9B9B9B),
-                  ),
-                  child: Text(
-                    'See All',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontFamily: 'DM Sans',
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 0.05,
-                    ),
-                  ),
-                  onPressed: () async {
-                    log('See All');
-                    cubit.getProductById(product.id).then((product) {
-                      cubit
-                          .getSimilarProducts(ProductModel.fromMap(product))
-                          .then((value) {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => SimilarItemsScreen(
-                              fromPage: fromPage,
-                              categoryName: categoryName,
-                              searchCubit: searchCubit,
-                              product: ProductModel.fromMap(product),
-                              searchWord: searchWord,
-                              similarProducts: cubit.similarProducts,
-                              productCubit: cubit,
-                            ),
+                child: cubit.similarProducts.isEmpty
+                    //* this height to equal SizedBox's height with TextButton's height :)
+                    ? SizedBox(height: 50.h)
+                    : TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: const Color(0xFF9B9B9B),
+                        ),
+                        child: Text(
+                          'See All',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontFamily: 'DM Sans',
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0.05,
                           ),
-                        );
-                      });
-                    });
-                  },
-                ),
+                        ),
+                        onPressed: () async {
+                          log('See All');
+                          cubit.getProductById(product.id).then((product) {
+                            cubit
+                                .getSimilarProducts(
+                                    ProductModel.fromMap(product))
+                                .then((value) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => SimilarItemsScreen(
+                                    fromPage: fromPage,
+                                    categoryName: categoryName,
+                                    searchCubit: searchCubit,
+                                    product: ProductModel.fromMap(product),
+                                    searchWord: searchWord,
+                                    similarProducts: cubit.similarProducts,
+                                    productCubit: cubit,
+                                  ),
+                                ),
+                              );
+                            });
+                          });
+                        },
+                      ),
               ),
             ],
           ),
@@ -95,30 +99,47 @@ class SimilarProductsCard extends StatelessWidget {
           Row(
             children: [
               SizedBox(
-                width: 355.w,
+                width: 393.w,
                 //* I put this height to show all simlair items
-                //* __(heightCard + heightAddToCartButton)__
+                //* (heightCard + heightAddToCartButton)
                 height: 190.h + 100.h,
-                child: ListView.separated(
-                  padding: EdgeInsets.symmetric(horizontal: 15.w),
-                  shrinkWrap: true,
-                  itemCount: cubit.similarProducts.length < 6
-                      ? cubit.similarProducts.length
-                      : 6,
-                  scrollDirection: Axis.horizontal,
-                  separatorBuilder: (BuildContext context, int index) =>
-                      SizedBox(width: 10.w),
-                  physics: const BouncingScrollPhysics(),
-                  itemBuilder: (_, int index) {
-                    ProductModel product =
-                        ProductModel.fromMap(cubit.similarProducts[index]);
-                    return CustomCard(
-                      width: 136.5.w,
-                      height: 174.5.h,
-                      product: product,
-                    );
-                  },
-                ),
+                child: cubit.similarProducts.isEmpty
+                    ? Padding(
+                        //* I do this way to put the text in the center of page
+                        //* by looking to the UI not the code (the code is not center :) )
+                        padding: EdgeInsets.only(bottom: 50.h),
+                        child: Center(
+                          child: Text(
+                            'There is no similar items',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontFamily: 'Tenor Sans',
+                              height: 1.06,
+                              letterSpacing: 0.20,
+                            ),
+                          ),
+                        ),
+                      )
+                    : ListView.separated(
+                        padding: EdgeInsets.only(left: 23.w),
+                        shrinkWrap: true,
+                        itemCount: cubit.similarProducts.length < 6
+                            ? cubit.similarProducts.length
+                            : 6,
+                        scrollDirection: Axis.horizontal,
+                        separatorBuilder: (BuildContext context, int index) =>
+                            SizedBox(width: 10.w),
+                        physics: const BouncingScrollPhysics(),
+                        itemBuilder: (_, int index) {
+                          ProductModel product = ProductModel.fromMap(
+                              cubit.similarProducts[index]);
+                          return CustomCard(
+                            width: 136.5.w,
+                            height: 174.5.h,
+                            product: product,
+                          );
+                        },
+                      ),
               ),
             ],
           ),

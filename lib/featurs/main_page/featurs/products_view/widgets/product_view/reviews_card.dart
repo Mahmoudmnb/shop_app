@@ -65,8 +65,7 @@ class ReviewsCard extends StatelessWidget {
         //! Cards of reviews
         SizedBox(
           width: 350.w,
-          height: 
-           cubit.reviws.length >= 3
+          height: cubit.reviws.length >= 3
               ? 325.h
               : cubit.reviws.length == 2
                   ? 255.h
@@ -100,16 +99,20 @@ class ReviewsCard extends StatelessWidget {
         ),
 
         SizedBox(height: 25.5.h),
-        SizedBox(
+        //* this widget was a SizedBox Widget and I convert it to Contianer 
+        //* add a margin property instead of Padding(child: SizedBox(...))
+        Container(
+          //* I use margin to put the button in the center of page 
+          //* to make the button so beautiful
+          margin: EdgeInsets.only(right: 10.w),
           width: 393.w,
           height: 50.h,
           child: ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder: (_) => AllReviewsScreen(
-                          reviews: cubit.reviws,
-                        )),
+                  builder: (_) => AllReviewsScreen(reviews: cubit.reviws),
+                ),
               );
             },
             style: ElevatedButton.styleFrom(
