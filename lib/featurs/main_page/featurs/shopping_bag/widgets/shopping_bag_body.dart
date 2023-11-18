@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../products_view/models/add_to_cart_product_model.dart';
 import '../cubits/item_product_cubit/item_product_cubit.dart';
 import '../cubits/products_cubit/products_cubit.dart';
-import 'custom_app_bar.dart';
 import 'info_card.dart';
 import 'product_item.dart';
 

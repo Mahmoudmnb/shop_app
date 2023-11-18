@@ -10,7 +10,7 @@ class CheckOutCubit extends Cubit<CheckOutState> {
   static CheckOutCubit get(context) => BlocProvider.of(context);
   String selectAddress = 'My Home';
   String selectMethod = 'In store pick-up';
-  String selectPayment = 'Credit Card';
+  String selectPayment = 'Paypal';
   changeAddress(String address) {
     selectAddress = address;
     emit(ChangeAddressState());
