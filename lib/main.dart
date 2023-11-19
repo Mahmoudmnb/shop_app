@@ -38,7 +38,7 @@ Future<void> main(List<String> args) async {
   //     .create(userId: 'a1a', email: 'maa@gmail.com', password: '123456789')
   //     .then((value) {
   //   log(value.email);
-  // });
+  // })
   await Supabase.initialize(
     url: Constant.supabaseUrl,
     anonKey: Constant.supabaseAnonkey,
