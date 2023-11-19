@@ -34,5 +34,13 @@
             android:value="2" />
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCCjVNCV37xaMD9Z-YRiiTy2dBFy3BXB0U"/>
+        <activity android:name="com.linusu.flutter_web_auth_2.CallbackActivity" android:exported="true">
+            <intent-filter android:label="flutter_web_auth_2">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="appwrite-callback-655083f2b78dc8c2d628" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

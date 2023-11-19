@@ -1,10 +1,11 @@
+import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
- 
+
 import 'featurs/main_page/featurs/shopping_bag/cubits/item_product_cubit/item_product_cubit.dart';
 import 'featurs/main_page/featurs/shopping_bag/cubits/products_cubit/products_cubit.dart';
 import 'featurs/main_page/featurs/home/blocs/discount/discount_products_bloc.dart';
@@ -27,6 +28,17 @@ import 'injection.dart';
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  Client client = Client();
+  client = Client()
+      .setEndpoint("https://cloud.appwrite.io/v1")
+      .setProject("655083f2b78dc8c2d628");
+  //!2023-11-18 02:06:13.626136
+  // Account account = Account(client);
+  // account
+  //     .create(userId: 'a1a', email: 'maa@gmail.com', password: '123456789')
+  //     .then((value) {
+  //   log(value.email);
+  // });
   await Supabase.initialize(
     url: Constant.supabaseUrl,
     anonKey: Constant.supabaseAnonkey,

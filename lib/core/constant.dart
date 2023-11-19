@@ -17,7 +17,7 @@ class Constant {
   static String supabaseUrl = 'https://eujauxjltyekeqyohodz.supabase.co';
   static String supabaseAnonkey =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1amF1eGpsdHlla2VxeW9ob2R6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODg2NDM3MzYsImV4cCI6MjAwNDIxOTczNn0.IsX_pZLfNmrYPYGhqH8yZ31Zz5mt9XSztN4Mv1MPlZw';
-
+  static String appWriteProjectId = '655083f2b78dc8c2d628';
   static Duration duration = const Duration(milliseconds: 500);
   static String baseUrl = '/data/user/0/com.example.shop_app/databases/';
   static String productDataBasePath = '${baseUrl}prducts.db';
@@ -31,11 +31,11 @@ class Constant {
       'name': 'white cotton shirt',
       'price': 20,
       'makerCompany': 'Elegance',
-      'sizes': 'L|XL|M',
+      'sizes': 'M|L|XL',
       'colors': '0xFFDC4447|0xFFCE8722|0xFF6D6D6D|0xFFDFA8A9',
       'discription':
           'A classic crewneck men\'s T-shirt made from soft cotton fabric, featuring a minimalist design and a comfortable fit for everyday wear.',
-      'imgUrl': 'assets/images/7.jpg|assets/images/10.jpg|assets/images/9.jpg ',
+      'imgUrl': 'assets/images/7.jpg|assets/images/10.jpg|assets/images/9.jpg',
       'discount': 0,
       'date': dateToString(DateTime.now()),
       'rating': 2,
