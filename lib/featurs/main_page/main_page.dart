@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/featurs/main_page/data_source/remot_data_source.dart';
 
 import '../../injection.dart';
 import 'drawer/home_drawer.dart';
@@ -79,7 +80,9 @@ class _MainPageState extends State<MainPage>
           padding: EdgeInsets.only(right: 4.0.w),
           child: IconButton(
             icon: const Icon(Icons.favorite_border),
-            onPressed: () {},
+            onPressed: () {
+              RemoteDataSource().getProducts();
+            },
           ),
         )
       ],

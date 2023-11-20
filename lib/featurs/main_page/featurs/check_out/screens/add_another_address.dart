@@ -59,7 +59,9 @@ class _AddNewAddressState extends State<AddNewAddress> {
     addressController.text =
         '${placemark.locality}, ${placemark.subLocality == '' ? placemark.street : placemark.subLocality}';
     countryCode = countryCodes
-        .where((element) => element['name'] == placemark.country)
+        .where((element) =>
+            element['code'] == placemark.isoCountryCode!.toUpperCase() ||
+            element['name']!.toUpperCase() == placemark.country!.toUpperCase())
         .toList();
     log(countryCode.toString());
     super.initState();
@@ -194,12 +196,10 @@ class _AddNewAddressState extends State<AddNewAddress> {
       height: 50.h,
       child: TextFormField(
         readOnly: title == 'longitude code' ||
-                title == 'latitude code' ||
-                title == 'City' ||
-                title == 'Country' ||
-                title == 'Address'
-            ? true
-            : false,
+            title == 'latitude code' ||
+            title == 'City' ||
+            title == 'Country' ||
+            title == 'Address',
         keyboardType: keyboardtype,
         controller: controller,
         decoration: InputDecoration(

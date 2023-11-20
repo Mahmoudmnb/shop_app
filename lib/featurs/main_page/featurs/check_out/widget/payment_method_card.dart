@@ -11,9 +11,7 @@ class PaymentMethodCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CheckOutCubit, CheckOutState>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         CheckOutCubit cubit = CheckOutCubit.get(context);
         return Container(
