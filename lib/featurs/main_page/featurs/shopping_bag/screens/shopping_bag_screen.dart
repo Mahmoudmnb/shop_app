@@ -21,13 +21,12 @@ class ShoppingBagScreen extends StatelessWidget {
         minTextAdapt: true,
         builder: (context, _) => Scaffold(
           // backgroundColor: Colors.white,
-
           body: Column(
             children: [
               const CustomAppBar(),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.w),
-                child: const Divider(color: Color(0xFFC6C6C6)),
+                padding: EdgeInsets.only(right: 25.w, left: 25.w, top: 7.h),
+                child: const Divider(color: Color(0xFFC6C6C6), height: 0),
               ),
               context.watch<AddToCartCubit>().products.isEmpty
                   ? const Expanded(

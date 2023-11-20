@@ -15,8 +15,6 @@ class ShoppingBagBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-       
-        SizedBox(height: 34.h),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: SizedBox(
@@ -29,6 +27,7 @@ class ShoppingBagBody extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
+                  SizedBox(height: 34.h),
                   BlocBuilder<AddToCartCubit, AddToCartState>(
                       builder: (context, state) => Column(
                             children: [
