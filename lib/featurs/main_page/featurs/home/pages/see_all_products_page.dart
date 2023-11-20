@@ -259,8 +259,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                     itemCount: categoryProducts.length,
                     gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      //* I edit it from .7 to .8
-                      childAspectRatio: .82.h,
+                      childAspectRatio: .7.h,
                       crossAxisSpacing: 20,
                     ),
                     itemBuilder: (context, index) {

@@ -99,6 +99,8 @@ class FirstStep extends StatelessWidget {
                       AddressModel address =
                           AddressModel.fromMap(locations[index]);
                       return CheckOutAddressCard(
+                          //! this property for select if this location is an only location
+                          lengthOfLocations: locations.length,
                           title: address.addressName,
                           description: address.address);
                     },

@@ -56,7 +56,7 @@ class HomePage extends StatelessWidget {
           //! Discount products
           SizedBox(
               width: double.infinity,
-              height: 180.h,
+              height: 182.h,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount:

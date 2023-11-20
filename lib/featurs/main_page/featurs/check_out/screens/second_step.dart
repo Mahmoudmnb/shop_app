@@ -61,7 +61,7 @@ class CheckOutScreen2 extends StatelessWidget {
                             image:
                                 const AssetImage('assets/images/location.png')),
                         SizedBox(
-                          width: 10.w,
+                          width: 10.w
                         ),
                         const CheckOutPoint(),
                         const CheckOutPoint(),

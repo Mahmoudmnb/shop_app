@@ -32,423 +32,429 @@ class EndDrawer extends StatelessWidget {
           .add(ChangeIsSearchEvent(isSearch: false));
     }
 
-    Widget sb({double width = 0, double height = 0}) {
-      return SizedBox(
-        height: height,
-        width: width,
-      );
-    }
-
-    return Drawer(
-      child: Container(
-        padding: EdgeInsets.only(
-            top: fromPage == 'SearchPage' ? 0 : 40.h, left: 8.w, right: 8.w),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Filter",
-                  style: TextStyle(
-                      fontSize: 18.sp,
-                      fontFamily: 'DM Sans',
-                      fontWeight: FontWeight.w500),
-                ),
-                Image(
-                  image: const AssetImage('assets/images/Filter_big.png'),
-                  height: 25.w,
-                )
-              ],
-            ),
-          ),
-          sb(height: fromPage == 'SearchPage' ? 0 : 10.h),
-          const Divider(thickness: 1),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const SizedBox(height: 10),
-              Text(
-                "Category",
-                style: TextStyle(
-                    color: const Color(0xFF7E7E7E),
-                    fontSize: 13.sp,
-                    fontFamily: 'DM Sans'),
-              ),
-              sb(height: fromPage == 'SearchPage' ? 20.h : 20.h),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                decoration: BoxDecoration(
-                    color: const Color(0xFFEDEDED),
-                    borderRadius: BorderRadius.circular(10)),
-                child: BlocBuilder<SearchCubit, SearchState>(
-                  builder: (context, state) {
-                    String selectedCategory = cubit.selectedCategory;
-                    if (state is ResetFilter) {
-                      selectedCategory = cubit.selectedCategory;
-                    } else if (state is SetSelectedCategory) {
-                      selectedCategory = cubit.selectedCategory;
-                    }
-                    return DropdownButton(
-                      underline: Container(),
-                      isExpanded: true,
-                      onChanged: (value) {
-                        cubit.setSelectedCategory(value!);
-                      },
-                      value: selectedCategory,
-                      hint: const Text("Choose category"),
-                      items: [
-                        DropdownMenuItem(
-                          value: "All",
-                          child: const Text("All"),
-                          onTap: () {
-                            // Category = 'Drinks';
-                          },
-                        ),
-                        DropdownMenuItem(
-                          value: "suits",
-                          child: const Text('Suits'),
-                          onTap: () {
-                            // Category = 'Main';
-                          },
-                        ),
-                        DropdownMenuItem(
-                          value: "shirt",
-                          child: const Text('Shirt'),
-                          onTap: () {
-                            // Category = 'Sweetes';
-                          },
-                        ),
-                        DropdownMenuItem(
-                          value: "pants",
-                          child: const Text("Pants"),
-                          onTap: () {
-                            // Category = 'Aprrtie';
-                          },
-                        ),
-                        DropdownMenuItem(
-                          value: "sweaters",
-                          child: const Text("Sweaters"),
-                          onTap: () {
-                            // Category = 'Aprrtie';
-                          },
-                        ),
-                        DropdownMenuItem(
-                          value: "t-shirts",
-                          child: const Text("T-Shirts"),
-                          onTap: () {
-                            // Category = 'Aprrtie';
-                          },
-                        ),
-                        DropdownMenuItem(
-                          value: "jackets",
-                          child: const Text("Jackets"),
-                          onTap: () {
-                            // Category = 'Aprrtie';
-                          },
-                        ),
-                        DropdownMenuItem(
-                          value: "shorts",
-                          child: const Text("Shorts"),
-                          onTap: () {
-                            // Category = 'Aprrtie';
-                          },
-                        ),
-                        DropdownMenuItem(
-                          value: "sportswear",
-                          child: const Text("SportsWear"),
-                          onTap: () {
-                            // Category = 'Aprrtie';
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-              sb(height: fromPage == 'SearchPage' ? 15.h : 20.h),
-              Text(
-                "Price",
-                style: TextStyle(
-                    color: const Color(0xFF7E7E7E),
-                    fontSize: 13.sp,
-                    fontFamily: 'DM Sans'),
-              ),
-              BlocBuilder<SearchCubit, SearchState>(
-                builder: (context, state) {
-                  SfRangeValues values = cubit.valuesOfFilterPrice;
-                  if (state is ResetFilter) {
-                    values = cubit.valuesOfFilterPrice;
-                  }
-                  return SfRangeSlider(
-                    shouldAlwaysShowTooltip: true,
-                    dragMode: SliderDragMode.both,
-                    min: 0,
-                    max: 100,
-                    values: values,
-                    stepSize: 1,
-                    interval: 20,
-                    activeColor: Colors.black,
-                    enableTooltip: true,
-                    onChanged: (SfRangeValues values) {
-                      cubit.changeValueofFilterPrice(values);
-                    },
-                  );
-                },
-              ),
-              Text(
-                "Colors",
-                style: TextStyle(
-                    color: const Color(0xFF7E7E7E),
-                    fontSize: 13.sp,
-                    fontFamily: 'DM Sans'),
-              ),
-              sb(height: fromPage == 'SearchPage' ? 15.h : 20.h),
-              BlocBuilder<SearchCubit, SearchState>(
-                builder: (context, state) {
-                  List<bool> filterColors = cubit.filterColors;
-                  if (state is ResetFilter) {
-                    filterColors = cubit.filterColors;
-                  }
-                  return SizedBox(
-                    height: 20.w,
-                    child: ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      separatorBuilder: (context, index) => sb(width: 10.w),
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemCount: cubit.colors.length,
-                      itemBuilder: (context, index) => GestureDetector(
-                        onTap: () {
-                          cubit.selectFilterColor(index);
-                        },
-                        child: Container(
-                          width: 20.w,
-                          height: 20.w,
-                          decoration: BoxDecoration(
-                              border: filterColors[index]
-                                  ? Border.all(color: Colors.blue, width: 2)
-                                  : null,
-                              color: cubit.colors[index],
-                              borderRadius: BorderRadius.circular(100)),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              sb(height: fromPage == 'SearchPage' ? 10.h : 20.h),
-              Text(
-                "Rating",
-                style: TextStyle(
-                    color: const Color(0xFF7E7E7E),
-                    fontSize: 13.sp,
-                    fontFamily: 'DM Sans'),
-              ),
-              sb(height: fromPage == 'SearchPage' ? 15.h : 20.h),
-              BlocBuilder<SearchCubit, SearchState>(
-                builder: (context, state) {
-                  List<bool> filterRating = cubit.filterRating;
-                  if (state is ResetFilter) {
-                    filterRating = cubit.filterRating;
-                  }
-                  return SizedBox(
-                    // padding: EdgeInsets.only(left: 10.w),
-                    height: 45.w,
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) => sb(width: 20.w),
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemCount: 5,
-                      itemBuilder: (context, index) => GestureDetector(
-                        onTap: () {
-                          cubit.selectFilterRating(index);
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(bottom: 5.h),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 4),
-                                    color: Colors.black.withOpacity(.25))
-                              ],
-                              color: filterRating[index]
-                                  ? const Color(0xFF33302E)
-                                  : Colors.white,
-                              borderRadius: BorderRadius.circular(100)),
-                          width: 40.w,
-                          // height: 30.w,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.star,
-                                  color: filterRating[index]
-                                      ? Colors.white
-                                      : const Color(0xFF33302E),
-                                  size: 12.w,
-                                ),
-                                Text(
-                                  '${index + 1}',
-                                  style: TextStyle(
-                                    fontFamily: 'DM Sans',
-                                    color: filterRating[index]
-                                        ? Colors.white
-                                        : const Color(0xFF33302E),
-                                  ),
-                                )
-                              ]),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              sb(height: fromPage == 'SearchPage' ? 10.h : 15.h),
-              Text(
-                "Discount",
-                style: TextStyle(
-                    color: const Color(0xFF7E7E7E),
-                    fontSize: 13.sp,
-                    fontFamily: 'DM Sans'),
-              ),
-              sb(height: fromPage == 'SearchPage' ? 15.h : 15.h),
-              BlocBuilder<SearchCubit, SearchState>(
-                builder: (context, state) {
-                  List<bool> filterDiscount = cubit.filterDiscount;
-                  if (state is ResetFilter) {
-                    filterDiscount = cubit.filterDiscount;
-                  }
-                  return SizedBox(
-                    // height: 15.h,
-                    child: GridView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: cubit.discount.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              childAspectRatio: 2,
-                              crossAxisSpacing: 8,
-                              mainAxisSpacing: 8),
-                      itemBuilder: (context, index) => GestureDetector(
-                        onTap: () {
-                          cubit.selectFilterDiscount(index);
-                        },
-                        child: Container(
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                                color: filterDiscount[index]
-                                    ? const Color(0xFF33302E)
-                                    : Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                      offset: const Offset(0, 4),
-                                      color: Colors.black.withOpacity(.25),
-                                      blurRadius: 4)
-                                ],
-                                borderRadius: BorderRadius.circular(4)),
-                            child: Center(
-                                child: Text(
-                              '${cubit.discount[index]}%',
-                              style: TextStyle(
-                                fontFamily: 'DM Sans',
-                                color: filterDiscount[index]
-                                    ? Colors.white
-                                    : const Color(0xFF33302E),
-                              ),
-                            ))),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              sb(height: fromPage == 'SearchPage' ? 40.h : 60.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return SafeArea(
+      child: Drawer(
+        child: Container(
+          margin: EdgeInsets.only(top: 15.h),
+          padding: EdgeInsets.only(
+              top: fromPage == 'SearchPage' ? 0 : 40.h, left: 8.w, right: 8.w),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  MaterialButton(
-                      onPressed: () async {
-                        if (fromPage == 'categoryView') {
-                          await cubit.reset(searchWord, false);
-                          cubit.setSelectedCategory(
-                              oldCategoryName!.toLowerCase());
-                          cubit.changeCategoryViewSearch(false);
-                          await cubit
-                              .searchInCategory(null, oldCategoryName!)
-                              .then((value) {
-                            log(value.toString());
-                          });
-                          searchController.text = '';
-                        }
-                        if (fromPage == 'seeAll') {
-                          cubit.reset(searchWord, false);
-                          cubit.setSelectedCategory('All');
-                          hidTextFromField();
-                          sl
-                              .get<DataSource>()
-                              .getDiscountsProducts()
-                              .then((allDiscountProducts) {
-                            context.read<DiscountProductsBloc>().add(
-                                GetAllDiscountEvent(
-                                    allDiscountProducts: allDiscountProducts));
-                          });
-                        } else {
-                          await cubit.reset(searchWord, true);
-                        }
-                      },
-                      child: const Text('Reset')),
-                  MaterialButton(
-                      onPressed: () async {
-                        if (fromPage == 'categoryView') {
-                          log(fromPage);
-                          if (searchWord.isEmpty) {
-                            var data = await cubit.searchInCategory(
-                                null, cubit.selectedCategory);
-                            log(data.toString());
-                          } else {
-                            var data = await cubit.searchInCategory(
-                                searchWord, cubit.selectedCategory);
-                            log(data.toString());
-                          }
-                        }
-                        if (fromPage == 'seeAll') {
-                          if (searchWord == '') {
-                            await cubit
-                                .searchInDiscounts(null)
-                                .then((searchResult) {
-                              context.read<DiscountProductsBloc>().add(
-                                  SearchInDiscount(searchResult: searchResult));
-                            });
-                          } else {
-                            log(searchWord);
-                            await cubit
-                                .searchInDiscounts(searchWord)
-                                .then((searchResult) {
-                              context.read<DiscountProductsBloc>().add(
-                                  SearchInDiscount(searchResult: searchResult));
-                            });
-                          }
-                        } else {
-                          cubit.search(searchWord);
-                        }
-                      },
-                      color: const Color(0xFF33302E),
-                      child: const Text(
-                        'Apply',
-                        style: TextStyle(
-                            color: Colors.white, fontFamily: 'DM Sans'),
-                      ))
+                  Text(
+                    "Filter",
+                    style: TextStyle(
+                        fontSize: 18.sp,
+                        fontFamily: 'DM Sans',
+                        fontWeight: FontWeight.w500),
+                  ),
+                  Image(
+                    image: const AssetImage('assets/images/Filter_big.png'),
+                    height: 25.w,
+                  )
                 ],
               ),
-            ]),
-          )
-        ]),
+            ),
+            SizedBox(height: fromPage == 'SearchPage' ? 0 : 10.h),
+            const Divider(thickness: 1),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10),
+                    Text(
+                      "Category",
+                      style: TextStyle(
+                          color: const Color(0xFF7E7E7E),
+                          fontSize: 13.sp,
+                          fontFamily: 'DM Sans'),
+                    ),
+                    SizedBox(height: fromPage == 'SearchPage' ? 20.h : 20.h),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      decoration: BoxDecoration(
+                          color: const Color(0xFFEDEDED),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: BlocBuilder<SearchCubit, SearchState>(
+                        builder: (context, state) {
+                          String selectedCategory = cubit.selectedCategory;
+                          if (state is ResetFilter) {
+                            selectedCategory = cubit.selectedCategory;
+                          } else if (state is SetSelectedCategory) {
+                            selectedCategory = cubit.selectedCategory;
+                          }
+                          return DropdownButton(
+                            underline: Container(),
+                            isExpanded: true,
+                            onChanged: (value) {
+                              cubit.setSelectedCategory(value!);
+                            },
+                            value: selectedCategory,
+                            hint: const Text("Choose category"),
+                            items: [
+                              DropdownMenuItem(
+                                value: "All",
+                                child: const Text("All"),
+                                onTap: () {
+                                  // Category = 'Drinks';
+                                },
+                              ),
+                              DropdownMenuItem(
+                                value: "suits",
+                                child: const Text('Suits'),
+                                onTap: () {
+                                  // Category = 'Main';
+                                },
+                              ),
+                              DropdownMenuItem(
+                                value: "shirt",
+                                child: const Text('Shirt'),
+                                onTap: () {
+                                  // Category = 'Sweetes';
+                                },
+                              ),
+                              DropdownMenuItem(
+                                value: "pants",
+                                child: const Text("Pants"),
+                                onTap: () {
+                                  // Category = 'Aprrtie';
+                                },
+                              ),
+                              DropdownMenuItem(
+                                value: "sweaters",
+                                child: const Text("Sweaters"),
+                                onTap: () {
+                                  // Category = 'Aprrtie';
+                                },
+                              ),
+                              DropdownMenuItem(
+                                value: "t-shirts",
+                                child: const Text("T-Shirts"),
+                                onTap: () {
+                                  // Category = 'Aprrtie';
+                                },
+                              ),
+                              DropdownMenuItem(
+                                value: "jackets",
+                                child: const Text("Jackets"),
+                                onTap: () {
+                                  // Category = 'Aprrtie';
+                                },
+                              ),
+                              DropdownMenuItem(
+                                value: "shorts",
+                                child: const Text("Shorts"),
+                                onTap: () {
+                                  // Category = 'Aprrtie';
+                                },
+                              ),
+                              DropdownMenuItem(
+                                value: "sportswear",
+                                child: const Text("SportsWear"),
+                                onTap: () {
+                                  // Category = 'Aprrtie';
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(height: fromPage == 'SearchPage' ? 15.h : 20.h),
+                    Text(
+                      "Price",
+                      style: TextStyle(
+                          color: const Color(0xFF7E7E7E),
+                          fontSize: 13.sp,
+                          fontFamily: 'DM Sans'),
+                    ),
+                    BlocBuilder<SearchCubit, SearchState>(
+                      builder: (context, state) {
+                        SfRangeValues values = cubit.valuesOfFilterPrice;
+                        if (state is ResetFilter) {
+                          values = cubit.valuesOfFilterPrice;
+                        }
+                        return SfRangeSlider(
+                          shouldAlwaysShowTooltip: true,
+                          dragMode: SliderDragMode.both,
+                          min: 0,
+                          max: 100,
+                          values: values,
+                          stepSize: 1,
+                          interval: 20,
+                          activeColor: Colors.black,
+                          enableTooltip: true,
+                          onChanged: (SfRangeValues values) {
+                            cubit.changeValueofFilterPrice(values);
+                          },
+                        );
+                      },
+                    ),
+                    Text(
+                      "Colors",
+                      style: TextStyle(
+                          color: const Color(0xFF7E7E7E),
+                          fontSize: 13.sp,
+                          fontFamily: 'DM Sans'),
+                    ),
+                    SizedBox(height: fromPage == 'SearchPage' ? 15.h : 20.h),
+                    BlocBuilder<SearchCubit, SearchState>(
+                      builder: (context, state) {
+                        List<bool> filterColors = cubit.filterColors;
+                        if (state is ResetFilter) {
+                          filterColors = cubit.filterColors;
+                        }
+                        return SizedBox(
+                          height: 17.w,
+                          child: ListView.separated(
+                            physics: const BouncingScrollPhysics(),
+                            separatorBuilder: (context, index) =>
+                                SizedBox(width: 9.5.w),
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            itemCount: cubit.colors.length,
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: () {
+                                cubit.selectFilterColor(index);
+                              },
+                              child: Container(
+                                width: 17.w,
+                                height: 17.w,
+                                decoration: BoxDecoration(
+                                    border: filterColors[index]
+                                        ? Border.all(
+                                            color: Colors.blue, width: 2)
+                                        : null,
+                                    color: cubit.colors[index],
+                                    borderRadius: BorderRadius.circular(100)),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: fromPage == 'SearchPage' ? 10.h : 20.h),
+                    Text(
+                      "Rating",
+                      style: TextStyle(
+                          color: const Color(0xFF7E7E7E),
+                          fontSize: 13.sp,
+                          fontFamily: 'DM Sans'),
+                    ),
+                    SizedBox(height: fromPage == 'SearchPage' ? 15.h : 20.h),
+                    BlocBuilder<SearchCubit, SearchState>(
+                      builder: (context, state) {
+                        List<bool> filterRating = cubit.filterRating;
+                        if (state is ResetFilter) {
+                          filterRating = cubit.filterRating;
+                        }
+                        return SizedBox(
+                          // padding: EdgeInsets.only(left: 10.w),
+                          height: 43.w,
+                          child: ListView.separated(
+                            padding: EdgeInsets.only(left: 8.w),
+                            separatorBuilder: (context, index) =>
+                                SizedBox(width: 12.w),
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            itemCount: 5,
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: () {
+                                cubit.selectFilterRating(index);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(bottom: 10.h),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 4,
+                                          offset: const Offset(0, 4),
+                                          color: Colors.black.withOpacity(.25))
+                                    ],
+                                    color: filterRating[index]
+                                        ? const Color(0xFF33302E)
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(100)),
+                                width: 35.w,
+                                // height: 30.w,
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.star,
+                                        color: filterRating[index]
+                                            ? Colors.white
+                                            : const Color(0xFF33302E),
+                                        size: 12.w,
+                                      ),
+                                      Text(
+                                        '${index + 1}',
+                                        style: TextStyle(
+                                          fontFamily: 'DM Sans',
+                                          color: filterRating[index]
+                                              ? Colors.white
+                                              : const Color(0xFF33302E),
+                                        ),
+                                      )
+                                    ]),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: fromPage == 'SearchPage' ? 10.h : 15.h),
+                    Text(
+                      "Discount",
+                      style: TextStyle(
+                          color: const Color(0xFF7E7E7E),
+                          fontSize: 13.sp,
+                          fontFamily: 'DM Sans'),
+                    ),
+                    SizedBox(height: fromPage == 'SearchPage' ? 15.h : 15.h),
+                    BlocBuilder<SearchCubit, SearchState>(
+                      builder: (context, state) {
+                        List<bool> filterDiscount = cubit.filterDiscount;
+                        if (state is ResetFilter) {
+                          filterDiscount = cubit.filterDiscount;
+                        }
+                        return SizedBox(
+                          // height: 15.h,
+                          child: GridView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: cubit.discount.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    childAspectRatio: 2,
+                                    crossAxisSpacing: 8,
+                                    mainAxisSpacing: 8),
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: () {
+                                cubit.selectFilterDiscount(index);
+                              },
+                              child: Container(
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                      color: filterDiscount[index]
+                                          ? const Color(0xFF33302E)
+                                          : Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                            offset: const Offset(0, 4),
+                                            color:
+                                                Colors.black.withOpacity(.25),
+                                            blurRadius: 4)
+                                      ],
+                                      borderRadius: BorderRadius.circular(4)),
+                                  child: Center(
+                                      child: Text(
+                                    '${cubit.discount[index]}%',
+                                    style: TextStyle(
+                                      fontFamily: 'DM Sans',
+                                      color: filterDiscount[index]
+                                          ? Colors.white
+                                          : const Color(0xFF33302E),
+                                    ),
+                                  ))),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: fromPage == 'SearchPage' ? 40.h : 60.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        MaterialButton(
+                            onPressed: () async {
+                              if (fromPage == 'categoryView') {
+                                await cubit.reset(searchWord, false);
+                                cubit.setSelectedCategory(
+                                    oldCategoryName!.toLowerCase());
+                                cubit.changeCategoryViewSearch(false);
+                                await cubit
+                                    .searchInCategory(null, oldCategoryName!)
+                                    .then((value) {
+                                  log(value.toString());
+                                });
+                                searchController.text = '';
+                              }
+                              if (fromPage == 'seeAll') {
+                                cubit.reset(searchWord, false);
+                                cubit.setSelectedCategory('All');
+                                hidTextFromField();
+                                sl
+                                    .get<DataSource>()
+                                    .getDiscountsProducts()
+                                    .then((allDiscountProducts) {
+                                  context.read<DiscountProductsBloc>().add(
+                                      GetAllDiscountEvent(
+                                          allDiscountProducts:
+                                              allDiscountProducts));
+                                });
+                              } else {
+                                await cubit.reset(searchWord, true);
+                              }
+                            },
+                            child: const Text('Reset')),
+                        MaterialButton(
+                            onPressed: () async {
+                              if (fromPage == 'categoryView') {
+                                log(fromPage);
+                                if (searchWord.isEmpty) {
+                                  var data = await cubit.searchInCategory(
+                                      null, cubit.selectedCategory);
+                                  log(data.toString());
+                                } else {
+                                  var data = await cubit.searchInCategory(
+                                      searchWord, cubit.selectedCategory);
+                                  log(data.toString());
+                                }
+                              }
+                              if (fromPage == 'seeAll') {
+                                if (searchWord == '') {
+                                  await cubit
+                                      .searchInDiscounts(null)
+                                      .then((searchResult) {
+                                    context.read<DiscountProductsBloc>().add(
+                                        SearchInDiscount(
+                                            searchResult: searchResult));
+                                  });
+                                } else {
+                                  log(searchWord);
+                                  await cubit
+                                      .searchInDiscounts(searchWord)
+                                      .then((searchResult) {
+                                    context.read<DiscountProductsBloc>().add(
+                                        SearchInDiscount(
+                                            searchResult: searchResult));
+                                  });
+                                }
+                              } else {
+                                cubit.search(searchWord);
+                              }
+                            },
+                            color: const Color(0xFF33302E),
+                            child: const Text(
+                              'Apply',
+                              style: TextStyle(
+                                  color: Colors.white, fontFamily: 'DM Sans'),
+                            ))
+                      ],
+                    ),
+                  ]),
+            )
+          ]),
+        ),
       ),
     );
   }

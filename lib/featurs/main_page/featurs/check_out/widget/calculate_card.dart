@@ -8,13 +8,18 @@ class CalculateCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-            offset: const Offset(0, -5),
-            blurRadius: 11,
-            color: Colors.black.withOpacity(.04))
-      ]),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+          boxShadow: [
+            BoxShadow(
+                offset: const Offset(0, -5),
+                blurRadius: 11,
+                color: Colors.black.withOpacity(.04))
+          ]),
       child: Column(children: [
+        SizedBox(height: 4.h),
         Container(
           padding: EdgeInsets.symmetric(vertical: 8.h),
           child: Row(
@@ -35,9 +40,7 @@ class CalculateCard extends StatelessWidget {
             ],
           ),
         ),
-        const Divider(
-          color: Color(0xFFE8E8E8),
-        ),
+        const Divider(color: Color(0xFFE8E8E8)),
         Container(
           padding: EdgeInsets.symmetric(vertical: 8.h),
           child: Row(

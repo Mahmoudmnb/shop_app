@@ -7,6 +7,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shop_app/core/country_codes.dart';
 import 'package:shop_app/featurs/main_page/featurs/check_out/screens/first_step.dart';
+import 'package:shop_app/featurs/main_page/featurs/check_out/widget/text_field_address.dart';
 import 'package:shop_app/gogole_map.dart';
 import '../cubit/check_out_cubit.dart';
 import '../models/address_model.dart';
@@ -82,134 +83,148 @@ class _AddNewAddressState extends State<AddNewAddress> {
         backToGoogleMapScreen();
         return false;
       },
-      child: Scaffold(
-        body: Container(
-          padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 60.h),
-          child: Column(children: [
-            Row(
-              children: [
-                GestureDetector(
+      child: SafeArea(
+        child: Scaffold(
+          body: Container(
+            padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 30.h),
+            child: Column(children: [
+              Row(
+                children: [
+                  GestureDetector(
+                      onTap: () {
+                        backToGoogleMapScreen();
+                      },
+                      child: Image(
+                        height: 40.w,
+                        width: 40.w,
+                        image: const AssetImage("assets/images/backicon.png"),
+                      )),
+                  SizedBox(width: 10.w),
+                  Text(
+                    "Add New Address",
+                    style: TextStyle(
+                        fontSize: 18.sp,
+                        fontFamily: 'Tenor Sans',
+                        fontWeight: FontWeight.w500),
+                  )
+                ],
+              ),
+              //! there is a problem of conutryCode
+              //! you have to find solution for it or keep it this is you choise
+              Expanded(
+                  child: ListView(
+                physics: const BouncingScrollPhysics(),
+                children: [
+                  TextFieldAddress(
+                      title: 'FirstName', controller: firstNameController),
+                  TextFieldAddress(
+                      title: 'LastName', controller: lastNameController),
+                  //! how can I access on countryCode from TextFieldAddress widget
+                  //! vvvvvv here vvvvvv
+                  TextFieldAddress(
+                      countryCode: countryCode,
+                      title: 'Phone Number',
+                      controller: phoneNuberController,
+                      keyboardType: TextInputType.number),
+                  TextFieldAddress(
+                      title: 'Email Address',
+                      controller: emailAddressController,
+                      keyboardType: TextInputType.emailAddress),
+                  TextFieldAddress(
+                      title: 'Address Name',
+                      controller: addressNameController,
+                      keyboardType: TextInputType.streetAddress),
+                  TextFieldAddress(
+                      title: 'latitude code', controller: latController),
+                  TextFieldAddress(
+                      title: 'longitude code', controller: longController),
+                  TextFieldAddress(title: 'City', controller: cityController),
+                  TextFieldAddress(
+                      title: 'Country', controller: countryController),
+                  TextFieldAddress(
+                      title: 'Address', controller: addressController),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(10),
                     onTap: () {
-                      backToGoogleMapScreen();
-                    },
-                    child: Image(
-                      height: 40.w,
-                      width: 40.w,
-                      image: const AssetImage("assets/images/backicon.png"),
-                    )),
-                SizedBox(width: 10.w),
-                Text(
-                  "Add New Address",
-                  style: TextStyle(
-                      fontSize: 18.sp,
-                      fontFamily: 'Tenor Sans',
-                      fontWeight: FontWeight.w500),
-                )
-              ],
-            ),
-            Expanded(
-                child: ListView(
-              physics: const BouncingScrollPhysics(),
-              children: [
-                buildTextFeild(
-                    title: 'FirstName', controller: firstNameController),
-                buildTextFeild(
-                    title: 'LastName', controller: lastNameController),
-                buildTextFeild(
-                    title: 'Phone Number',
-                    controller: phoneNuberController,
-                    keyboardtype: TextInputType.number),
-                buildTextFeild(
-                    title: 'Email Address',
-                    controller: emailAddressController,
-                    keyboardtype: TextInputType.emailAddress),
-                buildTextFeild(
-                    title: 'Address Name',
-                    controller: addressNameController,
-                    keyboardtype: TextInputType.streetAddress),
-                buildTextFeild(
-                    title: 'latitude code', controller: latController),
-                buildTextFeild(
-                    title: 'longitude code', controller: longController),
-                buildTextFeild(title: 'City', controller: cityController),
-                buildTextFeild(title: 'Country', controller: countryController),
-                buildTextFeild(title: 'Address', controller: addressController),
-                InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  onTap: () {
-                    AddressModel address = AddressModel(
-                        firstName: lastNameController.text.trim(),
-                        lastName: lastNameController.text.trim(),
-                        phoneNumber: phoneNuberController.text.trim(),
-                        emailAddress: emailAddressController.text.trim(),
-                        addressName: addressNameController.text.trim(),
-                        longitude: longController.text.trim(),
-                        latitude: latController.text.trim(),
-                        city: cityController.text.trim(),
-                        country: countryController.text.trim(),
-                        address: addressController.text.trim());
-                    context
-                        .read<CheckOutCubit>()
-                        .addNewAdress(address)
-                        .then((value) {
+                      //! I use this way instead of validation in Form of TextFieldAddress
+                      //! I will tell you why when I meet you :)
+                      if (firstNameController.text == '' ||
+                          lastNameController.text == '' ||
+                          phoneNuberController.text == '' ||
+                          emailAddressController.text == '' ||
+                          addressNameController.text == '' ||
+                          latController.text == '' ||
+                          longController.text == '' ||
+                          cityController.text == '' ||
+                          countryController.text == '' ||
+                          addressController.text == '') {
+                        showMessage(context, 'Please fill all fields');
+                        return;
+                      }
+                      AddressModel address = AddressModel(
+                          firstName: lastNameController.text.trim(),
+                          lastName: lastNameController.text.trim(),
+                          phoneNumber: phoneNuberController.text.trim(),
+                          emailAddress: emailAddressController.text.trim(),
+                          addressName: addressNameController.text.trim(),
+                          longitude: longController.text.trim(),
+                          latitude: latController.text.trim(),
+                          city: cityController.text.trim(),
+                          country: countryController.text.trim(),
+                          address: addressController.text.trim());
                       context
                           .read<CheckOutCubit>()
-                          .getLocations()
+                          .addNewAdress(address)
                           .then((value) {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => FirstStep(locations: value),
-                        ));
+                        context
+                            .read<CheckOutCubit>()
+                            .getLocations()
+                            .then((value) {
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(
+                            builder: (context) => FirstStep(locations: value),
+                          ));
+                        });
                       });
-                    });
-                  },
-                  child: Ink(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(vertical: 15.h),
-                    decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text(
-                      "Add new address",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 15.sp,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "DM Sans"),
+                    },
+                    child: Ink(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(vertical: 15.h),
+                      decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Text(
+                        "Add new address",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 15.sp,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "DM Sans"),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            )),
-          ]),
+                ],
+              )),
+            ]),
+          ),
         ),
       ),
     );
   }
 
-  Widget buildTextFeild(
-      {required String title,
-      required TextEditingController controller,
-      keyboardtype = TextInputType.name}) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-      height: 50.h,
-      child: TextFormField(
-        readOnly: title == 'longitude code' ||
-            title == 'latitude code' ||
-            title == 'City' ||
-            title == 'Country' ||
-            title == 'Address',
-        keyboardType: keyboardtype,
-        controller: controller,
-        decoration: InputDecoration(
-            prefix: title == 'Phone Number'
-                ? Text(countryCode[0]['dial_code'] + '  ')
-                : null,
-            label: Text(title),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-      ),
-    );
+  void showMessage(BuildContext context, String text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        shape: const OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+        backgroundColor: Colors.grey,
+        content: Center(
+          child: Text(
+            text,
+            style: TextStyle(fontSize: 18.sp),
+          ),
+        )));
   }
 }

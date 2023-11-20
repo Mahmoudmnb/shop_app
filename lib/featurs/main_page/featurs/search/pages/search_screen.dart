@@ -53,7 +53,8 @@ class _SearchScreenState extends State<SearchScreen> {
               SizedBox(height: 15.h),
               Row(
                 children: [
-                  Expanded(
+                  SizedBox(
+                    width: 300.w,
                     child: Container(
                       alignment: Alignment.center,
                       decoration:
@@ -115,25 +116,27 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                   ),
                   Builder(builder: (context) {
-                    return GestureDetector(
-                      onTap: () {
-                        cubit.openDrawer(context);
-                      },
-                      child: Container(
-                        // height: 30.h,
-                        // width: 30.w,
-                        padding: EdgeInsets.symmetric(
-                            vertical: 10.h, horizontal: 10.w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          color: const Color(0xFFEAEAEA),
-                        ),
-                        margin: const EdgeInsets.all(10),
-                        child: Image(
-                          image:
-                              const AssetImage('assets/images/Filter_big.png'),
-                          height: 22.h,
-                          width: 22.h,
+                    return Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          cubit.openDrawer(context);
+                        },
+                        child: Container(
+                          height: 55.h,
+                          // width: 30.w,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10.h, horizontal: 10.w),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: const Color(0xFFEAEAEA),
+                          ),
+                          margin: const EdgeInsets.all(10),
+                          child: Image(
+                            image:
+                                const AssetImage('assets/images/Filter_big.png'),
+                            height: 22.h,
+                            width: 22.h,
+                          ),
                         ),
                       ),
                     );
