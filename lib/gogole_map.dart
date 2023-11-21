@@ -115,7 +115,6 @@ class GoogleMapScreenState extends State<GoogleMapScreen> {
                                     context
                                         .read<MainPageCubit>()
                                         .changeIsAddLocationLoading(false);
-
                                     Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
                                             builder: (context) =>

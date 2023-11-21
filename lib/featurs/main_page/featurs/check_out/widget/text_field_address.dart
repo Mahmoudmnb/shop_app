@@ -8,7 +8,9 @@ class TextFieldAddress extends StatelessWidget {
     required this.controller,
     this.keyboardType = TextInputType.name,
     this.countryCode,
+    this.validator,
   });
+  final String? Function(String?)? validator;
   final List<Map<String, dynamic>>? countryCode;
   final String title;
   final TextEditingController controller;
@@ -18,8 +20,29 @@ class TextFieldAddress extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-      height: 50.h,
+      // height: 50.h,
       child: TextFormField(
+        validator: (value) {
+          if (title == 'Full Name' || title == 'Address Name') {
+            if (value == null || value.isEmpty || value.length <= 6) {
+              return '$title shold be more than six chrachters';
+            }
+          } else if (title == 'Phone Number') {
+            if (value == null ||
+                value.isEmpty ||
+                value.length <= 9 ||
+                value.length >= 11) {
+              return 'Phone Number shold be 10 digits';
+            }
+          } else if (title == 'Email Address') {
+            if (value == null ||
+                !value.contains('@') ||
+                !value.endsWith('.com')) {
+              return 'Invalid email';
+            }
+          }
+          return null;
+        },
         readOnly: title == 'longitude code' ||
             title == 'latitude code' ||
             title == 'City' ||
@@ -30,6 +53,7 @@ class TextFieldAddress extends StatelessWidget {
         decoration: InputDecoration(
             prefix: title == 'Phone Number'
                 ? Text(countryCode![0]['dial_code'] + '  ')
+                // ? Text('+963')     this for test (you can delete it)
                 : null,
             label:
                 Text(title, style: const TextStyle(color: Color(0xFF0C0C0C))),
