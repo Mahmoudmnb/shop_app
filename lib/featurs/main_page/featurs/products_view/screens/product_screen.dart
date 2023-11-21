@@ -181,11 +181,11 @@ class _ProductScreenState extends State<ProductScreen> {
                     NotificationListener<DraggableScrollableNotification>(
                         onNotification:
                             (DraggableScrollableNotification notification) {
-                          if (notification.extent == 1) {
+                          if (notification.extent >= 0.99) {
                             cubit.widthOfPrice = 3.w;
                             cubit.hidden = true;
                             cubit.changeWidthOfPrice();
-                          } else if (notification.extent == 0.49) {
+                          } else if (notification.extent <= 0.50) {
                             cubit.widthOfPrice = 141.w;
                             cubit.hidden = false;
                             cubit.changeWidthOfPrice();
@@ -200,6 +200,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         //* this widget is very good it is like model bottom sheet
                         //* and more flexible and you have to use it with [Stack]
                         child: ProductDetails(
+                          hidden: cubit.hidden,
                           categoryName: widget.fromPage == 'SearchReasults'
                               ? ''
                               : widget.categoryName!,

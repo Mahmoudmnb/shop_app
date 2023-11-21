@@ -10,12 +10,13 @@ class CategoryCard extends StatelessWidget {
   final String categoryImageUrl;
   final SearchCubit searchCubit;
   final String searchWord;
-  const CategoryCard(
-      {super.key,
-      required this.searchCubit,
-      required this.categoryImageUrl,
-      required this.searchWord,
-      required this.categroyName});
+  const CategoryCard({
+    super.key,
+    required this.searchCubit,
+    required this.categoryImageUrl,
+    required this.searchWord,
+    required this.categroyName,
+  });
 
   @override
   Widget build(BuildContext context) {

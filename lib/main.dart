@@ -109,13 +109,7 @@ class MyApp extends StatelessWidget {
               home: sl.get<SharedPreferences>().getBool('isFirstTime') == null
                   ? SplashScreen(deviceHeight: 852.h, deviceWidth: 393.w)
                   : const MainPage(),
-              // : AddNewAddress(
-              //     data: {
-              //       'sourceLocation': const LatLng(30, 20),
-              //       'placeMark':
-              //           Placemark(isoCountryCode: 'Syria', country: 'Syria')
-              //     },
-              // ),
+              
             ));
   }
 }

@@ -57,20 +57,25 @@ class ShoppingAddress extends StatelessWidget {
                     },
                   ),
                 ),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(vertical: 13.h),
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Text(
-                    "Add new address",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'DM Sans',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.sp),
+                InkWell(
+                  borderRadius: BorderRadius.circular(10),
+                  onTap: () {},
+                  child: Ink(
+                    
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(vertical: 13.h),
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text(
+                      "Add new address",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'DM Sans',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.sp),
+                    ),
                   ),
                 ),
                 SizedBox(

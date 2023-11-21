@@ -121,7 +121,7 @@ class SimilarProductsCard extends StatelessWidget {
                         ),
                       )
                     : ListView.separated(
-                        padding: EdgeInsets.only(left: 23.w),
+                        padding: EdgeInsets.only(left: 23.w, right: 15.w),
                         shrinkWrap: true,
                         itemCount: cubit.similarProducts.length < 6
                             ? cubit.similarProducts.length
