@@ -237,10 +237,14 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
           SizedBox(height: 15.h),
           BlocBuilder<SearchCubit, SearchState>(
             builder: (context, state) {
+              log(state.toString());
               if (state is GetCategoryProducts) {
                 categoryProducts = state.categoryProducts;
               } else if (state is SaveState) {
                 categoryProducts = state.categoryProducts;
+              } else if (state is ResetFilter) {
+                // todo i have to work on it
+                // categoryProducts = state.products;
               }
               return Expanded(
                 //* this widget have to be exit for (AnimationConfiguration)
@@ -250,8 +254,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                     itemCount: categoryProducts.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      //* I edit it from .7 to .8
-                      childAspectRatio: .82.h,
+                      childAspectRatio: .7.h,
                       crossAxisSpacing: 20,
                     ),
                     itemBuilder: (context, index) {
