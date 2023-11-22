@@ -37,6 +37,9 @@ class CustomTextField extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
+                        onTapOutside: (event) {
+                          FocusScope.of(context).unfocus();
+                        },
                         obscureText:
                             (visiblePasswordState is VisiblePasswordInitial &&
                                     (hintText == 'Password' ||
