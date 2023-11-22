@@ -37,6 +37,8 @@ class ProductDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //* this widget is very good it is like model bottom sheet
+    //* and more flexible and you have to use it with [Stack]
     return DraggableScrollableSheet(
       snap: true,
       initialChildSize: 0.49,
@@ -256,8 +258,8 @@ class ProductDetails extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 20.h),
-                        SizedBox(
-                          height: 68.h,
+                        Container(
+                          constraints: BoxConstraints(minHeight: 68.h),
                           width: 393.w,
                           child: Text(
                             product.discription,

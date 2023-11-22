@@ -197,8 +197,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           }
                           return true;
                         },
-                        //* this widget is very good it is like model bottom sheet
-                        //* and more flexible and you have to use it with [Stack]
+                        
                         child: ProductDetails(
                           hidden: cubit.hidden,
                           categoryName: widget.fromPage == 'SearchReasults'
