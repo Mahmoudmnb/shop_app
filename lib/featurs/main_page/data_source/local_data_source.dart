@@ -1,12 +1,47 @@
 import 'dart:developer';
-import '../featurs/check_out/models/address_model.dart';
+
+import 'package:appwrite/models.dart';
+import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../core/constant.dart';
+import '../featurs/check_out/models/address_model.dart';
 import '../featurs/home/models/product_model.dart';
 import '../featurs/products_view/models/add_to_cart_product_model.dart';
 
 class LocalDataSource {
+  Future<void> cleareAddToCartTable() async {
+    Database db = await openDatabase(Constant.addToCartTable);
+    db.rawDelete('delete form AddToCartTable');
+    log('add to cart table cleared');
+  }
+
+  Future<void> insertDataIntoLocalDataBase(List<Document> products) async {
+    try {
+      Database db = await openDatabase(Constant.productDataBasePath);
+      for (var element in products) {
+        Map<String, dynamic> data = {
+          'name': element.data['name'],
+          'price': element.data['price'],
+          'makerCompany': element.data['makerCompany'],
+          'sizes': element.data['sizes'],
+          'colors': element.data['colors'],
+          'discription': element.data['discription'],
+          'imgUrl': element.data['imgUrl'],
+          'discount': element.data['discount'],
+          'date': element.data['date'],
+          'rating': element.data['rating'],
+          'category': element.data['category'],
+          'isFavorate': 0
+        };
+        db.insert('products', data);
+      }
+      log('done inserting data in local dataBase');
+    } on PlatformException catch (e) {
+      log(e.toString());
+    }
+  }
+
   Future<List<Map<String, dynamic>>> getLocations() async {
     Database db = await openDatabase(Constant.locationsDataBasePath);
     List<Map<String, dynamic>> locations =

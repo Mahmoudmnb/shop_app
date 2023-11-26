@@ -40,7 +40,8 @@ class CheckOutAddressCard extends StatelessWidget {
                       activeColor: Colors.black,
                       //! this condition if you have one location selected by default
                       //! this is wrong way
-                      value: lengthOfLocations==1 ? cubit.selectAddress : title,
+                      value:
+                          lengthOfLocations == 1 ? cubit.selectAddress : title,
                       groupValue: cubit.selectAddress,
                       onChanged: (value) {
                         cubit.changeAddress(value!);

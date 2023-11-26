@@ -1,12 +1,23 @@
-import 'package:shop_app/featurs/main_page/featurs/check_out/models/address_model.dart';
-
-import '../featurs/products_view/models/add_to_cart_product_model.dart';
+import '../featurs/check_out/models/address_model.dart';
 import '../featurs/home/models/product_model.dart';
+import '../featurs/products_view/models/add_to_cart_product_model.dart';
 import 'local_data_source.dart';
+import 'remot_data_source.dart';
 
 class DataSource {
   LocalDataSource localDataSource;
-  DataSource({required this.localDataSource});
+  RemoteDataSource remoteDataSource;
+  DataSource({required this.localDataSource, required this.remoteDataSource});
+  Future<void> addOrdersToCloudDataBase(
+      List<Map<String, dynamic>> orderProducts, double totalPrice,String deliveryAddress) async {
+    return remoteDataSource.addOrderToCloudDataBase(orderProducts, totalPrice,deliveryAddress);
+  }
+
+  Future<void> getProductsFormCloudDataBase() async {
+    await localDataSource
+        .insertDataIntoLocalDataBase(await remoteDataSource.getProducts());
+  }
+
   Future<List<Map<String, dynamic>>> getLocations() async {
     return localDataSource.getLocations();
   }

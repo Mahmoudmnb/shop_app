@@ -5,15 +5,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_paypal_checkout/flutter_paypal_checkout.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/internet_info.dart';
+import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
 import 'package:shop_app/featurs/main_page/featurs/check_out/screens/third_step.dart';
 import 'package:shop_app/featurs/main_page/featurs/shopping_bag/cubits/products_cubit/products_cubit.dart';
+import 'package:shop_app/injection.dart';
+
 import '../cubit/check_out_cubit.dart';
 import '../widget/calculate_card.dart';
 import '../widget/payment_method_card.dart';
 import '../widget/point.dart';
 
 class CheckOutScreen2 extends StatelessWidget {
-  const CheckOutScreen2({super.key});
+  final String deliveryAddress;
+  const CheckOutScreen2({super.key, required this.deliveryAddress});
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +64,7 @@ class CheckOutScreen2 extends StatelessWidget {
                             height: 24.h,
                             image:
                                 const AssetImage('assets/images/location.png')),
-                        SizedBox(
-                          width: 10.w
-                        ),
+                        SizedBox(width: 10.w),
                         const CheckOutPoint(),
                         const CheckOutPoint(),
                         const CheckOutPoint(),
@@ -238,7 +240,7 @@ class CheckOutScreen2 extends StatelessWidget {
                                   log("onError: $error");
                                   showMessage(context,
                                       'Please you have to turn on VPN');
-                                  Navigator.pop(context);
+                                  Navigator.of(context).pop(true);
                                 },
                                 onCancel: () {
                                   log('cancelled:');
@@ -247,14 +249,21 @@ class CheckOutScreen2 extends StatelessWidget {
                             ),
                           )
                               .then((value) {
+                            log(value.toString());
                             if (value != null && value) {
                             } else {
-                              //! i hve to clear add to cart products and add it to orders cart
+                              //! i have to clear add to cart products and add it to orders cart
                               //! upload product to server
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                builder: (context) => const CheckOutScreen3(),
-                              ));
+                              sl
+                                  .get<DataSource>()
+                                  .addOrdersToCloudDataBase(
+                                      product, totalPrice, deliveryAddress)
+                                  .then((value) {
+                                Navigator.of(context)
+                                    .pushReplacement(MaterialPageRoute(
+                                  builder: (context) => const CheckOutScreen3(),
+                                ));
+                              });
                             }
                           });
                         } else {

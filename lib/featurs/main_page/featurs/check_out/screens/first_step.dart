@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/featurs/main_page/featurs/check_out/cubit/check_out_cubit.dart';
 import 'package:shop_app/gogole_map.dart';
 
 import '../models/address_model.dart';
@@ -7,7 +11,6 @@ import '../widget/check_out_address.dart';
 import '../widget/check_out_method.dart';
 import '../widget/code_textfild.dart';
 import '../widget/point.dart';
-import 'second_step.dart';
 
 class FirstStep extends StatelessWidget {
   final List<Map<String, dynamic>> locations;
@@ -15,6 +18,7 @@ class FirstStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<CheckOutCubit>().selectAddress = locations[0]['addressName'];
     return Scaffold(
       body: Column(
         children: [
@@ -175,9 +179,17 @@ class FirstStep extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       if (locations.isNotEmpty) {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const CheckOutScreen2(),
-                        ));
+                        String selectedAdress =
+                            context.read<CheckOutCubit>().selectAddress;
+                        for (var element in locations) {
+                          log(selectedAdress);
+                          if (selectedAdress == element['addressName']) {
+                            log(element.toString());
+                          }
+                        }
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //   builder: (context) => const CheckOutScreen2(),
+                        // ));
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             shape: const OutlineInputBorder(
