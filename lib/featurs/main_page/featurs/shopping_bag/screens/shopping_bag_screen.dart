@@ -29,12 +29,28 @@ class ShoppingBagScreen extends StatelessWidget {
                 child: const Divider(color: Color(0xFFC6C6C6), height: 0),
               ),
               context.watch<AddToCartCubit>().products.isEmpty
-                  ? const Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Your cart is empty'),
-                        ],
+                  ? Expanded(
+                      //! this padding to put the image and the text in the center
+                      //! by looking at screen :)
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 50.h),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image(
+                              image: const AssetImage(
+                                  'assets/images/empty_cart.png'),
+                              width: 150.w,
+                              height: 150.w,
+                            ),
+                            SizedBox(height: 5.h),
+                            Text('Your cart is empty',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'DM Sans',
+                                    fontSize: 18.sp)),
+                          ],
+                        ),
                       ),
                     )
                   : Expanded(

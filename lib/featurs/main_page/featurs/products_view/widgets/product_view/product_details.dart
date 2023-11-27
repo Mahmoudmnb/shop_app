@@ -18,6 +18,7 @@ class ProductDetails extends StatelessWidget {
   final String categoryName;
   final SearchCubit searchCubit;
   final String fromPage;
+  final bool hidden;
 
   const ProductDetails(
       {super.key,
@@ -31,10 +32,13 @@ class ProductDetails extends StatelessWidget {
       required this.similarProducts,
       required this.searchCubit,
       required this.searchWord,
-      required this.categoryName});
+      required this.categoryName,
+      required this.hidden});
 
   @override
   Widget build(BuildContext context) {
+    //* this widget is very good it is like model bottom sheet
+    //* and more flexible and you have to use it with [Stack]
     return DraggableScrollableSheet(
       snap: true,
       initialChildSize: 0.49,
@@ -44,10 +48,15 @@ class ProductDetails extends StatelessWidget {
         child: Container(
           // padding: const EdgeInsets.symmetric(horizontal: 15),
           width: 393.w,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+                  topLeft: hidden
+                      ? const Radius.circular(0)
+                      : const Radius.circular(15),
+                  topRight: hidden
+                      ? const Radius.circular(0)
+                      : const Radius.circular(15))),
           child: Column(
             children: [
               Stack(
@@ -249,8 +258,8 @@ class ProductDetails extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 20.h),
-                        SizedBox(
-                          height: 68.h,
+                        Container(
+                          constraints: BoxConstraints(minHeight: 68.h),
                           width: 393.w,
                           child: Text(
                             product.discription,

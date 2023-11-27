@@ -19,9 +19,7 @@ class ProfileScreen extends StatelessWidget {
           width: double.infinity,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            SizedBox(
-              height: 80.h,
-            ),
+            SizedBox(height: 80.h),
             Container(
               decoration: BoxDecoration(
                   color: Colors.red, borderRadius: BorderRadius.circular(12)),
@@ -106,27 +104,30 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ]),
             ),
-            SizedBox(
-              height: 3.h,
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 30.w),
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 15.h),
-              decoration: BoxDecoration(
-                  color: Colors.black, borderRadius: BorderRadius.circular(10)),
-              child: const Text(
-                "Log Out",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "DM Sans"),
+            SizedBox(height: 3.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30.w),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(10),
+                onTap: () {},
+                child: Ink(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 15.h),
+                  decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: const Text(
+                    "Log Out",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "DM Sans"),
+                  ),
+                ),
               ),
             ),
-            SizedBox(
-              height: 12.h,
-            ),
+            SizedBox(height: 12.h),
           ]),
         ),
       ),
@@ -151,10 +152,7 @@ class ProfileScreen extends StatelessWidget {
           style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.bold),
         ),
       ),
-      trailing: const Icon(
-        Icons.arrow_forward_ios,
-        size: 15,
-      ),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 15),
     );
   }
 }

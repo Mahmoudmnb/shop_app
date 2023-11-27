@@ -109,19 +109,30 @@ class SimilarProductsCard extends StatelessWidget {
                         //* by looking to the UI not the code (the code is not center :) )
                         padding: EdgeInsets.only(bottom: 50.h),
                         child: Center(
-                          child: Text(
-                            'There is no similar items',
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontFamily: 'Tenor Sans',
-                              height: 1.06,
-                              letterSpacing: 0.20,
-                            ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image(
+                                  image: const AssetImage(
+                                      'assets/images/nothing_found.png'),
+                                  width: 80.h),
+                              SizedBox(height: 15.h),
+                              Text(
+                                'There is no similar items',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Tenor Sans',
+                                  height: 1.06,
+                                  letterSpacing: 0.20,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       )
                     : ListView.separated(
-                        padding: EdgeInsets.only(left: 23.w),
+                        padding: EdgeInsets.only(left: 23.w, right: 15.w),
                         shrinkWrap: true,
                         itemCount: cubit.similarProducts.length < 6
                             ? cubit.similarProducts.length
