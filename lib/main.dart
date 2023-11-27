@@ -5,7 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:shop_app/featurs/main_page/featurs/check_out/screens/add_another_address.dart';
+
+import 'package:shop_app/featurs/auth/pages/splash_screen.dart';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constant.dart';
@@ -21,7 +25,6 @@ import 'featurs/main_page/featurs/products_view/cubits/product_screen/cubit.dart
 
 import 'featurs/auth/blocs/visible_password_bloc/visible_password_bloc.dart';
 import 'featurs/auth/models/user_model.dart';
-import 'featurs/auth/pages/splash_screen.dart';
 import 'featurs/main_page/cubit/main_page_cubit.dart';
 import 'featurs/main_page/featurs/check_out/cubit/check_out_cubit.dart';
 import 'featurs/main_page/featurs/orders/cubit/orders_cubit.dart';
@@ -33,17 +36,7 @@ import 'injection.dart';
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  // Client client = Client();
-  // client = Client()
-  //     .setEndpoint("https://cloud.appwrite.io/v1")
-  //     .setProject("655083f2b78dc8c2d628");
-  //!2023-11-18 02:06:13.626136
-  // Account account = Account(client);
-  // account
-  //     .create(userId: 'a1a', email: 'maa@gmail.com', password: '123456789')
-  //     .then((value) {
-  //   log(value.email);
-  // })
+
   await Supabase.initialize(
     url: Constant.supabaseUrl,
     anonKey: Constant.supabaseAnonkey,

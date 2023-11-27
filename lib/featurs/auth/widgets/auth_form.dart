@@ -1,5 +1,6 @@
+import 'dart:developer';
 import 'dart:io';
-
+import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,8 +10,8 @@ import 'package:shop_app/core/constant.dart';
 import 'package:shop_app/core/internet_info.dart';
 import 'package:shop_app/featurs/auth/models/user_model.dart';
 import 'package:shop_app/injection.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:toast/toast.dart';
+import 'package:uuid/uuid.dart';
 
 import '../blocs/auth_blocs.dart';
 import '../data.dart';
@@ -98,9 +99,9 @@ class _AuthFormState extends State<AuthForm> {
                   String password = Data.password;
                   if (await InternetInfo.isconnected()) {
                     if (isSignUP) {
-                      signUp(email, password, name);
+                      signUp(email.trim(), password.trim(), name.trim());
                     } else {
-                      signIn(email, password);
+                      signIn(email.trim(), password.trim());
                     }
                   } else {
                     Toast.show('Check you internet connection', duration: 2);
@@ -134,50 +135,123 @@ class _AuthFormState extends State<AuthForm> {
 
   signIn(String email, String password) async {
     changeButtonLoadingState(true);
-    SupabaseClient supabase = Supabase.instance.client;
+    Client client = Client();
+    client = Client()
+        .setEndpoint("https://cloud.appwrite.io/v1")
+        .setProject(Constant.appWriteProjectId);
+    Account account = Account(client);
+    Databases database = Databases(client);
     try {
-      await supabase.auth.signInWithPassword(password: password, email: email);
-      var data = await supabase.from('users').select('name').eq('email', email);
-      String userName = data[0]['name'];
+      await account.createEmailSession(email: email, password: password);
+      var data = await database.listDocuments(
+          databaseId: '655da767bc3f1651db70',
+          collectionId: '655da771422b6ac710aa',
+          queries: [Query.equal('email', email)]);
+      String name = data.documents[0].data['name'];
       Constant.currentUser =
-          UserModel(email: email, name: userName, password: password);
+          UserModel(email: email, name: name, password: password);
       sl
           .get<SharedPreferences>()
           .setString('currentUser', Constant.currentUser!.toJson());
-      changeButtonLoadingState(false);
       widget.goToHomePage();
-    } on AuthException {
       changeButtonLoadingState(false);
-      Toast.show('Invalid email or password', duration: 2);
+      log('done');
+    } on AppwriteException catch (e) {
+      log(e.toString());
+      if (e.message != null &&
+          e.message!.contains('user_invalid_credentials')) {
+        Toast.show('wrong email or password', duration: 2);
+      } else {
+        Toast.show('unkown error please try again');
+      }
+      changeButtonLoadingState(false);
     } on SocketException {
       changeButtonLoadingState(false);
-      Toast.show('Check your internet connection');
+      Toast.show('Your internet is week please check your internet connection');
+    } catch (e) {
+      log(e.toString());
     }
+
+    // changeButtonLoadingState(true);
+    // SupabaseClient supabase = Supabase.instance.client;
+    // try {
+    //   await supabase.auth.signInWithPassword(password: password, email: email);
+    //   var data = await supabase.from('users').select('name').eq('email', email);
+    //   String userName = data[0]['name'];
+    //   Constant.currentUser =
+    //       UserModel(email: email, name: userName, password: password);
+    //   sl
+    //       .get<SharedPreferences>()
+    //       .setString('currentUser', Constant.currentUser!.toJson());
+    //   changeButtonLoadingState(false);
+    //   widget.goToHomePage();
+    // } on AuthException {
+    //   changeButtonLoadingState(false);
+    //   Toast.show('Invalid email or password', duration: 2);
+    // } on SocketException {
+    //   changeButtonLoadingState(false);
+    //   Toast.show('Check your internet connection');
+    // }
   }
 
   signUp(String email, String password, String name) async {
     changeButtonLoadingState(true);
-    SupabaseClient supabase = Supabase.instance.client;
+    String id = const Uuid().v1();
+    Client client = Client();
+    client = Client()
+        .setEndpoint("https://cloud.appwrite.io/v1")
+        .setProject(Constant.appWriteProjectId);
+    Account account = Account(client);
+    Databases database = Databases(client);
     try {
-      await supabase.auth.signUp(password: password, email: email);
-      await supabase
-          .from('users')
-          .insert({'email': email, 'name': name, 'password': password});
+      await account.create(userId: id, email: email, password: password);
       Constant.currentUser =
           UserModel(email: email, name: name, password: password);
-
       sl
           .get<SharedPreferences>()
           .setString('currentUser', Constant.currentUser!.toJson());
-      changeButtonLoadingState(false);
+      await database.createDocument(
+          databaseId: '655da767bc3f1651db70',
+          collectionId: '655da771422b6ac710aa',
+          documentId: id,
+          data: {'email': email, 'name': name, 'password': password});
       widget.goToHomePage();
-    } on AuthException catch (error) {
       changeButtonLoadingState(false);
-      Toast.show(error.message, duration: 2);
+      log('done');
+    } on AppwriteException catch (e) {
+      log(e.toString());
+      if (e.message != null && e.message!.contains('user_already_exists')) {
+        Toast.show('user already exists for this email');
+      } else {
+        Toast.show('unkown error please try again');
+      }
+      changeButtonLoadingState(false);
     } on SocketException {
       changeButtonLoadingState(false);
-      Toast.show('Check your internet connection');
+      Toast.show('Your internet is week please check your internet connection');
+    } catch (e) {
+      log(e.toString());
     }
+    //! this is for supabase signUp
+    // try {
+    // SupabaseClient supabase = Supabase.instance.client;
+    // await supabase.auth.signUp(password: password, email: email);
+    // await supabase
+    //     .from('users')
+    //     .insert({'email': email, 'name': name, 'password': password});
+    // Constant.currentUser =
+    //     UserModel(email: email, name: name, password: password);
+    // sl
+    //     .get<SharedPreferences>()
+    //     .setString('currentUser', Constant.currentUser!.toJson());
+    // widget.goToHomePage();
+    // }  on AuthException catch (error) {
+    //   changeButtonLoadingState(false);
+    //   Toast.show(error.message, duration: 2);
+    // } on SocketException {
+    //   changeButtonLoadingState(false);
+    //   Toast.show('Check your internet connection');
+    // }
   }
 
   void changeButtonLoadingState(bool isLoading) {
