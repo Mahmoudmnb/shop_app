@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shop_app/featurs/main_page/featurs/check_out/screens/add_another_address.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constant.dart';
@@ -13,7 +10,6 @@ import 'featurs/auth/blocs/email_text_bloc/email_text_bloc.dart';
 import 'featurs/auth/blocs/sign_in_loading/sign_in_loading_bloc.dart';
 import 'featurs/auth/blocs/sign_up_bloc/sign_up_bloc.dart';
 
-import 'featurs/main_page/featurs/check_out/screens/second_step.dart';
 import 'featurs/main_page/featurs/shopping_bag/cubits/item_product_cubit/item_product_cubit.dart';
 import 'featurs/main_page/featurs/shopping_bag/cubits/products_cubit/products_cubit.dart';
 import 'featurs/main_page/featurs/home/blocs/discount/discount_products_bloc.dart';
@@ -55,45 +51,19 @@ Future<void> main(List<String> args) async {
     Constant.currentUser = UserModel.fromJson(user);
   }
   runApp(MultiBlocProvider(providers: [
-    BlocProvider(
-      create: (context) => VisiblePsswordBloc(),
-    ),
-    BlocProvider(
-      create: (context) => EmailTextBloc(),
-    ),
-    BlocProvider(
-      create: (context) => SignUpBloc(),
-    ),
-    BlocProvider(
-      create: (context) => SignInLoadingBloc(),
-    ),
-    BlocProvider(
-      create: (context) => DiscountProductsBloc(),
-    ),
-    BlocProvider(
-      create: (context) => SearchCubit(),
-    ),
-    BlocProvider(
-      create: (context) => ProductCubit(),
-    ),
-    BlocProvider(
-      create: (context) => MainPageCubit(),
-    ),
-    BlocProvider(
-      create: (context) => OrdersCubit(),
-    ),
-    BlocProvider(
-      create: (context) => ProfileCubit(),
-    ),
-    BlocProvider(
-      create: (context) => AddToCartCubit(),
-    ),
-    BlocProvider(
-      create: (context) => ItemProductCubit(),
-    ),
-    BlocProvider(
-      create: (context) => CheckOutCubit(),
-    ),
+    BlocProvider(create: (context) => VisiblePsswordBloc()),
+    BlocProvider(create: (context) => EmailTextBloc()),
+    BlocProvider(create: (context) => SignUpBloc()),
+    BlocProvider(create: (context) => SignInLoadingBloc()),
+    BlocProvider(create: (context) => DiscountProductsBloc()),
+    BlocProvider(create: (context) => SearchCubit()),
+    BlocProvider(create: (context) => ProductCubit()),
+    BlocProvider(create: (context) => MainPageCubit()),
+    BlocProvider(create: (context) => OrdersCubit()),
+    BlocProvider(create: (context) => ProfileCubit()),
+    BlocProvider(create: (context) => AddToCartCubit()),
+    BlocProvider(create: (context) => ItemProductCubit()),
+    BlocProvider(create: (context) => CheckOutCubit()),
   ], child: const MyApp()));
 }
 
@@ -102,6 +72,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // debugInvertOversizedImages = true;
     return ScreenUtilInit(
         designSize: const Size(393, 852),
         builder: (context, child) => MaterialApp(
@@ -109,7 +80,6 @@ class MyApp extends StatelessWidget {
               home: sl.get<SharedPreferences>().getBool('isFirstTime') == null
                   ? SplashScreen(deviceHeight: 852.h, deviceWidth: 393.w)
                   : const MainPage(),
-              
             ));
   }
 }
