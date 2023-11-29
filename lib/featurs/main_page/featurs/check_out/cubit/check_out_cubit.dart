@@ -10,7 +10,7 @@ part 'check_out_state.dart';
 class CheckOutCubit extends Cubit<CheckOutState> {
   CheckOutCubit() : super(CheckOutInitial());
   static CheckOutCubit get(context) => BlocProvider.of(context);
-  String selectAddress = 'work';
+  String selectAddress = '';
   String selectMethod = 'In store pick-up';
   String selectPayment = 'Paypal';
   changeAddress(String address) {
@@ -44,4 +44,9 @@ class CheckOutCubit extends Cubit<CheckOutState> {
   }
 
   List<Map<String, dynamic>> locations = [];
+  bool isDelfaultLocatoin = false;
+  void changeIsDelfaultLocatoin(bool value) {
+    isDelfaultLocatoin = value;
+    emit(IsDefaultLoacatoinState());
+  }
 }

@@ -5,13 +5,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shop_app/core/country_codes.dart';
-import 'package:shop_app/featurs/main_page/featurs/check_out/screens/first_step.dart';
-import 'package:shop_app/featurs/main_page/featurs/check_out/widget/text_field_address.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/gogole_map.dart';
+import 'package:shop_app/injection.dart';
+import 'package:toast/toast.dart';
 
+import '../../../../../core/country_codes.dart';
+import '../../../../../core/internet_info.dart';
 import '../cubit/check_out_cubit.dart';
 import '../models/address_model.dart';
+import '../widget/text_field_address.dart';
+import 'first_step.dart';
 
 class AddNewAddress extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -24,8 +28,7 @@ class AddNewAddress extends StatefulWidget {
 class _AddNewAddressState extends State<AddNewAddress> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
+  TextEditingController fullNameController = TextEditingController();
   TextEditingController phoneNuberController = TextEditingController();
   TextEditingController emailAddressController = TextEditingController();
   TextEditingController addressNameController = TextEditingController();
@@ -40,8 +43,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
   @override
   void dispose() {
     super.dispose();
-    firstNameController.dispose();
-    lastNameController.dispose();
+    fullNameController.dispose();
     phoneNuberController.dispose();
     emailAddressController.dispose();
     addressNameController.dispose();
@@ -81,6 +83,10 @@ class _AddNewAddressState extends State<AddNewAddress> {
 
   @override
   Widget build(BuildContext context) {
+    String? defaultLocation =
+        sl.get<SharedPreferences>().getString('defaultLocation');
+    context.read<CheckOutCubit>().isDelfaultLocatoin =
+        (defaultLocation == null);
     return WillPopScope(
       onWillPop: () async {
         backToGoogleMapScreen();
@@ -112,8 +118,6 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   )
                 ],
               ),
-              //! there is a problem of conutryCode
-              //! you have to find solution for it or keep it this is you choise
               Expanded(
                   child: Form(
                 key: formState,
@@ -122,10 +126,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   physics: const BouncingScrollPhysics(),
                   children: [
                     TextFieldAddress(
-                        title: 'Full Name',
-                        controller: firstNameController),
-                    //! how can I access on countryCode from TextFieldAddress widget
-                    //! vvvvvv here vvvvvv
+                        title: 'Full Name', controller: fullNameController),
                     TextFieldAddress(
                         countryCode: countryCode,
                         title: 'Phone Number',
@@ -148,57 +149,97 @@ class _AddNewAddressState extends State<AddNewAddress> {
                         title: 'Country', controller: countryController),
                     TextFieldAddress(
                         title: 'Address', controller: addressController),
+                    SizedBox(
+                      width: 393.w,
+                      child: Row(
+                        children: [
+                          const Spacer(),
+                          Expanded(
+                            flex: 4,
+                            child: BlocBuilder<CheckOutCubit, CheckOutState>(
+                              builder: (context, state) {
+                                bool isDefaultLocation = context
+                                    .read<CheckOutCubit>()
+                                    .isDelfaultLocatoin;
+                                return CheckboxListTile(
+                                  shape: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  checkColor: Colors.white,
+                                  activeColor: Colors.black,
+                                  controlAffinity:
+                                      ListTileControlAffinity.leading,
+                                  visualDensity: const VisualDensity(
+                                      horizontal: -4, vertical: -4),
+                                  title: const Text('Set as default location'),
+                                  value: isDefaultLocation,
+                                  onChanged: (value) {
+                                    if (defaultLocation != null) {
+                                      context
+                                          .read<CheckOutCubit>()
+                                          .changeIsDelfaultLocatoin(value!);
+                                    }
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          const Spacer(),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
                     InkWell(
                       borderRadius: BorderRadius.circular(10),
                       onTap: () {
-                        //! this is Nothing (you can delete it)
-                        //! ************************************ 
-                        // //! I use this way instead of validation in Form of TextFieldAddress
-                        // //! I will tell you why when I meet you :)
-                        // ?if (firstNameController.text == '' ||
-                        //     lastNameController.text == '' ||
-                        //     phoneNuberController.text == '' ||
-                        //     emailAddressController.text == '' ||
-                        //     addressNameController.text == '' ||
-                        //     latController.text == '' ||
-                        //     longController.text == '' ||
-                        //     cityController.text == '' ||
-                        //     countryController.text == '' ||
-                        //     addressController.text == '') {
-                        //   showMessage(context, 'Please fill all fields');
-                        //   return;
-                        // }
-                        //! ************************************* 
-                        if (formState.currentState!.validate()) {
-                          AddressModel address = AddressModel(
-                              firstName: lastNameController.text.trim(),
-                              lastName: lastNameController.text.trim(),
-                              phoneNumber: phoneNuberController.text.trim(),
-                              emailAddress: emailAddressController.text.trim(),
-                              addressName: addressNameController.text.trim(),
-                              longitude: longController.text.trim(),
-                              latitude: latController.text.trim(),
-                              city: cityController.text.trim(),
-                              country: countryController.text.trim(),
-                              address: addressController.text.trim());
-                          context
-                              .read<CheckOutCubit>()
-                              .addNewAdress(address)
-                              .then((value) {
-                            context
-                                .read<CheckOutCubit>()
-                                .getLocations()
-                                .then((value) {
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                builder: (context) =>
-                                    FirstStep(locations: value),
-                              ));
+                        //todo i have to replace last name and first name with full name
+                        InternetInfo.isconnected().then((value) {
+                          if (value) {
+                            if (formState.currentState!.validate()) {
+                              AddressModel address = AddressModel(
+                                  fullName: fullNameController.text.trim(),
+                                  lastName: fullNameController.text.trim(),
+                                  phoneNumber: phoneNuberController.text.trim(),
+                                  emailAddress:
+                                      emailAddressController.text.trim(),
+                                  addressName:
+                                      addressNameController.text.trim(),
+                                  longitude: longController.text.trim(),
+                                  latitude: latController.text.trim(),
+                                  city: cityController.text.trim(),
+                                  country: countryController.text.trim(),
+                                  address: addressController.text.trim());
+                              context
+                                  .read<CheckOutCubit>()
+                                  .addNewAdress(address)
+                                  .then((value) {
+                                context
+                                    .read<CheckOutCubit>()
+                                    .getLocations()
+                                    .then((value) {
+                                  Navigator.of(context)
+                                      .pushReplacement(MaterialPageRoute(
+                                    builder: (context) =>
+                                        FirstStep(locations: value),
+                                  ));
+                                });
+                              });
+                              if (defaultLocation == null ||
+                                  context
+                                      .read<CheckOutCubit>()
+                                      .isDelfaultLocatoin) {
+                                sl.get<SharedPreferences>().setString(
+                                    'defaultLocation',
+                                    addressNameController.text.trim());
+                              }
+                            }
+                            setState(() {
+                              autovalidateMode = AutovalidateMode.always;
                             });
-                          });
-                        }
-                        setState(() {
-                          autovalidateMode = AutovalidateMode.always;
+                          } else {
+                            ToastContext().init(context);
+                            Toast.show('check your internet connection');
+                          }
                         });
                       },
                       child: Ink(

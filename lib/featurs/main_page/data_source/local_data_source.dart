@@ -52,7 +52,7 @@ class LocalDataSource {
   Future<void> addNewLocation(AddressModel address) async {
     Database db = await openDatabase(Constant.locationsDataBasePath);
     db.rawInsert(
-      "INSERT INTO locations (firstName, lastName, phoneNumber, emailAddress,addressName, longitude_code, latitude_code,city,country,address) VALUES ('${address.firstName}', '${address.lastName}','${address.phoneNumber}','${address.emailAddress}','${address.addressName}','${address.longitude}','${address.latitude}','${address.city}','${address.country}','${address.address}')",
+      "INSERT INTO locations (firstName, lastName, phoneNumber, emailAddress,addressName, longitude_code, latitude_code,city,country,address) VALUES ('${address.fullName}', '${address.lastName}','${address.phoneNumber}','${address.emailAddress}','${address.addressName}','${address.longitude}','${address.latitude}','${address.city}','${address.country}','${address.address}')",
     );
   }
 

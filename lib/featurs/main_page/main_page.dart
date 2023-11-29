@@ -40,6 +40,7 @@ class _MainPageState extends State<MainPage>
 
   @override
   Widget build(BuildContext context) {
+    // debugInvertOversizedImages = true;
     final AppBar appBar = AppBar(
       backgroundColor: Colors.white,
       foregroundColor: Colors.black,
