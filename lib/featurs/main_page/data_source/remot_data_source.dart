@@ -3,7 +3,8 @@ import 'dart:developer';
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:shop_app/core/constant.dart';
-import 'package:uuid/uuid.dart';
+import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/injection.dart';
 
 class RemoteDataSource {
   Future<List<Document>> getProducts() async {
@@ -24,8 +25,8 @@ class RemoteDataSource {
     return data;
   }
 
-  Future<void> addOrderToCloudDataBase(
-      List<Map<String, dynamic>> orderProducts, double totalPrice,String deliveryAddress) async {
+  Future<void> addOrderToCloudDataBase(List<Map<String, dynamic>> orderProducts,
+      double totalPrice, String deliveryAddress, String shoppingMethod) async {
     log(orderProducts.toString());
     List<int> ordersIds = [];
     for (var element in orderProducts) {
@@ -35,19 +36,37 @@ class RemoteDataSource {
         .setEndpoint("https://cloud.appwrite.io/v1")
         .setProject(Constant.appWriteProjectId);
     Databases db = Databases(client);
-    String id = const Uuid().v1();
-    db.createDocument(
-        databaseId: '65590bfc54fa42e08afd',
-        collectionId: '65590c089231c74891b3',
-        documentId: id,
-        data: {
-          'email': Constant.currentUser!.email,
-          'orders_ids': ordersIds,
-          'total_price': totalPrice,
-          'delivery_address':deliveryAddress
-        }).then((value) {
-
-      log('created');
-    });
+    int id = 0;
+    var data = await getProducts();
+    id = data.length;
+    String orderDate = Constant.dateToString(DateTime.now());
+    try {
+      await db.createDocument(
+          databaseId: '65590bfc54fa42e08afd',
+          collectionId: '65590c089231c74891b3',
+          documentId: ID.unique(),
+          data: {
+            'email': Constant.currentUser!.email,
+            'orders_ids': ordersIds,
+            'total_price': totalPrice,
+            'delivery_address': deliveryAddress,
+            'shopping_method': shoppingMethod,
+            'created_at': orderDate,
+            'id': ++id
+          }).then((value) {
+        sl.get<DataSource>().addOrder(ordersIds, totalPrice, orderDate,
+            deliveryAddress, shoppingMethod, id, value.$id);
+        log(value.data.toString());
+        log('created');
+      });
+    } on AppwriteException catch (e) {
+      if (e.message != null &&
+          e.message!
+              .contains('Document with the requested ID already exists')) {
+        addOrderToCloudDataBase(
+            orderProducts, totalPrice, deliveryAddress, shoppingMethod);
+      }
+      log(e.message.toString());
+    }
   }
 }

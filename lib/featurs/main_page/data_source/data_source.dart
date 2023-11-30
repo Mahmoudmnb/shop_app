@@ -8,9 +8,23 @@ class DataSource {
   LocalDataSource localDataSource;
   RemoteDataSource remoteDataSource;
   DataSource({required this.localDataSource, required this.remoteDataSource});
+  Future<void> addOrder(ordersIds, totalPrice, orderDate, deliveryAddress,
+      shoppingMethod, orderId, trakingNumber) async {
+    localDataSource.addOrder(ordersIds, totalPrice, orderDate, deliveryAddress,
+        shoppingMethod, orderId, trakingNumber);
+  }
+
+  Future<void> clearAddToCartTable() async {
+    return localDataSource.cleareAddToCartTable();
+  }
+
   Future<void> addOrdersToCloudDataBase(
-      List<Map<String, dynamic>> orderProducts, double totalPrice,String deliveryAddress) async {
-    return remoteDataSource.addOrderToCloudDataBase(orderProducts, totalPrice,deliveryAddress);
+      List<Map<String, dynamic>> orderProducts,
+      double totalPrice,
+      String deliveryAddress,
+      String shoppingMethod) async {
+    return remoteDataSource.addOrderToCloudDataBase(
+        orderProducts, totalPrice, deliveryAddress, shoppingMethod);
   }
 
   Future<void> getProductsFormCloudDataBase() async {

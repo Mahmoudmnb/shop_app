@@ -50,8 +50,16 @@ class MyDataBase {
       dataBasePath,
       version: 1,
       onCreate: (db, version) async {
-        db.execute(
-            'CREATE TABLE orders (id INTEGER PRIMARY KEY , text orderDate TEXT NOT NULL , dueDate TEXT NOT NULL , quantity INTEGER NOT NULL , subtotal DOUBLE NOT NULL , trackingNumber TEXT NOT NULL , isPandeing BOOLEAN NOT NULL)');
+        db.execute('''CREATE TABLE orders (
+            id INTEGER PRIMARY KEY , 
+            email TEXT NOT NULL, 
+            ordersIds INTEGER NOT NULL ,
+            totalPrice DOUBLE NOT NULL ,
+            createdAt TEXT NOT NULL,
+            deliveryAddress TEXT NOT NULL,
+            shoppingMethod TEXT NOT NULL,
+            orderId TEXT NOT NULL,
+            trackingNumber TEXT NOT NULL)''');
       },
     );
     log('orders table created');

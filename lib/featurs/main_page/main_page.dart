@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/constant.dart';
+import 'package:shop_app/core/data_base.dart';
 import 'package:toast/toast.dart';
 
 import '../../injection.dart';
@@ -77,10 +78,7 @@ class _MainPageState extends State<MainPage>
                       duration: 2);
                 }
               },
-              icon: Icon(
-                Icons.shopping_cart_outlined,
-                size: 25.sp,
-              )),
+              icon: Icon(Icons.shopping_cart_outlined, size: 25.sp)),
         ],
       ),
       actions: [
@@ -88,7 +86,9 @@ class _MainPageState extends State<MainPage>
           padding: EdgeInsets.only(right: 4.0.w),
           child: IconButton(
             icon: const Icon(Icons.favorite_border),
-            onPressed: () {},
+            onPressed: () {
+              MyDataBase().createOrdersTable();
+            },
           ),
         )
       ],

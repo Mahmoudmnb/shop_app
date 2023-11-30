@@ -26,13 +26,15 @@ class AuthPage extends StatelessWidget {
             myDataBase.createSearchHistoryTable().then((value) {
               myDataBase.createAddToCartTable().then((value) {
                 MyDataBase().createLoactionsTable().then((value) {
-                  sl
-                      .get<DataSource>()
-                      .getProductsFormCloudDataBase()
-                      .then((value) {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const MainPage(),
-                    ));
+                  MyDataBase().createOrdersTable().then((value) {
+                    sl
+                        .get<DataSource>()
+                        .getProductsFormCloudDataBase()
+                        .then((value) {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => const MainPage(),
+                      ));
+                    });
                   });
                 });
               });

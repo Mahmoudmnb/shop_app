@@ -257,8 +257,17 @@ class CheckOutScreen2 extends StatelessWidget {
                               sl
                                   .get<DataSource>()
                                   .addOrdersToCloudDataBase(
-                                      product, totalPrice, deliveryAddress)
-                                  .then((value) {
+                                      product,
+                                      totalPrice,
+                                      deliveryAddress,
+                                      context
+                                          .read<CheckOutCubit>()
+                                          .selectMethod)
+                                  .then((value) async {
+                                await sl
+                                    .get<DataSource>()
+                                    .clearAddToCartTable();
+                                log('done');
                                 Navigator.of(context)
                                     .pushReplacement(MaterialPageRoute(
                                   builder: (context) => const CheckOutScreen3(),

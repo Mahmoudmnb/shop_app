@@ -10,9 +10,36 @@ import '../featurs/home/models/product_model.dart';
 import '../featurs/products_view/models/add_to_cart_product_model.dart';
 
 class LocalDataSource {
+  Future<void> addOrder(
+      List<int> ordersIds,
+      double totalPrice,
+      String orderDate,
+      String deliveryAddress,
+      String shoppingMethod,
+      int orderId,
+      String trakingNumber) async {
+    String ids = '';
+    for (var i = 0; i < ordersIds.length; i++) {
+      if (i == ordersIds.length - 1) {
+        ids += ordersIds[i].toString();
+      } else {
+        ids += '${ordersIds[i]}|';
+      }
+    }
+
+    Database db = await openDatabase(Constant.ordersDataBasePath);
+    try {
+      await db.rawInsert(
+          '''INSERT INTO orders(email, ordersIds, createdAt, totalPrice, deliveryAddress, shoppingMethod, orderId, trackingNumber) VALUES
+        ("${Constant.currentUser!.email}", "$ids", "$orderDate",$totalPrice,"$deliveryAddress","$shoppingMethod",$orderId,"$trakingNumber")''');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   Future<void> cleareAddToCartTable() async {
     Database db = await openDatabase(Constant.addToCartTable);
-    db.rawDelete('delete form AddToCartTable');
+    db.rawDelete('delete from AddToCartTable');
     log('add to cart table cleared');
   }
 
