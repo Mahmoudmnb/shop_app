@@ -25,8 +25,8 @@ class AuthPage extends StatelessWidget {
           myDataBase.createReviewTable().then((value) {
             myDataBase.createSearchHistoryTable().then((value) {
               myDataBase.createAddToCartTable().then((value) {
-                MyDataBase().createLoactionsTable().then((value) {
-                  MyDataBase().createOrdersTable().then((value) {
+                myDataBase.createLoactionsTable().then((value) {
+                  myDataBase.createOrdersTable().then((value) {
                     sl
                         .get<DataSource>()
                         .getProductsFormCloudDataBase()

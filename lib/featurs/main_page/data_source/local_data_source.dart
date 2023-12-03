@@ -61,7 +61,11 @@ class LocalDataSource {
           'category': element.data['category'],
           'isFavorate': 0
         };
-        db.insert('products', data);
+        try {
+          await db.insert('products', data);
+        } catch (e) {
+          log(e.toString());
+        }
       }
       log('done inserting data in local dataBase');
     } on PlatformException catch (e) {

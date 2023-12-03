@@ -20,12 +20,12 @@ class Constant {
   static String appWriteProjectId = '655083f2b78dc8c2d628';
   static Duration duration = const Duration(milliseconds: 500);
   static String baseUrl = '/data/user/0/com.example.shop_app/databases/';
-  static String productDataBasePath = '${baseUrl}prducts.db';
-  static String addToCartTable = '${baseUrl}AddToCartTable.db';
-  static String searchHistoryDataBasePath = '${baseUrl}searchHistory.db';
-  static String reviewsDataBasePath = '${baseUrl}reviews.db';
-  static String ordersDataBasePath = '${baseUrl}orders.db';
-  static String locationsDataBasePath = '${baseUrl}locations.db';
+  static String productDataBasePath = '$baseUrl/prducts.db';
+  static String addToCartTable = '$baseUrl/AddToCartTable.db';
+  static String searchHistoryDataBasePath = '$baseUrl/searchHistory.db';
+  static String reviewsDataBasePath = '$baseUrl/reviews.db';
+  static String ordersDataBasePath = '$baseUrl/orders.db';
+  static String locationsDataBasePath = '$baseUrl/locations.db';
   static List<Map<String, dynamic>> data = [
     {
       'name': 'white cotton shirt',

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/featurs/auth/pages/splash_screen.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'core/constant.dart';
 import 'featurs/auth/blocs/email_text_bloc/email_text_bloc.dart';
@@ -35,6 +36,12 @@ Future<void> main(List<String> args) async {
   String? user = db.getString('currentUser');
   if (user != null) {
     Constant.currentUser = UserModel.fromJson(user);
+  }
+  String? baseUrl = db.getString('baseUrl');
+  if (baseUrl == null) {
+    baseUrl = await getDatabasesPath();
+    db.setString('baseUrl', baseUrl);
+    Constant.baseUrl = baseUrl;
   }
   runApp(MultiBlocProvider(providers: [
     BlocProvider(
