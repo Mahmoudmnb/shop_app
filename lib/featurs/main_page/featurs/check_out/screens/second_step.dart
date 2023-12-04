@@ -17,13 +17,22 @@ import '../widget/point.dart';
 
 class CheckOutScreen2 extends StatelessWidget {
   final String deliveryAddress;
-  const CheckOutScreen2({super.key, required this.deliveryAddress});
+  final String latitude;
+  final String longitude;
+  final double deliveryCost;
+
+  const CheckOutScreen2(
+      {super.key,
+      required this.deliveryAddress,
+      required this.latitude,
+      required this.longitude,
+      required this.deliveryCost});
 
   @override
   Widget build(BuildContext context) {
+    context.read<CheckOutCubit>().agree = false;
     // List<String> payment = ['Credit Card', 'Paypal', 'Visa', 'Google play'];
     List<String> payment = ['Paypal'];
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -137,7 +146,10 @@ class CheckOutScreen2 extends StatelessWidget {
                   ]),
                 ),
                 SizedBox(height: 8.h),
-                const CalculateCard(),
+                CalculateCard(
+                  deliveryCost: deliveryCost,
+                  productPrice: context.read<AddToCartCubit>().totalPrice(),
+                ),
                 SizedBox(height: 15.h),
                 const Spacer(),
                 BlocConsumer<CheckOutCubit, CheckOutState>(
@@ -175,137 +187,151 @@ class CheckOutScreen2 extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     if (context.read<CheckOutCubit>().agree) {
-                      InternetInfo.isconnected().then((value) {
-                        if (value) {
-                          List<Map<String, dynamic>> p = [];
-                          List<Map<String, dynamic>> product =
-                              context.read<AddToCartCubit>().products;
-                          double totalPrice =
-                              context.read<AddToCartCubit>().totalPrice();
-                          for (var element in product) {
-                            p.add(
-                              {
-                                "name": element['productName'],
-                                "quantity": element['quantity'],
-                                "price": element['price'].toString(),
-                                "currency": "USD"
-                              },
-                            );
-                          }
-                          Navigator.of(context)
-                              .push(
-                            MaterialPageRoute(
-                              builder: (context) => PaypalCheckout(
-                                sandboxMode: true,
-                                clientId:
-                                    "AQuqmSDLKtYJ5MWKpuxAO2zzIxIeBFlTN7nC2wDtzokwEqvzj-1rLUGEsDst9MIJmacfX4n69BK9CSna",
-                                secretKey:
-                                    "EPq3lvVP9vliuW1fcfOyWArAlU_Zmbg6x-y_kHkgFzSlJGFNOQz6aila9mrzbUIl9UrxIiqcP5sHuzW4",
-                                returnURL: "success.snippetcoder.com",
-                                cancelURL: "cancel.snippetcoder.com",
-                                transactions: [
-                                  {
-                                    "amount": {
-                                      "total": '$totalPrice',
-                                      "currency": "USD",
-                                      "details": {
-                                        "subtotal": '$totalPrice',
-                                        "shipping": '0',
-                                        "shipping_discount": 0
-                                      }
-                                    },
-                                    "description":
-                                        "The payment transaction description.",
-                                    "item_list": {
-                                      "items": p,
-                                      // shipping address is Optional
-                                      "shipping_address": const {
-                                        "recipient_name": "Raman Singh",
-                                        "line1": "Delhi",
-                                        "line2": "",
-                                        "city": "Delhi",
-                                        "country_code": "IN",
-                                        "postal_code": "11001",
-                                        "phone": "+00000000",
-                                        "state": "Texas"
-                                      },
-                                    }
-                                  }
-                                ],
-                                note: "PAYMENT_NOTE",
-                                onSuccess: (Map params) async {
-                                  log("onSuccess: $params");
+                      if (!context.read<CheckOutCubit>().isLoading) {
+                        log('mnb');
+                        context.read<CheckOutCubit>().changeIsLoading(true);
+                        InternetInfo.isconnected().then((value) {
+                          if (value) {
+                            List<Map<String, dynamic>> p = [];
+                            List<Map<String, dynamic>> product =
+                                context.read<AddToCartCubit>().products;
+                            double totalPrice =
+                                context.read<AddToCartCubit>().totalPrice();
+                            for (var element in product) {
+                              p.add(
+                                {
+                                  "name": element['productName'],
+                                  "quantity": element['quantity'],
+                                  "price": element['price'].toString(),
+                                  "currency": "USD"
                                 },
-                                onError: (error) {
-                                  log("onError: $error");
-                                  showMessage(context,
-                                      'Please you have to turn on VPN');
-                                  Navigator.of(context).pop(true);
-                                },
-                                onCancel: () {
-                                  log('cancelled:');
-                                },
-                              ),
-                            ),
-                          )
-                              .then((value) {
-                            log(value.toString());
-                            if (value != null && value) {
-                            } else {
-                              //! i have to clear add to cart products and add it to orders cart
-                              //! upload product to server
-                              sl
-                                  .get<DataSource>()
-                                  .addOrdersToCloudDataBase(
-                                      product,
-                                      totalPrice,
-                                      deliveryAddress,
-                                      context
-                                          .read<CheckOutCubit>()
-                                          .selectMethod)
-                                  .then((value) async {
-                                await sl
-                                    .get<DataSource>()
-                                    .clearAddToCartTable();
-                                log('done');
-                                Navigator.of(context)
-                                    .pushReplacement(MaterialPageRoute(
-                                  builder: (context) => const CheckOutScreen3(),
-                                ));
-                              });
+                              );
                             }
-                          });
-                        } else {
-                          showMessage(
-                              context, 'Check you internet connection ');
-                        }
-                      });
+                            context
+                                .read<CheckOutCubit>()
+                                .changeIsLoading(false);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => PaypalCheckout(
+                                  sandboxMode: true,
+                                  clientId:
+                                      "AQuqmSDLKtYJ5MWKpuxAO2zzIxIeBFlTN7nC2wDtzokwEqvzj-1rLUGEsDst9MIJmacfX4n69BK9CSna",
+                                  secretKey:
+                                      "EPq3lvVP9vliuW1fcfOyWArAlU_Zmbg6x-y_kHkgFzSlJGFNOQz6aila9mrzbUIl9UrxIiqcP5sHuzW4",
+                                  returnURL: "success.snippetcoder.com",
+                                  cancelURL: "cancel.snippetcoder.com",
+                                  transactions: [
+                                    {
+                                      "amount": {
+                                        "total":
+                                            '${double.parse((totalPrice + deliveryCost).toStringAsFixed(2))}',
+                                        "currency": "USD",
+                                        "details": {
+                                          "subtotal": '$totalPrice',
+                                          "shipping":
+                                              '${double.parse((deliveryCost).toStringAsFixed(2))}',
+                                          "shipping_discount": 0
+                                        }
+                                      },
+                                      "description":
+                                          "The payment transaction description.",
+                                      "item_list": {
+                                        "items": p,
+                                        // shipping address is Optional
+                                        "shipping_address": const {
+                                          "recipient_name": "Raman Singh",
+                                          "line1": "Delhi",
+                                          "line2": "",
+                                          "city": "Delhi",
+                                          "country_code": "IN",
+                                          "postal_code": "11001",
+                                          "phone": "+00000000",
+                                          "state": "Texas"
+                                        },
+                                      }
+                                    }
+                                  ],
+                                  note: "PAYMENT_NOTE",
+                                  onSuccess: (Map params) async {
+                                    sl
+                                        .get<DataSource>()
+                                        .addOrdersToCloudDataBase(
+                                            product,
+                                            totalPrice + deliveryCost,
+                                            deliveryAddress,
+                                            context
+                                                .read<CheckOutCubit>()
+                                                .selectMethod,
+                                            latitude,
+                                            longitude)
+                                        .then((value) async {
+                                      await sl
+                                          .get<DataSource>()
+                                          .clearAddToCartTable();
+                                      log('done');
+                                      if (context.mounted) {
+                                        Navigator.of(context)
+                                            .pushReplacement(MaterialPageRoute(
+                                          builder: (context) =>
+                                              const CheckOutScreen3(),
+                                        ));
+                                      }
+                                    });
+                                    log("onSuccess: $params");
+                                  },
+                                  onError: (error) {
+                                    log("onError: $error");
+                                    showMessage(context,
+                                        'Please you have to turn on VPN');
+                                    context
+                                        .read<CheckOutCubit>()
+                                        .changeIsLoading(false);
+                                    Navigator.of(context).pop(true);
+                                  },
+                                  onCancel: () {
+                                    log('cancelled:');
+                                  },
+                                ),
+                              ),
+                            );
+                          } else {
+                            context
+                                .read<CheckOutCubit>()
+                                .changeIsLoading(false);
+                            showMessage(
+                                context, 'Check you internet connection ');
+                          }
+                        });
+                      }
                     } else {
                       showMessage(context, 'You have to accept to our terms ');
                     }
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    //   builder: (context) => const CheckOutScreen3(),
-                    // ));
                   },
-                  child: Container(
-                    margin:
-                        EdgeInsets.symmetric(vertical: 24.h, horizontal: 25.w),
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(
-                      vertical: 13.h,
-                    ),
-                    decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text(
-                      "Place Order",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'DM Sans',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.sp),
-                    ),
+                  child: BlocBuilder<CheckOutCubit, CheckOutState>(
+                    builder: (context, state) {
+                      return Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: 24.h, horizontal: 25.w),
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(
+                          vertical: 13.h,
+                        ),
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: context.read<CheckOutCubit>().isLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : Text(
+                                "Place Order",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'DM Sans',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.sp),
+                              ),
+                      );
+                    },
                   ),
                 ),
               ],

@@ -17,7 +17,9 @@ class LocalDataSource {
       String deliveryAddress,
       String shoppingMethod,
       int orderId,
-      String trakingNumber) async {
+      String trakingNumber,
+      String latitude,
+      String longitude) async {
     String ids = '';
     for (var i = 0; i < ordersIds.length; i++) {
       if (i == ordersIds.length - 1) {
@@ -30,11 +32,16 @@ class LocalDataSource {
     Database db = await openDatabase(Constant.ordersDataBasePath);
     try {
       await db.rawInsert(
-          '''INSERT INTO orders(email, ordersIds, createdAt, totalPrice, deliveryAddress, shoppingMethod, orderId, trackingNumber) VALUES
-        ("${Constant.currentUser!.email}", "$ids", "$orderDate",$totalPrice,"$deliveryAddress","$shoppingMethod",$orderId,"$trakingNumber")''');
+          '''INSERT INTO orders(email, ordersIds, createdAt, totalPrice, deliveryAddress, shoppingMethod, orderId, trackingNumber, latitude, longitude) VALUES
+        ("${Constant.currentUser!.email}", "$ids", "$orderDate",$totalPrice,"$deliveryAddress","$shoppingMethod",$orderId,"$trakingNumber","$latitude","$longitude")''');
     } catch (e) {
       log(e.toString());
     }
+  }
+
+  Future<List<Map<String, dynamic>>> getOrders() async {
+    Database db = await openDatabase(Constant.ordersDataBasePath);
+    return await db.rawQuery('SELECT * FROM orders');
   }
 
   Future<void> cleareAddToCartTable() async {

@@ -10,6 +10,7 @@ part 'check_out_state.dart';
 class CheckOutCubit extends Cubit<CheckOutState> {
   CheckOutCubit() : super(CheckOutInitial());
   static CheckOutCubit get(context) => BlocProvider.of(context);
+  bool isLoading = false;
   String selectAddress = '';
   String selectMethod = 'In store pick-up';
   String selectPayment = 'Paypal';
@@ -21,6 +22,11 @@ class CheckOutCubit extends Cubit<CheckOutState> {
   changePayment(String pay) {
     selectPayment = pay;
     emit(ChangePayState());
+  }
+
+  changeIsLoading(value) {
+    isLoading = value;
+    emit(IsLoadingState());
   }
 
   changeMethod(String method) {

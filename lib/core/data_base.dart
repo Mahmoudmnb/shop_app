@@ -53,12 +53,14 @@ class MyDataBase {
         db.execute('''CREATE TABLE orders (
             id INTEGER PRIMARY KEY , 
             email TEXT NOT NULL, 
-            ordersIds INTEGER NOT NULL ,
+            ordersIds TEXT NOT NULL ,
             totalPrice DOUBLE NOT NULL ,
             createdAt TEXT NOT NULL,
             deliveryAddress TEXT NOT NULL,
             shoppingMethod TEXT NOT NULL,
             orderId TEXT NOT NULL,
+            latitude TEXT NOT NULL,
+            longitude TEXT NOT NULL,
             trackingNumber TEXT NOT NULL)''');
       },
     );

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/main_page/featurs/orders/screen/details_delivered.dart';
+import 'package:shop_app/core/constant.dart';
 
-import '../model/card_model.dart';
+import '../model/order_model.dart';
+import '../screen/details_delivered.dart';
 
 class BuildOrderCard extends StatelessWidget {
-  final CardModel card;
-  const BuildOrderCard({super.key, required this.card});
+  final OrderModel order;
+  final bool isDeliverd;
+  const BuildOrderCard(
+      {super.key, required this.order, required this.isDeliverd});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,7 @@ class BuildOrderCard extends StatelessWidget {
           ]),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
-          "Order #${card.numb}",
+          "Order #${order.orderId}",
           style: TextStyle(
               fontFamily: "DM Sans",
               fontSize: 15.sp,
@@ -36,9 +39,7 @@ class BuildOrderCard extends StatelessWidget {
                     blurRadius: 4)
               ]),
         ),
-        SizedBox(
-          height: 8.h,
-        ),
+        SizedBox(height: 8.h),
         Row(
           children: [
             Expanded(
@@ -52,19 +53,15 @@ class BuildOrderCard extends StatelessWidget {
                         color: const Color(0xFF828282),
                         fontSize: 13.sp),
                   ),
-                  SizedBox(
-                    width: 8.w,
-                  ),
+                  SizedBox(width: 8.w),
                   Text(
-                    "${card.orderDate.day}/${card.orderDate.month}/${card.orderDate.year}",
+                    "${Constant.stringToDate(order.createdAt).day}/${Constant.stringToDate(order.createdAt).month}/${Constant.stringToDate(order.createdAt).year}",
                     style: TextStyle(color: Colors.black, fontSize: 13.sp),
                   ),
                 ],
               ),
             ),
-            SizedBox(
-              width: 8.w,
-            ),
+            SizedBox(width: 8.w),
             Expanded(
               // flex: 4,
               child: Row(
@@ -76,11 +73,11 @@ class BuildOrderCard extends StatelessWidget {
                         color: const Color(0xFF828282),
                         fontSize: 13.sp),
                   ),
-                  SizedBox(
-                    width: 8.w,
-                  ),
+                  SizedBox(width: 8.w),
                   Text(
-                    "${card.dueDate.day}/${card.dueDate.month}/${card.dueDate.year}",
+                    order.shoppingMethod == 'In store pick-up'
+                        ? 'In store'
+                        : "${Constant.stringToDate(order.createdAt).add(const Duration(days: 3)).day}/${Constant.stringToDate(order.createdAt).add(const Duration(days: 3)).month}/${Constant.stringToDate(order.createdAt).add(const Duration(days: 3)).year}",
                     style: TextStyle(color: Colors.black, fontSize: 13.sp),
                   ),
                 ],
@@ -88,9 +85,7 @@ class BuildOrderCard extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(
-          height: 8.h,
-        ),
+        SizedBox(height: 8.h),
         Row(
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -103,20 +98,16 @@ class BuildOrderCard extends StatelessWidget {
                     style: TextStyle(
                         fontFamily: 'Tenor Sans', color: Color(0xFF828282)),
                   ),
-                  SizedBox(
-                    width: 8.w,
-                  ),
+                  SizedBox(width: 8.w),
                   Text(
-                    "${card.quantity}",
+                    "${order.ordersIds.length}",
                     style: const TextStyle(
                         fontFamily: 'Tenor Sans', color: Colors.black),
                   ),
                 ],
               ),
             ),
-            SizedBox(
-              width: 8.w,
-            ),
+            SizedBox(width: 8.w),
             Expanded(
               // flex: 4,
               child: Row(
@@ -126,11 +117,9 @@ class BuildOrderCard extends StatelessWidget {
                     style: TextStyle(
                         fontFamily: 'Tenor Sans', color: Color(0xFF828282)),
                   ),
-                  SizedBox(
-                    width: 8.w,
-                  ),
+                  SizedBox(width: 8.w),
                   Text(
-                    "${card.subtotal}\$",
+                    "${order.totalPrice}\$",
                     style: const TextStyle(
                         fontFamily: 'Tenor Sans', color: Colors.black),
                   ),
@@ -139,9 +128,7 @@ class BuildOrderCard extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(
-          height: 8.h,
-        ),
+        SizedBox(height: 8.h),
         Row(
           children: [
             const Text(
@@ -149,27 +136,23 @@ class BuildOrderCard extends StatelessWidget {
               style:
                   TextStyle(fontFamily: 'Tenor Sans', color: Color(0xFF828282)),
             ),
-            SizedBox(
-              width: 8.w,
-            ),
+            SizedBox(width: 8.w),
             Text(
-              card.trackingNumber,
+              order.trackingNumber,
               style: const TextStyle(
                   fontFamily: 'Tenor Sans', color: Colors.black),
             ),
           ],
         ),
-        SizedBox(
-          height: 8.h,
-        ),
+        SizedBox(height: 8.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              card.kingOfOrder,
+              isDeliverd ? 'Deliverd' : 'Pending',
               style: TextStyle(
                   fontFamily: 'Tenor Sans',
-                  color: card.kingOfOrder == "Pending"
+                  color: !isDeliverd
                       ? const Color(0xFFD57676)
                       : const Color(0xFF76D5AD),
                   fontSize: 15.sp),

@@ -132,8 +132,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                           margin: const EdgeInsets.all(10),
                           child: Image(
-                            image:
-                                const AssetImage('assets/images/Filter_big.png'),
+                            image: const AssetImage(
+                                'assets/images/Filter_big.png'),
                             height: 22.h,
                             width: 22.h,
                           ),
@@ -252,26 +252,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ],
                                 ),
                                 SizedBox(height: 2.h),
-                                Text(
-                                  "Collections",
-                                  style: TextStyle(
-                                      fontFamily: 'Tenor Sans',
-                                      fontSize: 20.sp,
-                                      color: const Color(0xFF6D6D6D)),
-                                ),
-                                SizedBox(height: 15.h),
-                                ListView.separated(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  separatorBuilder: (context, index) =>
-                                      SizedBox(height: 30.h),
-                                  shrinkWrap: true,
-                                  itemCount: 3,
-                                  itemBuilder: (context, index) => Container(
-                                    height: 123.h,
-                                    width: 337.w,
-                                    color: const Color(0xFFD7D7D7),
-                                  ),
-                                )
                               ],
                             ),
                           );

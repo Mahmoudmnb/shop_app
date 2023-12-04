@@ -1,8 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shop_app/featurs/main_page/featurs/check_out/screens/second_step.dart';
 import 'package:shop_app/gogole_map.dart';
 import 'package:shop_app/injection.dart';
 
@@ -10,8 +11,8 @@ import '../cubit/check_out_cubit.dart';
 import '../models/address_model.dart';
 import '../widget/check_out_address.dart';
 import '../widget/check_out_method.dart';
-import '../widget/code_textfild.dart';
 import '../widget/point.dart';
+import 'second_step.dart';
 
 class FirstStep extends StatelessWidget {
   final List<Map<String, dynamic>> locations;
@@ -165,23 +166,45 @@ class FirstStep extends StatelessWidget {
                       price: '\$9.99',
                       title: "Express delivery",
                       description: "Same-day delivery"),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 15.h),
-                    width: double.infinity,
-                    child: Text(
-                      "Coupon Code",
-                      style: TextStyle(
-                          color: const Color(0xFF939393),
-                          fontSize: 18.sp,
-                          fontFamily: 'DM Sans'),
-                    ),
-                  ),
-                  const CodeTextFeild(),
+                  // Container(
+                  //   margin: EdgeInsets.symmetric(vertical: 15.h),
+                  //   width: double.infinity,
+                  //   child: Text(
+                  //     "Coupon Code",
+                  //     style: TextStyle(
+                  //         color: const Color(0xFF939393),
+                  //         fontSize: 18.sp,
+                  //         fontFamily: 'DM Sans'),
+                  //   ),
+                  // ),
+                  // const CodeTextFeild(),
                   GestureDetector(
                     onTap: () {
                       if (locations.isNotEmpty) {
+                        String latitude = '';
+                        String longitude = '';
+                        for (var element in locations) {
+                          if (element['addressName'] ==
+                              context.read<CheckOutCubit>().selectAddress) {
+                            latitude = element['latitude_code'].toString();
+                            longitude = element['longitude_code'].toString();
+                          }
+                        }
+                        String selectedMethod =
+                            context.read<CheckOutCubit>().selectMethod;
+                        double deliveryCost =
+                            selectedMethod == 'In store pick-up'
+                                ? 0
+                                : selectedMethod == 'Standard delivery'
+                                    ? 4.99
+                                    : 9.99;
+                        deliveryCost += 10;
+                        log(deliveryCost.toString());
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => CheckOutScreen2(
+                              latitude: latitude,
+                              longitude: longitude,
+                              deliveryCost: deliveryCost,
                               deliveryAddress:
                                   context.read<CheckOutCubit>().selectAddress),
                         ));
