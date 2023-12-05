@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/main_page/data_source/remot_data_source.dart';
+import 'package:shop_app/core/constant.dart';
+import 'package:toast/toast.dart';
 
 import '../../injection.dart';
-import 'drawer/home_drawer.dart';
 import 'cubit/main_page_cubit.dart';
 import 'data_source/data_source.dart';
+import 'drawer/home_drawer.dart';
 import 'featurs/home/pages/home_page.dart';
-import 'featurs/search/pages/search_screen.dart';
+import 'featurs/home/widgets/main_page_tab_bar.dart';
 import 'featurs/orders/screen/orders_screen.dart';
 import 'featurs/profile/screen/profile_screen.dart';
-import 'featurs/home/widgets/main_page_tab_bar.dart';
-import 'featurs/shopping_bag/screens/shopping_bag_screen.dart';
+import 'featurs/search/pages/search_screen.dart';
 import 'featurs/shopping_bag/cubits/products_cubit/products_cubit.dart';
+import 'featurs/shopping_bag/screens/shopping_bag_screen.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -39,6 +40,7 @@ class _MainPageState extends State<MainPage>
 
   @override
   Widget build(BuildContext context) {
+    // debugInvertOversizedImages = true;
     final AppBar appBar = AppBar(
       backgroundColor: Colors.white,
       foregroundColor: Colors.black,
@@ -59,15 +61,21 @@ class _MainPageState extends State<MainPage>
           SizedBox(width: 2.w),
           IconButton(
               onPressed: () async {
-                await sl
-                    .get<DataSource>()
-                    .getAddToCartProducts()
-                    .then((addToCartProducts) {
-                  context.read<AddToCartCubit>().products = addToCartProducts;
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const ShoppingBagScreen(),
-                  ));
-                });
+                if (Constant.currentUser != null) {
+                  await sl
+                      .get<DataSource>()
+                      .getAddToCartProducts()
+                      .then((addToCartProducts) {
+                    context.read<AddToCartCubit>().products = addToCartProducts;
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const ShoppingBagScreen(),
+                    ));
+                  });
+                } else {
+                  ToastContext().init(context);
+                  Toast.show('You have to register before you can go here',
+                      duration: 2);
+                }
               },
               icon: Icon(
                 Icons.shopping_cart_outlined,
@@ -80,9 +88,7 @@ class _MainPageState extends State<MainPage>
           padding: EdgeInsets.only(right: 4.0.w),
           child: IconButton(
             icon: const Icon(Icons.favorite_border),
-            onPressed: () {
-              RemoteDataSource().getProducts();
-            },
+            onPressed: () {},
           ),
         )
       ],

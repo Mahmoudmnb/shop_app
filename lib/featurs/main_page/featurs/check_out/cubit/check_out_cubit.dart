@@ -1,14 +1,16 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/injection.dart';
+
 import '../../../data_source/data_source.dart';
 import '../models/address_model.dart';
-import 'package:shop_app/injection.dart';
+
 part 'check_out_state.dart';
 
 class CheckOutCubit extends Cubit<CheckOutState> {
   CheckOutCubit() : super(CheckOutInitial());
   static CheckOutCubit get(context) => BlocProvider.of(context);
-  String selectAddress = 'My Home';
+  String selectAddress = '';
   String selectMethod = 'In store pick-up';
   String selectPayment = 'Paypal';
   changeAddress(String address) {
@@ -42,4 +44,9 @@ class CheckOutCubit extends Cubit<CheckOutState> {
   }
 
   List<Map<String, dynamic>> locations = [];
+  bool isDelfaultLocatoin = false;
+  void changeIsDelfaultLocatoin(bool value) {
+    isDelfaultLocatoin = value;
+    emit(IsDefaultLoacatoinState());
+  }
 }

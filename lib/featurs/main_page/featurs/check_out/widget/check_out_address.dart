@@ -7,12 +7,10 @@ import '../cubit/check_out_cubit.dart';
 class CheckOutAddressCard extends StatelessWidget {
   final String title;
   final String description;
-  final int lengthOfLocations;
   const CheckOutAddressCard({
     super.key,
     required this.title,
     required this.description,
-    required this.lengthOfLocations,
   });
 
   @override
@@ -38,9 +36,7 @@ class CheckOutAddressCard extends StatelessWidget {
                   padding: EdgeInsets.only(bottom: 15.h),
                   child: Radio(
                       activeColor: Colors.black,
-                      //! this condition if you have one location selected by default
-                      //! this is wrong way
-                      value: lengthOfLocations==1 ? cubit.selectAddress : title,
+                      value: cubit.selectAddress,
                       groupValue: cubit.selectAddress,
                       onChanged: (value) {
                         cubit.changeAddress(value!);

@@ -13,29 +13,25 @@ class CheckOutScreen3 extends StatelessWidget {
       body: Container(
         padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 60.h),
         child: Column(children: [
-          Row(
-            children: [
-              GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Image(
-                    height: 40.w,
-                    width: 40.w,
-                    image: const AssetImage("assets/images/backicon.png"),
-                  )),
-              SizedBox(
-                width: 10.w,
-              ),
-              Text(
-                "Check out",
-                style: TextStyle(fontSize: 18.sp, fontFamily: 'Tenor Sans'),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 15.h,
-          ),
+          // Row(
+          //   children: [
+          //     GestureDetector(
+          //         onTap: () {
+          //           Navigator.of(context).pop();
+          //         },
+          //         child: Image(
+          //           height: 40.w,
+          //           width: 40.w,
+          //           image: const AssetImage("assets/images/backicon.png"),
+          //         )),
+          //     SizedBox(width: 10.w),
+          //     Text(
+          //       "Check out",
+          //       style: TextStyle(fontSize: 18.sp, fontFamily: 'Tenor Sans'),
+          //     )
+          //   ],
+          // ),
+          SizedBox(height: 40.h),
           Row(
             children: [
               const Spacer(),
@@ -50,32 +46,24 @@ class CheckOutScreen3 extends StatelessWidget {
               const CheckOutPoint(),
               const CheckOutPoint(),
               const CheckOutPoint(),
-              SizedBox(
-                width: 10.w,
-              ),
+              SizedBox(width: 10.w),
               Image(
                   height: 18.h,
                   image: const AssetImage('assets/images/card.png')),
-              SizedBox(
-                width: 10.w,
-              ),
+              SizedBox(width: 10.w),
               const CheckOutPoint(),
               const CheckOutPoint(),
               const CheckOutPoint(),
               const CheckOutPoint(),
               const CheckOutPoint(),
-              SizedBox(
-                width: 10.w,
-              ),
+              SizedBox(width: 10.w),
               Image(
                   height: 24.h,
                   image: const AssetImage('assets/images/check_out.png')),
               const Spacer(),
             ],
           ),
-          SizedBox(
-            height: 40.h,
-          ),
+          SizedBox(height: 40.h),
           Text(
             "Order Completed",
             style: TextStyle(
@@ -83,15 +71,11 @@ class CheckOutScreen3 extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 fontSize: 18.sp),
           ),
-          SizedBox(
-            height: 40.h,
-          ),
+          SizedBox(height: 40.h),
           Image(
               height: 120.h,
               image: const AssetImage('assets/images/check-circle.png')),
-          SizedBox(
-            height: 80.h,
-          ),
+          SizedBox(height: 80.h),
           const Text(
             "Thank you for your purchase.",
             style: TextStyle(fontFamily: 'DM Sans', color: Color(0xFF3D3D3D)),

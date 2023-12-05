@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/featurs/main_page/featurs/check_out/screens/second_step.dart';
 import 'package:shop_app/gogole_map.dart';
+import 'package:shop_app/injection.dart';
 
+import '../cubit/check_out_cubit.dart';
 import '../models/address_model.dart';
 import '../widget/check_out_address.dart';
 import '../widget/check_out_method.dart';
 import '../widget/code_textfild.dart';
 import '../widget/point.dart';
-import 'second_step.dart';
 
 class FirstStep extends StatelessWidget {
   final List<Map<String, dynamic>> locations;
@@ -15,6 +19,9 @@ class FirstStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String? defaultLocation =
+        sl.get<SharedPreferences>().getString('defaultLocation');
+    context.read<CheckOutCubit>().selectAddress = defaultLocation ?? '';
     return Scaffold(
       body: Column(
         children: [
@@ -99,8 +106,6 @@ class FirstStep extends StatelessWidget {
                       AddressModel address =
                           AddressModel.fromMap(locations[index]);
                       return CheckOutAddressCard(
-                          //! this property for select if this location is an only location
-                          lengthOfLocations: locations.length,
                           title: address.addressName,
                           description: address.address);
                     },
@@ -176,7 +181,9 @@ class FirstStep extends StatelessWidget {
                     onTap: () {
                       if (locations.isNotEmpty) {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const CheckOutScreen2(),
+                          builder: (context) => CheckOutScreen2(
+                              deliveryAddress:
+                                  context.read<CheckOutCubit>().selectAddress),
                         ));
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

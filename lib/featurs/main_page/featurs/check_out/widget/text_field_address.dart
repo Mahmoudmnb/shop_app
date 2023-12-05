@@ -22,16 +22,16 @@ class TextFieldAddress extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       // height: 50.h,
       child: TextFormField(
+        onTapOutside: (event) {
+          FocusScope.of(context).unfocus();
+        },
         validator: (value) {
           if (title == 'Full Name' || title == 'Address Name') {
             if (value == null || value.isEmpty || value.length <= 6) {
               return '$title shold be more than six chrachters';
             }
           } else if (title == 'Phone Number') {
-            if (value == null ||
-                value.isEmpty ||
-                value.length <= 9 ||
-                value.length >= 11) {
+            if (value == null || value.isEmpty || value.length != 10) {
               return 'Phone Number shold be 10 digits';
             }
           } else if (title == 'Email Address') {

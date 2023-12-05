@@ -1,5 +1,5 @@
 class AddressModel {
-  final String firstName;
+  final String fullName;
   final String lastName;
   final String phoneNumber;
   final String emailAddress;
@@ -11,7 +11,7 @@ class AddressModel {
   final String address;
 
   AddressModel(
-      {required this.firstName,
+      {required this.fullName,
       required this.lastName,
       required this.phoneNumber,
       required this.emailAddress,
@@ -24,7 +24,7 @@ class AddressModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'firstName': firstName,
+      'firstName': fullName,
       'lastName': lastName,
       'phoneNumber': phoneNumber,
       'emailAddress': emailAddress,
@@ -39,7 +39,7 @@ class AddressModel {
 
   factory AddressModel.fromMap(Map<String, dynamic> locations) {
     return AddressModel(
-        firstName: locations['firstName'] as String,
+        fullName: locations['firstName'] as String,
         lastName: locations['lastName'] as String,
         phoneNumber: locations['phoneNumber'] as String,
         emailAddress: locations['emailAddress'] as String,

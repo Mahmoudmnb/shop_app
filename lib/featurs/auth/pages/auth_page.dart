@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
 import 'package:shop_app/featurs/main_page/main_page.dart';
+
 import '../../../core/data_base.dart';
 import '../../../injection.dart';
 import '../blocs/auth_blocs.dart';
@@ -22,17 +24,23 @@ class AuthPage extends StatelessWidget {
         myDataBase.createTable().then((value) {
           myDataBase.createReviewTable().then((value) {
             myDataBase.createSearchHistoryTable().then((value) {
-              myDataBase.insertReviewTable().then((value) {
-                myDataBase.insertData().then((value) {
-                  myDataBase.createAddToCartTable().then((value) {
-                    MyDataBase().createLoactionsTable().then((value) {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const MainPage(),
-                      ));
-                    });
+              myDataBase.createAddToCartTable().then((value) {
+                MyDataBase().createLoactionsTable().then((value) {
+                  sl
+                      .get<DataSource>()
+                      .getProductsFormCloudDataBase()
+                      .then((value) {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const MainPage(),
+                    ));
                   });
                 });
               });
+              // myDataBase.insertReviewTable().then((value) {
+              //   myDataBase.insertData().then((value) {
+
+              //   });
+              // });
             });
           });
         });

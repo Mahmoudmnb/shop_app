@@ -53,6 +53,7 @@ dependencies:
   geocoding: 
   flutter_paypal_checkout: 
   appwrite: ^11.0.0
+  uuid: ^4.2.1
    
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
