@@ -16,10 +16,7 @@ class CheckOutMethodCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CheckOutCubit, CheckOutState>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
+    return BlocBuilder<CheckOutCubit, CheckOutState>(
       builder: (context, state) {
         CheckOutCubit cubit = CheckOutCubit.get(context);
         return Container(
@@ -33,7 +30,7 @@ class CheckOutMethodCard extends StatelessWidget {
             padding: EdgeInsets.only(
                 left: 10.w, top: 8.h, right: 20.w, bottom: 16.h),
             onPressed: () {
-              cubit.changeAddress(title);
+              cubit.changeMethod(title);
             },
             child: Column(
               children: [

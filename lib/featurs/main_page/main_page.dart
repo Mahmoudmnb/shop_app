@@ -77,10 +77,7 @@ class _MainPageState extends State<MainPage>
                       duration: 2);
                 }
               },
-              icon: Icon(
-                Icons.shopping_cart_outlined,
-                size: 25.sp,
-              )),
+              icon: Icon(Icons.shopping_cart_outlined, size: 25.sp)),
         ],
       ),
       actions: [

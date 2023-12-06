@@ -14,3 +14,5 @@ class ChangePayState extends CheckOutState {}
 class ChangeAgreeState extends CheckOutState {}
 
 class IsDefaultLoacatoinState extends CheckOutState {}
+class IsLoadingState extends CheckOutState {}
+

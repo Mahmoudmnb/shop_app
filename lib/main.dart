@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/featurs/auth/pages/splash_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constant.dart';
@@ -27,16 +28,21 @@ import 'injection.dart';
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
-  await Supabase.initialize(
-    url: Constant.supabaseUrl,
-    anonKey: Constant.supabaseAnonkey,
-  );
+  // await Supabase.initialize(
+  //   url: Constant.supabaseUrl,
+  //   anonKey: Constant.supabaseAnonkey,
+  // );
   init();
   SharedPreferences db = await SharedPreferences.getInstance();
   String? user = db.getString('currentUser');
   if (user != null) {
     Constant.currentUser = UserModel.fromJson(user);
+  }
+  String? baseUrl = db.getString('baseUrl');
+  if (baseUrl == null) {
+    baseUrl = await getDatabasesPath();
+    db.setString('baseUrl', baseUrl);
+    Constant.baseUrl = baseUrl;
   }
   runApp(MultiBlocProvider(providers: [
     BlocProvider(create: (context) => VisiblePsswordBloc()),

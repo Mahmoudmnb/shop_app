@@ -1,11 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CalculateCard extends StatelessWidget {
-  const CalculateCard({super.key});
+  final double productPrice;
+  final double deliveryCost;
+  const CalculateCard(
+      {super.key, required this.productPrice, required this.deliveryCost});
 
   @override
   Widget build(BuildContext context) {
+    log(productPrice.toString());
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
       decoration: BoxDecoration(
@@ -24,19 +30,15 @@ class CalculateCard extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 8.h),
           child: Row(
             children: [
-              SizedBox(
-                width: 40.w,
-              ),
+              SizedBox(width: 40.w),
               const Text(
                 "Product Price",
                 style:
                     TextStyle(color: Color(0xFFAAAAAA), fontFamily: 'DM Sans'),
               ),
               const Spacer(),
-              const Text('\$100'),
-              SizedBox(
-                width: 40.w,
-              ),
+              Text('\$$productPrice'),
+              SizedBox(width: 40.w),
             ],
           ),
         ),
@@ -45,9 +47,7 @@ class CalculateCard extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 8.h),
           child: Row(
             children: [
-              SizedBox(
-                width: 40.w,
-              ),
+              SizedBox(width: 40.w),
               const Text(
                 "Shopping",
                 style:
@@ -55,31 +55,42 @@ class CalculateCard extends StatelessWidget {
               ),
               const Spacer(),
               const Text('\$10'),
-              SizedBox(
-                width: 40.w,
-              ),
+              SizedBox(width: 40.w),
             ],
           ),
         ),
-        const Divider(
-          color: Color(0xFFE8E8E8),
-        ),
+        const Divider(color: Color(0xFFE8E8E8)),
         Container(
           padding: EdgeInsets.symmetric(vertical: 8.h),
           child: Row(
             children: [
-              SizedBox(
-                width: 40.w,
+              SizedBox(width: 40.w),
+              const Text(
+                "delivary cost",
+                style: TextStyle(
+                  fontFamily: 'DM Sans',
+                  color: Color(0xFFAAAAAA),
+                ),
               ),
+              const Spacer(),
+              Text('\$${(deliveryCost - 10).toStringAsFixed(2)}'),
+              SizedBox(width: 40.w),
+            ],
+          ),
+        ),
+        const Divider(color: Color(0xFFE8E8E8)),
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 8.h),
+          child: Row(
+            children: [
+              SizedBox(width: 40.w),
               const Text(
                 "Subtotal",
                 style: TextStyle(fontFamily: 'DM Sans'),
               ),
               const Spacer(),
-              const Text('\$110'),
-              SizedBox(
-                width: 40.w,
-              ),
+              Text('\$${(productPrice + deliveryCost).toStringAsFixed(2)}'),
+              SizedBox(width: 40.w),
             ],
           ),
         ),
