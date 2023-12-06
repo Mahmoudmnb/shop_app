@@ -54,8 +54,6 @@ class ShoppingBagScreen extends StatelessWidget {
                       ),
                     )
                   : Expanded(
-                      // height: 852.h,
-                      // width: 393.w,
                       child: Stack(
                         children: [
                           const ShoppingBagBody(),
