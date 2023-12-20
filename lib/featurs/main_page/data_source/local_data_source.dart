@@ -10,16 +10,32 @@ import '../featurs/home/models/product_model.dart';
 import '../featurs/products_view/models/add_to_cart_product_model.dart';
 
 class LocalDataSource {
+  Future<List<Map<String, dynamic>>> getProductsByIds(String ordersIds) async {
+    List<Map<String, dynamic>> orders = [];
+    Database db = await openDatabase(Constant.productDataBasePath);
+    String data = ordersIds.replaceAll('|', ',');
+    try {
+      orders = await db.rawQuery('SELECT * FROM products WHERE id IN ($data)');
+    } catch (e) {
+      log(e.toString());
+    }
+    return orders;
+  }
+
   Future<void> addOrder(
-      List<int> ordersIds,
-      double totalPrice,
-      String orderDate,
-      String deliveryAddress,
-      String shoppingMethod,
-      int orderId,
-      String trakingNumber,
-      String latitude,
-      String longitude) async {
+    List<int> ordersIds,
+    double totalPrice,
+    String orderDate,
+    String deliveryAddress,
+    String shoppingMethod,
+    int orderId,
+    String trakingNumber,
+    String latitude,
+    String longitude,
+    String colors,
+    String sizes,
+    String amounts,
+  ) async {
     String ids = '';
     for (var i = 0; i < ordersIds.length; i++) {
       if (i == ordersIds.length - 1) {
@@ -32,8 +48,8 @@ class LocalDataSource {
     Database db = await openDatabase(Constant.ordersDataBasePath);
     try {
       await db.rawInsert(
-          '''INSERT INTO orders(email, ordersIds, createdAt, totalPrice, deliveryAddress, shoppingMethod, orderId, trackingNumber, latitude, longitude) VALUES
-        ("${Constant.currentUser!.email}", "$ids", "$orderDate",$totalPrice,"$deliveryAddress","$shoppingMethod",$orderId,"$trakingNumber","$latitude","$longitude")''');
+          '''INSERT INTO orders(email, ordersIds, createdAt, totalPrice, deliveryAddress, shoppingMethod, orderId, trackingNumber, latitude, longitude,colors,sizes,quntities) VALUES
+        ("${Constant.currentUser!.email}", "$ids", "$orderDate",$totalPrice,"$deliveryAddress","$shoppingMethod",$orderId,"$trakingNumber","$latitude","$longitude","$colors","$sizes","$amounts")''');
     } catch (e) {
       log(e.toString());
     }

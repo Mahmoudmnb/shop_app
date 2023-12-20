@@ -3,8 +3,9 @@ import 'dart:developer';
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:shop_app/core/constant.dart';
-import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
-import 'package:shop_app/injection.dart';
+
+import '../../../injection.dart';
+import 'data_source.dart';
 
 class RemoteDataSource {
   Future<List<Document>> getProducts() async {
@@ -33,9 +34,28 @@ class RemoteDataSource {
       String latitude,
       String longitude) async {
     List<int> ordersIds = [];
+    List<String> colors = [];
+    List<String> sizes = [];
+    List<int> amounts = [];
+    String colorsForLocal = '';
+    String sizesForLocal = '';
+    String amountsForLocal = '';
+    log(orderProducts.toString());
     for (var element in orderProducts) {
       ordersIds.add(element['id']);
+      colors.add(element['color']);
+      sizes.add(element['size']);
+      amounts.add(element['quantity']);
+      colorsForLocal += element['color'] + '|';
+      sizesForLocal += element['size'] + '|';
+      amountsForLocal += '${element['quantity']}|';
     }
+    colorsForLocal = colorsForLocal.substring(0, colorsForLocal.length - 1);
+    sizesForLocal = sizesForLocal.substring(0, sizesForLocal.length - 1);
+    amountsForLocal = amountsForLocal.substring(0, amountsForLocal.length - 1);
+    log(colorsForLocal);
+    log(sizesForLocal);
+    log(amountsForLocal);
     Client client = Client()
         .setEndpoint("https://cloud.appwrite.io/v1")
         .setProject(Constant.appWriteProjectId);
@@ -67,7 +87,10 @@ class RemoteDataSource {
             'created_at': orderDate,
             'id': ++id,
             'latitude': latitude,
-            'longitude': longitude
+            'longitude': longitude,
+            'colors': colors,
+            'sizes': sizes,
+            'amounts': amounts,
           }).then((value) {
         sl.get<DataSource>().addOrder(
             ordersIds,
@@ -78,7 +101,11 @@ class RemoteDataSource {
             id,
             value.$id,
             longitude,
-            latitude);
+            latitude,
+            colorsForLocal,
+            sizesForLocal,
+            amountsForLocal
+            );
         log(value.data.toString());
         log('created');
       });

@@ -8,7 +8,7 @@ class ItemCard extends StatelessWidget {
   final Color color;
   final String size;
   final int quantity;
-  final int price;
+  final double price;
   const ItemCard(
       {super.key,
       required this.url,

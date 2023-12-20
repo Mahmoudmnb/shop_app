@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,9 +24,9 @@ class MyOrdersScreen extends StatelessWidget {
             builder: (ctx, snapshot) {
               List<OrderModel> pendingOrders = [];
               List<OrderModel> deliverdOrders = [];
-
               if (snapshot.hasData) {
                 List<Map<String, dynamic>> orders = snapshot.data!;
+                log(snapshot.data.toString());
                 for (var element in orders) {
                   OrderModel order = OrderModel.fromMap(element);
                   if (DateTime.now()

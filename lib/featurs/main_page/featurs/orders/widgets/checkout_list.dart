@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../home/models/product_model.dart';
+import '../model/order_model.dart';
+
 class CheckOutList extends StatelessWidget {
-  const CheckOutList({super.key});
+  final List<Map<String, dynamic>> products;
+  final OrderModel order;
+  const CheckOutList({super.key, required this.products, required this.order});
 
   @override
   Widget build(BuildContext context) {
+    double deliveryCost = order.shoppingMethod == 'Standard delivery'
+        ? 4.99
+        : order.shoppingMethod == 'In store pick-up'
+            ? 0
+            : 9.99;
     return Container(
       margin: EdgeInsets.symmetric(vertical: 30.h),
       padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -23,17 +33,18 @@ class CheckOutList extends StatelessWidget {
         children: [
           ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: 3,
+            itemCount: products.length,
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
+              ProductModel product = ProductModel.fromMap(products[index]);
               return Container(
                 padding: EdgeInsets.symmetric(vertical: 10.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "Flyday shirt",
-                      style: TextStyle(
+                    Text(
+                      product.name,
+                      style: const TextStyle(
                         fontFamily: 'Tenor Sans',
                         color: Color(0xFF393939),
                       ),
@@ -42,7 +53,7 @@ class CheckOutList extends StatelessWidget {
                       children: [
                         const Text('x 1'),
                         SizedBox(width: 30.w),
-                        const Text('25 \$'),
+                        Text('${product.price.toStringAsFixed(2)}\$'),
                       ],
                     )
                   ],
@@ -53,17 +64,34 @@ class CheckOutList extends StatelessWidget {
           SizedBox(height: 50.h),
           Container(
             padding: EdgeInsets.symmetric(vertical: 10.h),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   "Sub Total",
                   style: TextStyle(
                     fontFamily: 'Tenor Sans',
                     color: Color(0xFF393939),
                   ),
                 ),
-                Text('25 \$')
+                Text(
+                    '${(order.totalPrice - deliveryCost).toStringAsFixed(2)} \$')
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 10.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Deliver",
+                  style: TextStyle(
+                    fontFamily: 'Tenor Sans',
+                    color: Color(0xFF393939),
+                  ),
+                ),
+                Text('$deliveryCost \$')
               ],
             ),
           ),
@@ -73,19 +101,17 @@ class CheckOutList extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Deliver",
+                  "Shipping",
                   style: TextStyle(
                     fontFamily: 'Tenor Sans',
                     color: Color(0xFF393939),
                   ),
                 ),
-                Text('4.99 \$')
+                Text('10 \$')
               ],
             ),
           ),
-          const Divider(
-            thickness: 1,
-          ),
+          const Divider(thickness: 1),
           Container(
             padding: EdgeInsets.symmetric(vertical: 10.h),
             child: const Row(

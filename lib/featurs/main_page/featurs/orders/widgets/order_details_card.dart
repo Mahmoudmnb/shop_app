@@ -38,13 +38,9 @@ class OrderDetailsCard extends StatelessWidget {
                 color: Color(0xFF828282),
               ),
             ),
-            Text(
-              "#$orderNumber",
-            ),
+            Text("#$orderNumber"),
           ]),
-          SizedBox(
-            height: 20.h,
-          ),
+          SizedBox(height: 20.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -55,14 +51,10 @@ class OrderDetailsCard extends StatelessWidget {
                   color: Color(0xFF828282),
                 ),
               ),
-              Text(
-                trackingNumber,
-              ),
+              Text(trackingNumber),
             ],
           ),
-          SizedBox(
-            height: 20.h,
-          ),
+          SizedBox(height: 20.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -73,14 +65,10 @@ class OrderDetailsCard extends StatelessWidget {
                   color: Color(0xFF828282),
                 ),
               ),
-              Text(
-                deliberyAddress,
-              ),
+              Text(deliberyAddress),
             ],
           ),
-          SizedBox(
-            height: 20.h,
-          ),
+          SizedBox(height: 20.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -91,14 +79,10 @@ class OrderDetailsCard extends StatelessWidget {
                   color: Color(0xFF828282),
                 ),
               ),
-              Text(
-                shoppingMethod,
-              ),
+              Text(shoppingMethod),
             ],
           ),
-          SizedBox(
-            height: 10.h,
-          ),
+          SizedBox(height: 10.h),
         ]));
   }
 }

@@ -100,7 +100,7 @@ class BuildOrderCard extends StatelessWidget {
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    "${order.ordersIds.length}",
+                    "${order.ordersIds.split('|').length}",
                     style: const TextStyle(
                         fontFamily: 'Tenor Sans', color: Colors.black),
                   ),
@@ -119,7 +119,7 @@ class BuildOrderCard extends StatelessWidget {
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    "${order.totalPrice}\$",
+                    "${order.totalPrice.toStringAsFixed(2)}\$",
                     style: const TextStyle(
                         fontFamily: 'Tenor Sans', color: Colors.black),
                   ),
@@ -160,7 +160,10 @@ class BuildOrderCard extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const DetailsDelivered(),
+                  builder: (context) => DetailsDelivered(
+                    order: order,
+                    isDeliverd: isDeliverd,
+                  ),
                 ));
               },
               child: Container(

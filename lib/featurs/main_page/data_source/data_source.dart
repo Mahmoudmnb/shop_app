@@ -12,6 +12,10 @@ class DataSource {
     return localDataSource.getOrders();
   }
 
+  Future<List<Map<String, dynamic>>> getProductsByIds(String ordersIds) async {
+    return localDataSource.getProductsByIds(ordersIds);
+  }
+
   Future<void> addOrder(
       ordersIds,
       totalPrice,
@@ -21,9 +25,13 @@ class DataSource {
       orderId,
       trakingNumber,
       String longitude,
-      String latitude) async {
+      String latitude,
+      String colors,
+      String sizes,
+      String amounts
+      ) async {
     localDataSource.addOrder(ordersIds, totalPrice, orderDate, deliveryAddress,
-        shoppingMethod, orderId, trakingNumber, latitude, longitude);
+        shoppingMethod, orderId, trakingNumber, latitude, longitude,colors,sizes,amounts);
   }
 
   Future<void> clearAddToCartTable() async {

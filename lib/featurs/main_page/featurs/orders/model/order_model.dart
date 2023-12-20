@@ -10,6 +10,9 @@ class OrderModel {
   final String latitude;
   final String longitude;
   final String trackingNumber;
+  final List<String> colors;
+  final List<String> sizes;
+  final List<int> amounts;
 
   OrderModel(
       {required this.id,
@@ -22,10 +25,16 @@ class OrderModel {
       required this.orderId,
       required this.latitude,
       required this.longitude,
+      required this.amounts,
+      required this.colors,
+      required this.sizes,
       required this.trackingNumber});
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
     return OrderModel(
+        amounts: map['amounts'],
+        colors: map['colors'],
+        sizes: map['sizes'],
         id: map['id'],
         email: map['email'],
         ordersIds: map['ordersIds'],
@@ -40,6 +49,9 @@ class OrderModel {
   }
   Map<String, dynamic> toMap() {
     return {
+      'amounts': amounts,
+      'colors': colors,
+      'sizes': sizes,
       'id': id,
       'email': email,
       'ordersIds': orderId,

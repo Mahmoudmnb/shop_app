@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/core/constant.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -61,7 +60,11 @@ class MyDataBase {
             orderId TEXT NOT NULL,
             latitude TEXT NOT NULL,
             longitude TEXT NOT NULL,
-            trackingNumber TEXT NOT NULL)''');
+            trackingNumber TEXT NOT NULL,
+            colors TEXT NOT NULL,
+            sizes TEXT NOT NULL,
+            quntities INT NOT NULL
+            )''');
       },
     );
     log('orders table created');
@@ -98,8 +101,8 @@ class MyDataBase {
       onCreate: (db, version) async {
         db.execute(
             'CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT NOT NULL , price DECIMAL NOT NULL , makerCompany TEXT NOT NULL , sizes TEXT NOT NULL , colors TEXT NOT NULL , discription TEXT NOT NULL , imgUrl TEXT NOT NULL ,discount INTEGER NOT NULL , date TEXT NOT NULL , category TEXT , rating INTEGER , isFavorate BOOLEAN)');
-        SharedPreferences sh = await SharedPreferences.getInstance();
-        sh.setString('DataBasePath', dataBasePath);
+        // SharedPreferences sh = await SharedPreferences.getInstance();
+        // sh.setString('DataBasePath', dataBasePath);
       },
     );
     log('created');
