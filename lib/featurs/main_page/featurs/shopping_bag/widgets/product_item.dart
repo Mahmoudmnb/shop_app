@@ -59,15 +59,19 @@ class ProductItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 17.sp,
-                    fontFamily: 'DM Sans',
-                    fontWeight: FontWeight.w500,
-                    height: 1.06,
-                    letterSpacing: 1,
+                SizedBox(
+                  width: 160.w,
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 17.sp,
+                      fontFamily: 'DM Sans',
+                      fontWeight: FontWeight.w500,
+                      height: 1.06,
+                      letterSpacing: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
                 const Spacer(),
@@ -119,9 +123,9 @@ class ProductItem extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 20.w),
+          const Spacer(),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 17.h),
+            padding: EdgeInsets.only(bottom: 17.h, top: 17.h, right: 11.w),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
