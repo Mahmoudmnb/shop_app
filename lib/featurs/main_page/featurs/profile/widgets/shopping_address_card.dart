@@ -12,10 +12,7 @@ class ShoppingAddressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ProfileCubit, ProfileState>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
+    return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
         ProfileCubit cubit = ProfileCubit.get(context);
         return Container(

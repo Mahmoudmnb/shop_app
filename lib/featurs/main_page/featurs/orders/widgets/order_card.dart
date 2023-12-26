@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/constant.dart';
 
 import '../model/order_model.dart';
-import '../screen/details_delivered.dart';
+import '../screen/order_details.dart';
 
 class BuildOrderCard extends StatelessWidget {
   final OrderModel order;
@@ -159,10 +159,19 @@ class BuildOrderCard extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
+                List<String> amounts =
+                    Constant.stringToList(order.amounts) as List<String>;
+                List<String> colors =
+                    Constant.stringToList(order.colors) as List<String>;
+                List<String> sizes =
+                    Constant.stringToList(order.sizes) as List<String>;
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DetailsDelivered(
+                  builder: (context) => OrderDetails(
                     order: order,
                     isDeliverd: isDeliverd,
+                    sizes: sizes,
+                    colors: colors,
+                    amounts: amounts,
                   ),
                 ));
               },

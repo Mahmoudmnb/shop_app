@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/featurs/auth/pages/splash_screen.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constant.dart';
 import 'featurs/auth/blocs/email_text_bloc/email_text_bloc.dart';
@@ -13,7 +12,6 @@ import 'featurs/auth/blocs/sign_in_loading/sign_in_loading_bloc.dart';
 import 'featurs/auth/blocs/sign_up_bloc/sign_up_bloc.dart';
 import 'featurs/auth/blocs/visible_password_bloc/visible_password_bloc.dart';
 import 'featurs/auth/models/user_model.dart';
-import 'featurs/auth/pages/splash_screen.dart';
 import 'featurs/main_page/cubit/main_page_cubit.dart';
 import 'featurs/main_page/featurs/check_out/cubit/check_out_cubit.dart';
 import 'featurs/main_page/featurs/home/blocs/discount/discount_products_bloc.dart';

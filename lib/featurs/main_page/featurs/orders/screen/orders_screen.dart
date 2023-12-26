@@ -176,7 +176,7 @@ class MyOrdersScreen extends StatelessWidget {
                         ],
                       ),
                     )
-                  : const CircularProgressIndicator();
+                  : const Center(child: CircularProgressIndicator());
             });
       },
     );

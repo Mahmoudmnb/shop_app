@@ -1,28 +1,34 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
-import 'package:shop_app/featurs/main_page/featurs/home/models/product_model.dart';
-import 'package:shop_app/featurs/main_page/featurs/orders/model/order_model.dart';
 import 'package:shop_app/injection.dart';
 
+import '../../../data_source/data_source.dart';
+import '../../home/models/product_model.dart';
+import '../model/order_model.dart';
 import '../widgets/checkout_list.dart';
 import '../widgets/item_card.dart';
 import '../widgets/order_details_card.dart';
 
-class DetailsDelivered extends StatelessWidget {
+class OrderDetails extends StatelessWidget {
   final OrderModel order;
   final bool isDeliverd;
-  const DetailsDelivered(
-      {super.key, required this.order, required this.isDeliverd});
+  final List<String> amounts;
+  final List<String> colors;
+  final List<String> sizes;
+  const OrderDetails(
+      {super.key,
+      required this.order,
+      required this.isDeliverd,
+      required this.amounts,
+      required this.colors,
+      required this.sizes});
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: sl.get<DataSource>().getProductsByIds(order.ordersIds),
         builder: (ctx, snapshot) => !snapshot.hasData
-            ? const CircularProgressIndicator()
+            ? const Center(child: CircularProgressIndicator())
             : Scaffold(
                 body: SingleChildScrollView(
                   // physics: const NeverScrollableScrollPhysics(),
@@ -110,13 +116,14 @@ class DetailsDelivered extends StatelessWidget {
                         itemBuilder: (context, index) {
                           ProductModel product =
                               ProductModel.fromMap(snapshot.data![index]);
+
                           return ItemCard(
                             title: product.name,
                             price: product.price,
                             type: product.makerCompany,
-                            color: Colors.black,
-                            size: 'L',
-                            quantity: 5,
+                            color: Color(int.parse(colors[index])),
+                            size: sizes[index],
+                            quantity: int.parse(amounts[index]),
                             url: product.imgUrl.split('|')[0],
                           );
                         },
@@ -147,6 +154,9 @@ class DetailsDelivered extends StatelessWidget {
                       CheckOutList(
                         products: snapshot.data!,
                         order: order,
+                        amounts: amounts,
+                        colors: colors,
+                        sizes: sizes,
                       ),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 30.w),

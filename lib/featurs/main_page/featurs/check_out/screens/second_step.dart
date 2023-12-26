@@ -160,7 +160,7 @@ class CheckOutScreen2 extends StatelessWidget {
                       children: [
                         SizedBox(width: 50.w),
                         Checkbox(
-                            activeColor: const Color(0xFF5ECE7B),
+                            activeColor: Colors.black,
                             value: cubit.agree,
                             onChanged: (value) {
                               cubit.changeAgree(value!);

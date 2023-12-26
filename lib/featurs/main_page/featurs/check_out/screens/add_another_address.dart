@@ -171,7 +171,10 @@ class _AddNewAddressState extends State<AddNewAddress> {
                                       ListTileControlAffinity.leading,
                                   visualDensity: const VisualDensity(
                                       horizontal: -4, vertical: -4),
-                                  title: const Text('Set as default location'),
+                                  title: Text(
+                                    'Set as default location',
+                                    style: TextStyle(fontSize: 14.sp),
+                                  ),
                                   value: isDefaultLocation,
                                   onChanged: (value) {
                                     if (defaultLocation != null) {

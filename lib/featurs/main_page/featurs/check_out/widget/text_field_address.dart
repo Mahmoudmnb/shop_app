@@ -27,12 +27,12 @@ class TextFieldAddress extends StatelessWidget {
         },
         validator: (value) {
           if (title == 'Full Name' || title == 'Address Name') {
-            if (value == null || value.isEmpty || value.length <= 6) {
-              return '$title shold be more than six chrachters';
+            if (value == null || value.isEmpty || value.length < 3) {
+              return '$title shold be more than three chrachters';
             }
           } else if (title == 'Phone Number') {
-            if (value == null || value.isEmpty || value.length != 10) {
-              return 'Phone Number shold be 10 digits';
+            if (value == null || value.isEmpty || value.length != 9) {
+              return 'Phone Number shold be 9 digits';
             }
           } else if (title == 'Email Address') {
             if (value == null ||

@@ -112,7 +112,7 @@ class ShoppingBagBody extends StatelessWidget {
                       );
                     },
                   ),
-                  SizedBox(height: 270.h),
+                  SizedBox(height: 60.h),
                 ],
               ),
             ),
