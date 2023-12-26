@@ -77,7 +77,7 @@ class BuildOrderCard extends StatelessWidget {
                   Text(
                     order.shoppingMethod == 'In store pick-up'
                         ? 'In store'
-                        : "${Constant.stringToDate(order.createdAt).add(const Duration(days: 3)).day}/${Constant.stringToDate(order.createdAt).add(const Duration(days: 3)).month}/${Constant.stringToDate(order.createdAt).add(const Duration(days: 3)).year}",
+                        : "${Constant.stringToDate(order.createdAt).add(Duration(days: order.shoppingMethod == 'Express delivery' ? 1 : 3)).day}/${Constant.stringToDate(order.createdAt).add(const Duration(days: 3)).month}/${Constant.stringToDate(order.createdAt).add(const Duration(days: 3)).year}",
                     style: TextStyle(color: Colors.black, fontSize: 13.sp),
                   ),
                 ],

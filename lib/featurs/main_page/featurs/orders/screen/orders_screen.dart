@@ -29,10 +29,12 @@ class MyOrdersScreen extends StatelessWidget {
                 log(snapshot.data.toString());
                 for (var element in orders) {
                   OrderModel order = OrderModel.fromMap(element);
+                  int deliveryTime =
+                      order.shoppingMethod == 'Express delivery' ? 1 : 3;
                   if (DateTime.now()
                           .difference(Constant.stringToDate(order.createdAt))
                           .inDays >=
-                      3) {
+                      deliveryTime) {
                     deliverdOrders.add(order);
                   } else {
                     pendingOrders.add(order);

@@ -32,7 +32,7 @@ class OrderModel {
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
     return OrderModel(
-        amounts: map['quntities'],
+        amounts: map['quntities'].toString(),
         colors: map['colors'],
         sizes: map['sizes'],
         id: map['id'],
