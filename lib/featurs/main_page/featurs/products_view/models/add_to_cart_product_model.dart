@@ -2,6 +2,7 @@ import 'dart:convert';
 
 class AddToCartProductModel {
   int? id;
+  int orderId;
   String productName;
   double price;
   int quantity;
@@ -11,6 +12,7 @@ class AddToCartProductModel {
   String imgUrl;
   AddToCartProductModel(
       {this.id,
+      required this.orderId,
       required this.quantity,
       required this.color,
       required this.companyMaker,
@@ -21,6 +23,7 @@ class AddToCartProductModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
+      'order_id': orderId,
       'productName': productName,
       'price': price,
       'quantity': quantity,
@@ -33,6 +36,7 @@ class AddToCartProductModel {
 
   factory AddToCartProductModel.fromMap(Map<String, dynamic> map) {
     return AddToCartProductModel(
+        orderId: map['order_id'] as int,
         id: map['id'] as int,
         productName: map['productName'] as String,
         price: map['price'] as double,

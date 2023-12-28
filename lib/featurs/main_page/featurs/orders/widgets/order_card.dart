@@ -113,7 +113,7 @@ class BuildOrderCard extends StatelessWidget {
               child: Row(
                 children: [
                   const Text(
-                    "Subtotal",
+                    "Total price",
                     style: TextStyle(
                         fontFamily: 'Tenor Sans', color: Color(0xFF828282)),
                   ),

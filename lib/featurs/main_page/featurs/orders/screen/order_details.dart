@@ -116,7 +116,6 @@ class OrderDetails extends StatelessWidget {
                         itemBuilder: (context, index) {
                           ProductModel product =
                               ProductModel.fromMap(snapshot.data![index]);
-
                           return ItemCard(
                             title: product.name,
                             price: product.price,

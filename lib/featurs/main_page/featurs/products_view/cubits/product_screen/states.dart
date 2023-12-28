@@ -15,5 +15,5 @@ class ChangeProductSizeState extends ProductStates {}
 class GetReviews extends ProductStates {}
 
 class SetFavorateState extends ProductStates {}
-class ChangeWidthOfPrice extends ProductStates {}
 
+class ChangeWidthOfPrice extends ProductStates {}

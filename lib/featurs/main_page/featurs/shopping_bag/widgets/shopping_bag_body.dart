@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -41,6 +43,9 @@ class ShoppingBagBody extends StatelessWidget {
                                           BlocProvider.of<AddToCartCubit>(
                                                   context)
                                               .products[index]);
+                                  log(BlocProvider.of<AddToCartCubit>(context)
+                                      .products[index]
+                                      .toString());
                                   return Padding(
                                     padding: EdgeInsets.only(bottom: 28.h),
                                     child: Dismissible(

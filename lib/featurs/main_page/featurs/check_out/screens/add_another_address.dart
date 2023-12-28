@@ -198,6 +198,16 @@ class _AddNewAddressState extends State<AddNewAddress> {
                         //todo i have to replace last name and first name with full name
                         InternetInfo.isconnected().then((value) {
                           if (value) {
+                            context
+                                .read<CheckOutCubit>()
+                                .getLocationByName(
+                                    addressNameController.text.trim())
+                                .then((value) {
+                              log(value.toString());
+                              context
+                                  .read<CheckOutCubit>()
+                                  .isAddressNameIsAvailable = value.isEmpty;
+                            });
                             if (formState.currentState!.validate()) {
                               AddressModel address = AddressModel(
                                   fullName: fullNameController.text.trim(),
@@ -212,21 +222,26 @@ class _AddNewAddressState extends State<AddNewAddress> {
                                   city: cityController.text.trim(),
                                   country: countryController.text.trim(),
                                   address: addressController.text.trim());
-                              context
+
+                              if (context
                                   .read<CheckOutCubit>()
-                                  .addNewAdress(address)
-                                  .then((value) {
+                                  .isAddressNameIsAvailable) {
                                 context
                                     .read<CheckOutCubit>()
-                                    .getLocations()
+                                    .addNewAdress(address)
                                     .then((value) {
-                                  Navigator.of(context)
-                                      .pushReplacement(MaterialPageRoute(
-                                    builder: (context) =>
-                                        FirstStep(locations: value),
-                                  ));
+                                  context
+                                      .read<CheckOutCubit>()
+                                      .getLocations()
+                                      .then((value) {
+                                    Navigator.of(context)
+                                        .pushReplacement(MaterialPageRoute(
+                                      builder: (context) =>
+                                          FirstStep(locations: value),
+                                    ));
+                                  });
                                 });
-                              });
+                              }
                               if (defaultLocation == null ||
                                   context
                                       .read<CheckOutCubit>()
@@ -262,6 +277,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 10.h),
                   ],
                 ),
               )),

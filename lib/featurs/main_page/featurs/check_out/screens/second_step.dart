@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_paypal_checkout/flutter_paypal_checkout.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/core/internet_info.dart';
-import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
-import 'package:shop_app/featurs/main_page/featurs/check_out/screens/third_step.dart';
-import 'package:shop_app/featurs/main_page/featurs/shopping_bag/cubits/products_cubit/products_cubit.dart';
 import 'package:shop_app/injection.dart';
 
+import '../../../../../core/internet_info.dart';
+import '../../../data_source/data_source.dart';
+import '../../shopping_bag/cubits/products_cubit/products_cubit.dart';
 import '../cubit/check_out_cubit.dart';
 import '../widget/calculate_card.dart';
 import '../widget/payment_method_card.dart';
 import '../widget/point.dart';
+import 'third_step.dart';
 
 class CheckOutScreen2 extends StatelessWidget {
   final String deliveryAddress;
@@ -152,8 +152,7 @@ class CheckOutScreen2 extends StatelessWidget {
                 ),
                 SizedBox(height: 15.h),
                 const Spacer(),
-                BlocConsumer<CheckOutCubit, CheckOutState>(
-                  listener: (context, state) {},
+                BlocBuilder<CheckOutCubit, CheckOutState>(
                   builder: (context, state) {
                     CheckOutCubit cubit = CheckOutCubit.get(context);
                     return Row(
@@ -188,7 +187,6 @@ class CheckOutScreen2 extends StatelessWidget {
                   onTap: () {
                     if (context.read<CheckOutCubit>().agree) {
                       if (!context.read<CheckOutCubit>().isLoading) {
-                        log('mnb');
                         context.read<CheckOutCubit>().changeIsLoading(true);
                         InternetInfo.isconnected().then((value) {
                           if (value) {

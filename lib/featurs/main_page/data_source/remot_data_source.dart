@@ -42,7 +42,7 @@ class RemoteDataSource {
     String amountsForLocal = '';
     log(orderProducts.toString());
     for (var element in orderProducts) {
-      ordersIds.add(element['id']);
+      ordersIds.add(element['order_id']);
       colors.add(element['color']);
       sizes.add(element['size']);
       amounts.add(element['quantity']);
@@ -104,8 +104,7 @@ class RemoteDataSource {
             latitude,
             colorsForLocal,
             sizesForLocal,
-            amountsForLocal
-            );
+            amountsForLocal);
         log(value.data.toString());
         log('created');
       });

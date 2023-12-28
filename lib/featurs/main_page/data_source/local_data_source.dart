@@ -10,15 +10,28 @@ import '../featurs/home/models/product_model.dart';
 import '../featurs/products_view/models/add_to_cart_product_model.dart';
 
 class LocalDataSource {
+  Future<List<Map<String, dynamic>>> getLocationByName(
+      String addressName) async {
+    Database db = await openDatabase(Constant.locationsDataBasePath);
+    return db
+        .rawQuery('SELECT * FROM locations WHERE addressName="$addressName"');
+  }
+
   Future<List<Map<String, dynamic>>> getProductsByIds(String ordersIds) async {
     List<Map<String, dynamic>> orders = [];
     Database db = await openDatabase(Constant.productDataBasePath);
-    String data = ordersIds.replaceAll('|', ',');
+    // String data = ordersIds.replaceAll('|', ',');
+    List<String> p = ordersIds.split('|');
     try {
-      orders = await db.rawQuery('SELECT * FROM products WHERE id IN ($data)');
+      for (var i = 0; i < p.length; i++) {
+        var d = await db.rawQuery('SELECT * FROM products WHERE id = ${p[i]}');
+        orders.add(d[0]);
+      }
+      // orders = await db.rawQuery('SELECT * FROM products WHERE id IN ($data)');
     } catch (e) {
       log(e.toString());
     }
+
     return orders;
   }
 
@@ -118,22 +131,23 @@ class LocalDataSource {
     } catch (e) {
       log(e.toString());
     }
+    log(products.toString());
     return products;
   }
 
   Future<void> addToCart(AddToCartProductModel addToCartTableModel) async {
-    //! try it if its working
     Database db = await openDatabase(Constant.addToCartTable);
     try {
       List<Map<String, dynamic>> data = await db.rawQuery(
-          'SELECT * FROM AddToCartTable WHERE  productName=="${addToCartTableModel.productName}" AND price == ${addToCartTableModel.price} AND companyMaker == "${addToCartTableModel.companyMaker}" AND color == "${addToCartTableModel.color}" AND  size == "${addToCartTableModel.size}"');
+          'SELECT * FROM AddToCartTable WHERE  productName=="${addToCartTableModel.productName}" AND order_id==${addToCartTableModel.orderId} AND price == ${addToCartTableModel.price} AND companyMaker == "${addToCartTableModel.companyMaker}" AND color == "${addToCartTableModel.color}" AND  size == "${addToCartTableModel.size}"');
       if (data.isNotEmpty) {
         int q = data[0]['quantity'];
         q += addToCartTableModel.quantity;
-        db.rawUpdate('UPDATE AddToCartTable SET quantity=$q');
+        db.rawUpdate(
+            'UPDATE AddToCartTable SET quantity=$q WHERE order_id==${addToCartTableModel.orderId}');
       } else {
         db.rawInsert(
-          "INSERT INTO AddToCartTable (imgUrl, quantity, productName, price,companyMaker, color, size) VALUES ('${addToCartTableModel.imgUrl}', ${addToCartTableModel.quantity},'${addToCartTableModel.productName}',${addToCartTableModel.price},'${addToCartTableModel.companyMaker}','${addToCartTableModel.color}','${addToCartTableModel.size}')",
+          "INSERT INTO AddToCartTable (imgUrl, quantity, productName, price,companyMaker, color, size, order_id) VALUES ('${addToCartTableModel.imgUrl}', ${addToCartTableModel.quantity},'${addToCartTableModel.productName}',${addToCartTableModel.price},'${addToCartTableModel.companyMaker}','${addToCartTableModel.color}','${addToCartTableModel.size}',${addToCartTableModel.orderId})",
         );
       }
     } catch (e) {

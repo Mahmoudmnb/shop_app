@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/main_page/featurs/products_view/cubits/product_screen/cubit.dart';
+
 import '../../../home/models/product_model.dart';
+import '../../cubits/product_screen/cubit.dart';
 import 'product_view_custom_button.dart';
 
 class AddToCartBottomSheet extends StatelessWidget {
@@ -158,9 +159,7 @@ class AddToCartBottomSheet extends StatelessWidget {
                 //       ],
                 //     ),
                 //   );
-                // } else {
-
-                // }
+                // } else {}
               },
             ),
           )

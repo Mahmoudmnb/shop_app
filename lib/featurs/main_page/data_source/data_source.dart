@@ -8,6 +8,11 @@ class DataSource {
   LocalDataSource localDataSource;
   RemoteDataSource remoteDataSource;
   DataSource({required this.localDataSource, required this.remoteDataSource});
+  Future<List<Map<String, dynamic>>> getLocationByName(
+      String addressName) async {
+    return localDataSource.getLocationByName(addressName);
+  }
+
   Future<List<Map<String, dynamic>>> getOrders() async {
     return localDataSource.getOrders();
   }
@@ -28,10 +33,20 @@ class DataSource {
       String latitude,
       String colors,
       String sizes,
-      String amounts
-      ) async {
-    localDataSource.addOrder(ordersIds, totalPrice, orderDate, deliveryAddress,
-        shoppingMethod, orderId, trakingNumber, latitude, longitude,colors,sizes,amounts);
+      String amounts) async {
+    localDataSource.addOrder(
+        ordersIds,
+        totalPrice,
+        orderDate,
+        deliveryAddress,
+        shoppingMethod,
+        orderId,
+        trakingNumber,
+        latitude,
+        longitude,
+        colors,
+        sizes,
+        amounts);
   }
 
   Future<void> clearAddToCartTable() async {
