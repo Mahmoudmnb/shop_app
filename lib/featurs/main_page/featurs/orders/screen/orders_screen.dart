@@ -15,7 +15,6 @@ class MyOrdersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<MainPageCubit>().changePageIndex(2);
-
     List<OrderModel> pendingOrders = [];
     List<OrderModel> deliverdOrders = [];
     return BlocBuilder<OrdersCubit, OrdersState>(
@@ -24,6 +23,8 @@ class MyOrdersScreen extends StatelessWidget {
             future: sl.get<DataSource>().getOrders(),
             builder: (ctx, snapshot) {
               if (snapshot.hasData) {
+                pendingOrders = [];
+                deliverdOrders = [];
                 List<Map<String, dynamic>> orders = snapshot.data!;
                 for (var element in orders) {
                   OrderModel order = OrderModel.fromMap(element);
