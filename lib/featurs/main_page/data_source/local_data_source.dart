@@ -10,6 +10,54 @@ import '../featurs/home/models/product_model.dart';
 import '../featurs/products_view/models/add_to_cart_product_model.dart';
 
 class LocalDataSource {
+  Future<void> insertDataInOrderTableFromCloud(List<Document> orders) async {
+    for (var element in orders) {
+      Map<String, dynamic> order = element.data;
+      List<String> ordersIds = order['orders_ids']
+          .toString()
+          .substring(1, order['orders_ids'].toString().length - 1)
+          .split(',');
+      List<int> finalOrdersIds = [];
+      String colors = '';
+      String sizes = '';
+      String amounts = '';
+      for (var element in order['colors']) {
+        colors += element + '|';
+      }
+      colors.replaceRange(colors.length, colors.length, '');
+
+      for (var element in order['sizes']) {
+        sizes += element + '|';
+      }
+      sizes.replaceRange(sizes.length, sizes.length, '');
+      for (var element in order['amounts']) {
+        amounts += '$element|';
+      }
+      amounts.replaceRange(amounts.length, amounts.length, '');
+      for (var element in ordersIds) {
+        finalOrdersIds.add(int.parse(element));
+      }
+      await addOrder(
+          finalOrdersIds,
+          order['total_price'] * 1.0,
+          order['created_at'],
+          order['delivery_address'],
+          order['shopping_method'],
+          order['id'],
+          order['\$id'],
+          order['latitude'],
+          order['longitude'],
+          colors,
+          sizes,
+          amounts);
+      log('done');
+      // log(element.data.toString());
+    }
+    // await db.rawInsert(
+    //     '''INSERT INTO orders(email, ordersIds, createdAt, totalPrice, deliveryAddress, shoppingMethod, orderId, trackingNumber, latitude, longitude,colors,sizes,quntities) VALUES
+    //     ("${Constant.currentUser!.email}", "$ids", "$orderDate",$totalPrice,"$deliveryAddress","$shoppingMethod",$orderId,"$trakingNumber","$latitude","$longitude","$colors","$sizes","$amounts")''');
+  }
+
   Future<List<Map<String, dynamic>>> getLocationByName(
       String addressName) async {
     Database db = await openDatabase(Constant.locationsDataBasePath);

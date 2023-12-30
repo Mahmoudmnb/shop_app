@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/core/constant.dart';
+import 'package:shop_app/featurs/auth/models/user_model.dart';
+import 'package:shop_app/injection.dart';
 
 class PersonalDetails extends StatefulWidget {
   const PersonalDetails({super.key});
@@ -9,17 +13,24 @@ class PersonalDetails extends StatefulWidget {
 }
 
 class _PersonalDetailsState extends State<PersonalDetails> {
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
-  TextEditingController phoneNameController = TextEditingController();
-  TextEditingController emailNameController = TextEditingController();
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  String? imgUrl;
+  @override
+  void initState() {
+    fullNameController.text = Constant.currentUser!.name;
+    phoneNumberController.text = Constant.currentUser!.phoneNumber ?? '';
+    emailController.text = Constant.currentUser!.email;
+    super.initState();
+  }
+
   @override
   void dispose() {
     super.dispose();
-    firstNameController.dispose();
-    lastNameController.dispose();
-    emailNameController.dispose();
-    phoneNameController.dispose();
+    fullNameController.dispose();
+    emailController.dispose();
+    phoneNumberController.dispose();
   }
 
   @override
@@ -40,18 +51,14 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                       width: 40.w,
                       image: const AssetImage("assets/images/backicon.png"),
                     )),
-                SizedBox(
-                  width: 8.w,
-                ),
+                SizedBox(width: 8.w),
                 Text(
                   "Personal Details",
                   style: TextStyle(fontSize: 18.sp, fontFamily: 'Tenor Sans'),
                 )
               ],
             ),
-            SizedBox(
-              height: 16.h,
-            ),
+            SizedBox(height: 16.h),
             Row(
               children: [
                 const Spacer(),
@@ -62,71 +69,67 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                       decoration: BoxDecoration(
                           color: Colors.red,
                           borderRadius: BorderRadius.circular(12)),
-                      child: Image(
-                          height: 130.h,
-                          width: 130.h,
-                          image: const AssetImage(
-                              'assets/images/profileimage.jpg')),
-                    ),
-                    Container(
-                      height: 40.h,
-                      width: 40.h,
-                      padding: EdgeInsets.only(top: 8.h),
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              offset: const Offset(0, 4),
-                              color: Colors.black.withOpacity(.25),
-                              blurRadius: 4,
+                      child: Constant.currentUser!.imgUrl == null
+                          ? const SizedBox(
+                              height: 130,
+                              width: 130,
+                              child: Center(
+                                child: Text('No Image'),
+                              ),
                             )
-                          ],
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: const Image(
-                          image: AssetImage("assets/images/Pen.png")),
+                          : Image(
+                              height: 130.h,
+                              width: 130.h,
+                              image: AssetImage(Constant.currentUser!.imgUrl!)),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        // Todo : code for select an image for profile
+                      },
+                      child: Container(
+                        height: 40.h,
+                        width: 40.h,
+                        padding: EdgeInsets.only(top: 8.h),
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                offset: const Offset(0, 4),
+                                color: Colors.black.withOpacity(.25),
+                                blurRadius: 4,
+                              )
+                            ],
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: const Image(
+                            image: AssetImage("assets/images/Pen.png")),
+                      ),
                     )
                   ],
                 ),
                 const Spacer(),
               ],
             ),
-            SizedBox(
-              height: 80.h,
-            ),
+            SizedBox(height: 80.h),
             const Row(
               children: [
                 Expanded(
                     child: Text(
-                  "First Name",
+                  "Full Name",
                   style: TextStyle(
                       color: Color(0xFFA5A5A5), fontFamily: 'DM Sans'),
-                )),
-                Expanded(
-                    child: Text(
-                  "Last Name",
-                  style: TextStyle(
-                      color: Color(0xFFA5A5A5), fontFamily: 'DM Sans'),
-                )),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                    child: Container(
-                  padding: EdgeInsets.only(right: 16.w),
-                  child: TextField(
-                    controller: firstNameController,
-                  ),
-                )),
-                Expanded(
-                    child: TextField(
-                  controller: lastNameController,
                 )),
               ],
             ),
             SizedBox(
-              height: 24.h,
-            ),
+                width: 393.w,
+                height: 50.h,
+                child: TextField(
+                  onTapOutside: (value) {
+                    FocusScope.of(context).unfocus();
+                  },
+                  controller: fullNameController,
+                )),
+            SizedBox(height: 24.h),
             const SizedBox(
               width: double.infinity,
               child: Text(
@@ -137,56 +140,64 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ),
             ),
             TextField(
-              controller: emailNameController,
+              onTapOutside: (value) {
+                FocusScope.of(context).unfocus();
+              },
+              controller: emailController,
             ),
-            SizedBox(
-              height: 80.h,
-            ),
+            SizedBox(height: 25.h),
             const Row(
               children: [
                 Expanded(
                     child: Text(
-                  "Gender",
+                  "Phone Number",
                   style: TextStyle(
                       color: Color(0xFFA5A5A5), fontFamily: 'DM Sans'),
-                )),
-                Expanded(
-                    child: Text(
-                  "Phone",
-                  style: TextStyle(
-                      color: Color(0xFFA5A5A5), fontFamily: 'DM Sans'),
-                )),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                    child: Container(
-                  padding: EdgeInsets.only(right: 16.w),
-                  child: const TextField(),
-                )),
-                Expanded(
-                    child: TextField(
-                  keyboardType: TextInputType.phone,
-                  decoration:
-                      const InputDecoration(hintText: '(+963)922222222'),
-                  controller: phoneNameController,
                 )),
               ],
             ),
             SizedBox(
-              height: 80.h,
-            ),
+                height: 50.h,
+                width: 393.w,
+                child: TextField(
+                  onTapOutside: (value) {
+                    FocusScope.of(context).unfocus();
+                  },
+                  keyboardType: TextInputType.phone,
+                  decoration: InputDecoration(
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      hintText: phoneNumberController.text == ''
+                          ? 'No Phone number'
+                          : ''),
+                  controller: phoneNumberController,
+                )),
+            SizedBox(height: 80.h),
             InkWell(
-                  borderRadius: BorderRadius.circular(10),
-              onTap: () {
-                
+              borderRadius: BorderRadius.circular(10),
+              onTap: () async {
+                UserModel user = UserModel(
+                    phoneNumber: phoneNumberController.text != ''
+                        ? phoneNumberController.text.trim()
+                        : null,
+                    imgUrl: imgUrl,
+                    email: emailController.text.trim(),
+                    name: fullNameController.text.trim(),
+                    password: Constant.currentUser!.password);
+
+                Constant.currentUser = user;
+                await sl
+                    .get<SharedPreferences>()
+                    .setString('currentUser', user.toJson());
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
               },
               child: Ink(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(vertical: 13.h),
                 decoration: BoxDecoration(
-                    color: Colors.black, borderRadius: BorderRadius.circular(10)),
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(10)),
                 child: Text(
                   "Save",
                   textAlign: TextAlign.center,

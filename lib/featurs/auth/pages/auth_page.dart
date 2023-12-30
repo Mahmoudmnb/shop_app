@@ -31,9 +31,11 @@ class AuthPage extends StatelessWidget {
                         .get<DataSource>()
                         .getProductsFormCloudDataBase()
                         .then((value) {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const MainPage(),
-                      ));
+                      sl.get<DataSource>().getOrdersFromCloud().then((value) {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => const MainPage(),
+                        ));
+                      });
                     });
                   });
                 });

@@ -82,7 +82,9 @@ class ProductCubit extends Cubit<ProductStates> {
             color: color,
             companyMaker: product.makerCompany,
             productName: product.name,
-            price: product.price,
+            price: product.disCount > 0
+                ? (1 - product.disCount / 100) * product.price
+                : product.price,
             size: size))
         .then((value) {
       amountOfProduct = 1;

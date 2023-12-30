@@ -118,4 +118,23 @@ class RemoteDataSource {
       log(e.message.toString());
     }
   }
+
+  Future<void> getOrdersFromCloud() async {
+    List<Document> orders = [];
+    final client = Client()
+        .setEndpoint('https://cloud.appwrite.io/v1')
+        .setProject(Constant.appWriteProjectId);
+    Databases databases = Databases(client);
+    try {
+      var result = await databases.listDocuments(
+        databaseId: '65590bfc54fa42e08afd',
+        collectionId: "65590c089231c74891b3",
+        queries: [Query.equal('email', Constant.currentUser!.email)],
+      );
+      orders = result.documents;
+    } on AppwriteException catch (e) {
+      log(e.message.toString());
+    }
+    sl.get<DataSource>().insertDataInOrderTableFromCloud(orders);
+  }
 }

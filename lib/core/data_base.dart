@@ -95,17 +95,21 @@ class MyDataBase {
   Future<void> createTable() async {
     String path = await getDatabasesPath();
     String dataBasePath = '$path/prducts.db';
-    await openDatabase(
-      dataBasePath,
-      version: 1,
-      onCreate: (db, version) async {
-        db.execute(
-            'CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT NOT NULL , price DECIMAL NOT NULL , makerCompany TEXT NOT NULL , sizes TEXT NOT NULL , colors TEXT NOT NULL , discription TEXT NOT NULL , imgUrl TEXT NOT NULL ,discount INTEGER NOT NULL , date TEXT NOT NULL , category TEXT , rating INTEGER , isFavorate BOOLEAN)');
-        // SharedPreferences sh = await SharedPreferences.getInstance();
-        // sh.setString('DataBasePath', dataBasePath);
-      },
-    );
-    log('created');
+    try {
+      await openDatabase(
+        dataBasePath,
+        version: 1,
+        onCreate: (db, version) async {
+          db.execute(
+              'CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT NOT NULL , price DECIMAL NOT NULL , makerCompany TEXT NOT NULL , sizes TEXT NOT NULL , colors TEXT NOT NULL , discription TEXT NOT NULL , imgUrl TEXT NOT NULL ,discount INTEGER NOT NULL , date TEXT NOT NULL , category TEXT , rating INTEGER , isFavorate BOOLEAN)');
+          // SharedPreferences sh = await SharedPreferences.getInstance();
+          // sh.setString('DataBasePath', dataBasePath);
+        },
+      );
+      log('products table created');
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   Future<void> createSearchHistoryTable() async {

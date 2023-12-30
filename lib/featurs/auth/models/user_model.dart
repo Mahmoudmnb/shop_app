@@ -4,11 +4,19 @@ class UserModel {
   final String name;
   final String email;
   final String password;
-  const UserModel(
-      {required this.email, required this.name, required this.password});
+  String? phoneNumber;
+  String? imgUrl;
+  UserModel(
+      {required this.email,
+      required this.name,
+      required this.password,
+      this.phoneNumber,
+      this.imgUrl});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'phoneNumber': phoneNumber,
+      'imgUrl': imgUrl,
       'name': name,
       'email': email,
       'password': password,
@@ -17,6 +25,8 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
+      phoneNumber: map['phoneNumber'],
+      imgUrl: map['imgUrl'],
       name: map['name'] as String,
       email: map['email'] as String,
       password: map['password'] as String,

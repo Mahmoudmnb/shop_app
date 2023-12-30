@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/constant.dart';
+import 'package:shop_app/core/data_base.dart';
 import 'package:toast/toast.dart';
 
 import '../../injection.dart';
@@ -85,7 +86,26 @@ class _MainPageState extends State<MainPage>
           padding: EdgeInsets.only(right: 4.0.w),
           child: IconButton(
             icon: const Icon(Icons.favorite_border),
-            onPressed: () {},
+            onPressed: () async {
+              MyDataBase().createTable();
+              sl.get<DataSource>().getOrdersFromCloud();
+              //   try {
+              //     File file1 = File(Constant.addToCartTable);
+              //     Stream<String> lines = file1
+              //         .openRead()
+              //         .transform(utf8.decoder) // Decode bytes to UTF-8.
+              //         .transform(const LineSplitter());
+              //     await for (var line in lines) {
+              //       print(line);
+              //     }
+              //     // File file = File(Constant.addToCartTable);
+              //     // var res = await OpenFile.open(Constant.addToCartTable);
+              //     // log(res.message);
+              //     // log(file.existsSync().toString());
+              //   } catch (e) {
+              //     log(e.toString());
+              //   }
+            },
           ),
         )
       ],

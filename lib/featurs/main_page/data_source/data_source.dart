@@ -1,3 +1,5 @@
+import 'package:appwrite/models.dart';
+
 import '../featurs/check_out/models/address_model.dart';
 import '../featurs/home/models/product_model.dart';
 import '../featurs/products_view/models/add_to_cart_product_model.dart';
@@ -8,6 +10,14 @@ class DataSource {
   LocalDataSource localDataSource;
   RemoteDataSource remoteDataSource;
   DataSource({required this.localDataSource, required this.remoteDataSource});
+  Future<void> insertDataInOrderTableFromCloud(List<Document> orders) async {
+    localDataSource.insertDataInOrderTableFromCloud(orders);
+  }
+
+  Future<void> getOrdersFromCloud() async {
+    return remoteDataSource.getOrdersFromCloud();
+  }
+
   Future<List<Map<String, dynamic>>> getLocationByName(
       String addressName) async {
     return localDataSource.getLocationByName(addressName);
