@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -149,9 +151,16 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
           SizedBox(height: 30.h),
           BlocBuilder<SearchCubit, SearchState>(
             builder: (context, state) {
-              if (state is SearchResults) {
+              log(state.toString());
+              if (state is GetCategoryProducts) {
+                searchProducts = state.categoryProducts;
+              } else if (state is SaveState) {
+                searchProducts = state.categoryProducts;
+              } else if (state is SearchResults) {
+                log(state.searchResult.toString());
                 searchProducts = state.searchResult;
               }
+
               return Expanded(
                 child: GridView.builder(
                   physics: const BouncingScrollPhysics(),

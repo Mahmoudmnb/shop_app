@@ -130,6 +130,7 @@ class _MainPageState extends State<MainPage>
       backgroundColor: Colors.white,
       appBar: appBar,
       drawer: const Drawer(
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(15),

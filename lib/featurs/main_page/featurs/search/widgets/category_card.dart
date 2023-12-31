@@ -22,6 +22,7 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        searchCubit.reset(searchWord, false);
         searchCubit.selectedCategory = categroyName.toLowerCase();
         context
             .read<SearchCubit>()

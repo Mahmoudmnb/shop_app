@@ -242,9 +242,9 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                 categoryProducts = state.categoryProducts;
               } else if (state is SaveState) {
                 categoryProducts = state.categoryProducts;
-              } else if (state is ResetFilter) {
+              } else if (state is SearchResults) {
                 // todo i have to work on it
-                // categoryProducts = state.products;
+                categoryProducts = state.searchResult;
               }
               return Expanded(
                 //* this widget have to be exit for (AnimationConfiguration)

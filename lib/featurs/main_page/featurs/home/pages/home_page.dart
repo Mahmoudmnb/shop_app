@@ -43,6 +43,7 @@ class HomePage extends StatelessWidget {
                     .read<SearchCubit>()
                     .searchInDiscounts(null)
                     .then((disCountProducts) {
+                  context.read<SearchCubit>().reset('', false);
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => SeeAllProductsPage(
                         searchWord: '',

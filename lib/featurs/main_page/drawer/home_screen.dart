@@ -15,6 +15,7 @@ class HomeScreen extends StatelessWidget {
           appBar: AppBar(),
           body: null,
           drawer: const Drawer(
+            backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(15),
