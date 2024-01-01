@@ -126,7 +126,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                             clipBehavior: Clip.antiAlias,
                             child: TextField(
                               onSubmitted: (value) async {
-                                searchInDiscount(cubit);
+                                searchIn(cubit);
                               },
                               controller: searchController,
                               textAlign: TextAlign.start,
@@ -142,7 +142,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                   prefixIcon: IconButton(
                                     onPressed: () {
                                       FocusScope.of(context).unfocus();
-                                      searchInDiscount(cubit);
+                                      searchIn(cubit);
                                     },
                                     icon: Icon(
                                       color: const Color(0xFFA4A4A4),
@@ -162,7 +162,8 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                       context.read<DiscountProductsBloc>().add(
                                           ChangeIsSearchEvent(isSearch: false));
                                       cubit
-                                          .searchInDiscounts(null)
+                                          .searchInDiscounts(null, categoryName,
+                                              categoryProducts)
                                           .then((allDiscountProducts) {
                                         context
                                             .read<DiscountProductsBloc>()
@@ -257,7 +258,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                   child: GridView.builder(
                     physics: const BouncingScrollPhysics(),
                     itemCount: categoryProducts.length,
-                    gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: .7.h,
                       crossAxisSpacing: 20,
@@ -266,7 +267,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                       ProductModel product =
                           ProductModel.fromMap(categoryProducts[index]);
                       return AnimationConfiguration.staggeredGrid(
-                        position: index, 
+                        position: index,
                         columnCount: 2,
                         child: ScaleAnimation(
                           curve: Curves.fastEaseInToSlowEaseOut,
@@ -289,7 +290,8 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                       searchCubit: cubit,
                                       searchWord: searchController.text,
                                       product: product,
-                                      cubit: BlocProvider.of<ProductCubit>(context),
+                                      cubit: BlocProvider.of<ProductCubit>(
+                                          context),
                                     ),
                                   ));
                                 });
@@ -320,14 +322,18 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                             backgroundColor: Colors.white,
                                             child: GestureDetector(
                                                 onTap: () {
-                                                  if (searchController.text == '') {
+                                                  if (searchController.text ==
+                                                      '') {
                                                     cubit
                                                         .setFavorateProduct(
                                                             product.id,
                                                             !product.isFavorite)
                                                         .then((value) {
                                                       cubit
-                                                          .searchInDiscounts(null)
+                                                          .searchInDiscounts(
+                                                              null,
+                                                              categoryName,
+                                                              categoryProducts)
                                                           .then((searchResult) {
                                                         context
                                                             .read<
@@ -345,7 +351,10 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                                         .then((value) {
                                                       cubit
                                                           .searchInDiscounts(
-                                                              searchController.text)
+                                                              searchController
+                                                                  .text,
+                                                              categoryName,
+                                                              categoryProducts)
                                                           .then((searchResult) {
                                                         context
                                                             .read<
@@ -361,17 +370,21 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                                     height: 33.h,
                                                     width: 33.h,
                                                     alignment: Alignment.center,
-                                                    decoration: const BoxDecoration(
-                                                        color: Colors.white,
-                                                        shape: BoxShape.circle),
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                            color: Colors.white,
+                                                            shape: BoxShape
+                                                                .circle),
                                                     child: product.isFavorite
                                                         ? const Icon(
                                                             Icons.favorite,
-                                                            color: Color(0xffFF6E6E),
+                                                            color: Color(
+                                                                0xffFF6E6E),
                                                           )
                                                         : const Icon(
                                                             Icons.favorite,
-                                                            color: Color(0xffD8D8D8),
+                                                            color: Color(
+                                                                0xffD8D8D8),
                                                           )))),
                                       )
                                     ],
@@ -427,9 +440,12 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
     ));
   }
 
-  searchInDiscount(SearchCubit cubit) async {
+  searchIn(SearchCubit cubit) async {
     if (searchController.text != '') {
-      cubit.searchInDiscounts(searchController.text).then((searchResult) {
+      cubit
+          .searchInDiscounts(
+              searchController.text, categoryName, categoryProducts)
+          .then((searchResult) {
         log(searchResult.toString());
         context
             .read<DiscountProductsBloc>()

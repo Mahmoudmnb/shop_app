@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import '../../../../../injection.dart';
@@ -423,7 +422,8 @@ class EndDrawer extends StatelessWidget {
                               if (fromPage == 'seeAll') {
                                 if (searchWord == '') {
                                   await cubit
-                                      .searchInDiscounts(null)
+                                      .searchInDiscounts(
+                                          null, oldCategoryName!, null)
                                       .then((searchResult) {
                                     context.read<DiscountProductsBloc>().add(
                                         SearchInDiscount(
@@ -432,7 +432,8 @@ class EndDrawer extends StatelessWidget {
                                 } else {
                                   log(searchWord);
                                   await cubit
-                                      .searchInDiscounts(searchWord)
+                                      .searchInDiscounts(
+                                          searchWord, oldCategoryName!, null)
                                       .then((searchResult) {
                                     context.read<DiscountProductsBloc>().add(
                                         SearchInDiscount(

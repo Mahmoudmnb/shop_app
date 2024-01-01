@@ -9,13 +9,16 @@ import '../models/product_model.dart';
 import '../widgets/collections_spacer.dart';
 import '../widgets/discount_image.dart';
 import '../widgets/recommended_image.dart';
-import '../widgets/top_collection_image.dart';
 import '../widgets/trendy_image.dart';
 import 'home_pages.dart';
 
 class HomePage extends StatelessWidget {
   final List<Map<String, Object?>> disCountProducts;
-  const HomePage({super.key, required this.disCountProducts});
+  final List<Map<String, dynamic>> trindyProducts;
+  const HomePage(
+      {super.key,
+      required this.disCountProducts,
+      required this.trindyProducts});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,7 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 context
                     .read<SearchCubit>()
-                    .searchInDiscounts(null)
+                    .searchInDiscounts(null, 'Discount', null)
                     .then((disCountProducts) {
                   context.read<SearchCubit>().reset('', false);
                   Navigator.of(context).push(MaterialPageRoute(
@@ -73,37 +76,34 @@ class HomePage extends StatelessWidget {
                         discount: product.disCount.toString());
                   })),
           SizedBox(height: 15.h),
-          CollectionsSpacer(onTap: () async {}, collectoinTitle: 'Trendy'),
+          CollectionsSpacer(
+              onTap: () async {
+                context.read<SearchCubit>().reset('', false);
+                // ToDo: i have to update trendy product before user can get here
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => SeeAllProductsPage(
+                      searchWord: '',
+                      categoryName: 'Trendy',
+                      categoryProducts: trindyProducts),
+                ));
+              },
+              collectoinTitle: 'Trendy'),
           //! Trendy products
           SizedBox(height: 15.h),
           Container(
             padding: EdgeInsets.only(left: 3.w, top: 1.h),
             width: 123.w,
             height: 180.h,
-            child: ListView(scrollDirection: Axis.horizontal, children: [
-              const TrendyImage(
-                imageUrl: 'assets/images/1.png',
-                percent: '50 %',
-                price: '17 \$',
-                productName: 'Wite contton Shirt',
-                makerCompany: 'elegance',
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: trindyProducts.length,
+              itemBuilder: (_, index) => TrendyImage(
+                makerCompany: trindyProducts[index]['makerCompany'],
+                imageUrl: trindyProducts[index]['imgUrl'].split('|')[0],
+                price: trindyProducts[index]['price'].toString(),
+                productName: trindyProducts[index]['name'],
               ),
-              SizedBox(width: 2.w),
-              const TrendyImage(
-                imageUrl: 'assets/images/1.png',
-                percent: '50 %',
-                price: '17 \$',
-                productName: 'Stripped contton Shirt',
-                makerCompany: 'elegance',
-              ),
-              SizedBox(width: 2.w),
-              const TrendyImage(
-                  imageUrl: 'assets/images/1.png',
-                  percent: '50 %',
-                  price: '17 \$',
-                  makerCompany: 'elegance',
-                  productName: 'Grey contton Shirt'),
-            ]),
+            ),
           ),
           SizedBox(height: 15.h),
 
@@ -124,10 +124,10 @@ class HomePage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 15.h),
-          CollectionsSpacer(onTap: () {}, collectoinTitle: 'Top Collection'),
+          // CollectionsSpacer(onTap: () {}, collectoinTitle: 'Top Collection'),
           //! Top collection
-          SizedBox(height: 15.h),
-          const TopCollectionImage(),
+          // SizedBox(height: 15.h),
+          // const TopCollectionImage(),
         ],
       ),
     );

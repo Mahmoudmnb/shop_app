@@ -291,7 +291,7 @@ class _ProductScreenState extends State<ProductScreen> {
       if (widget.searchWord != '') {
         context
             .read<SearchCubit>()
-            .searchInDiscounts(widget.searchWord)
+            .searchInDiscounts(widget.searchWord, 'Discount', null)
             .then((categoryProducts) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => SeeAllProductsPage(
@@ -303,7 +303,7 @@ class _ProductScreenState extends State<ProductScreen> {
       } else {
         context
             .read<SearchCubit>()
-            .searchInDiscounts(null)
+            .searchInDiscounts(null,'Discount',null)
             .then((categoryProducts) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => SeeAllProductsPage(

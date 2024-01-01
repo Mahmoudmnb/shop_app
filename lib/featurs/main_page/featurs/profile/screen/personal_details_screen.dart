@@ -1,5 +1,9 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/core/constant.dart';
 import 'package:shop_app/featurs/auth/models/user_model.dart';
@@ -67,24 +71,44 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                          color: Colors.red,
+                          color: Colors.black,
                           borderRadius: BorderRadius.circular(12)),
                       child: Constant.currentUser!.imgUrl == null
                           ? const SizedBox(
                               height: 130,
                               width: 130,
                               child: Center(
-                                child: Text('No Image'),
+                                child: Text(
+                                  'No Image',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
                             )
                           : Image(
                               height: 130.h,
                               width: 130.h,
-                              image: AssetImage(Constant.currentUser!.imgUrl!)),
+                              image: const AssetImage('assets/images/1.png')),
                     ),
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         // Todo : code for select an image for profile
+                        ImagePicker imagePicker = ImagePicker();
+                        XFile? file = await imagePicker.pickImage(
+                            source: ImageSource.gallery);
+                        if (file != null) {
+                          try {
+                            File profileImage = await File(file.path).copy(
+                                '/data/user/0/com.example.shop_app/mnb.jpg');
+                            Constant.currentUser!.imgUrl = profileImage.path;
+                            sl.get<SharedPreferences>().setString(
+                                'currentUser', Constant.currentUser!.toJson());
+                            log(Constant.currentUser!.imgUrl!);
+                          } catch (e) {
+                            log(e.toString());
+                          }
+                        } else {
+                          log('empty image');
+                        }
                       },
                       child: Container(
                         height: 40.h,

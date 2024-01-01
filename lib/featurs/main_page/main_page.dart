@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/constant.dart';
-import 'package:shop_app/core/data_base.dart';
 import 'package:toast/toast.dart';
 
 import '../../injection.dart';
@@ -30,6 +29,7 @@ class _MainPageState extends State<MainPage>
   @override
   void initState() {
     tabController = TabController(length: 4, vsync: this);
+
     super.initState();
   }
 
@@ -87,8 +87,25 @@ class _MainPageState extends State<MainPage>
           child: IconButton(
             icon: const Icon(Icons.favorite_border),
             onPressed: () async {
-              MyDataBase().createTable();
-              sl.get<DataSource>().getOrdersFromCloud();
+              // try {
+              //   final client = Client()
+              //       .setEndpoint('https://cloud.appwrite.io/v1')
+              //       .setProject(Constant.appWriteProjectId);
+              //   Realtime realtime = Realtime(client);
+              //   Databases databases = Databases(client);
+              //   var data = realtime
+              //       .subscribe([
+              //         'databases.65585f55e896c3e87515.collections.655860259ae4b331bee6'
+              //       ])
+              //       .stream
+              //       .listen((event) {
+              //         log('error');
+              //         log(event.payload.toString());
+              //       });
+              // } catch (e) {
+              //   log(e.toString());
+              // }
+
               //   try {
               //     File file1 = File(Constant.addToCartTable);
               //     Stream<String> lines = file1
@@ -172,7 +189,16 @@ class _MainPageState extends State<MainPage>
             FutureBuilder(
               future: sl.get<DataSource>().getDiscountsProducts(),
               builder: (context, snapshot) => snapshot.hasData
-                  ? HomePage(disCountProducts: snapshot.data!)
+                  ? FutureBuilder(
+                      future: sl.get<DataSource>().getTrendyProducts(),
+                      builder: (context, snapshot1) => snapshot1.hasData
+                          ? HomePage(
+                              disCountProducts: snapshot.data!,
+                              trindyProducts: snapshot1.data!,
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ))
                   : const SizedBox.shrink(),
             ),
             const SearchScreen(),

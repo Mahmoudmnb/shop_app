@@ -148,14 +148,27 @@ class SearchCubit extends Cubit<SearchState> {
     return data;
   }
 
-  Future<List<Map<String, dynamic>>> searchInDiscounts(String? searchWord) {
-    return sl.get<DataSource>().searchInDiscountProducts(
-        minPrice: minPrice,
-        maxPrice: maxPrice,
-        searchWord: searchWord,
-        discountFilter: filterDiscount,
-        ratingFilter: filterRating,
-        selectedCategory: selectedCategory,
-        colorFilter: filterColors);
+  Future<List<Map<String, dynamic>>> searchInDiscounts(String? searchWord,
+      String categoryName, List<Map<String, dynamic>>? trendyProducts) {
+    if (categoryName == 'Discount') {
+      return sl.get<DataSource>().searchInDiscountProducts(
+          minPrice: minPrice,
+          maxPrice: maxPrice,
+          searchWord: searchWord,
+          discountFilter: filterDiscount,
+          ratingFilter: filterRating,
+          selectedCategory: selectedCategory,
+          colorFilter: filterColors);
+    } else {
+      return sl.get<DataSource>().searchInTrendy(
+          selectedCategory,
+          searchWord,
+          minPrice,
+          maxPrice,
+          trendyProducts!,
+          filterDiscount,
+          filterRating,
+          filterColors);
+    }
   }
 }

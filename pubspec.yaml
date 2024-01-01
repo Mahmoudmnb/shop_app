@@ -54,6 +54,7 @@ dependencies:
   flutter_paypal_checkout:
   appwrite: ^11.0.0
   uuid: ^4.2.1
+  image_picker: ^1.0.5
   better_open_file:
 
   # The following adds the Cupertino Icons font to your application.

@@ -3,15 +3,47 @@ import 'package:appwrite/models.dart';
 import '../featurs/check_out/models/address_model.dart';
 import '../featurs/home/models/product_model.dart';
 import '../featurs/products_view/models/add_to_cart_product_model.dart';
-import 'local_data_source.dart';
-import 'remot_data_source.dart';
+import 'data_source_paths.dart';
 
 class DataSource {
-  LocalDataSource localDataSource;
   RemoteDataSource remoteDataSource;
-  DataSource({required this.localDataSource, required this.remoteDataSource});
+  SearchDataSource searchDataSource;
+  SetDataLocalDataSource setDataLocalDataSource;
+  GetDataLocalDataSource getDataLocalDataSource;
+  UpdateDeleteLocalDataSource updateDeleteLocalDataSource;
+  DataSource({
+    required this.updateDeleteLocalDataSource,
+    required this.remoteDataSource,
+    required this.searchDataSource,
+    required this.getDataLocalDataSource,
+    required this.setDataLocalDataSource,
+  });
+  Future<List<Map<String, dynamic>>> searchInTrendy(
+      String selectedCategory,
+      String? searchWord,
+      double minPrice,
+      double maxPrice,
+      List<Map<String, dynamic>> trendyProducts,
+      List<bool> discountFilter,
+      List<bool> ratingFilter,
+      List<bool> colorFilter) {
+    return searchDataSource.searchInTrendyProducts(
+        selectedCategory,
+        searchWord,
+        minPrice,
+        maxPrice,
+        trendyProducts,
+        discountFilter,
+        ratingFilter,
+        colorFilter);
+  }
+
+  Future<List<Map<String, dynamic>>> getTrendyProducts() async {
+    return getDataLocalDataSource.getTrendyProducts();
+  }
+
   Future<void> insertDataInOrderTableFromCloud(List<Document> orders) async {
-    localDataSource.insertDataInOrderTableFromCloud(orders);
+    setDataLocalDataSource.insertDataInOrderTableFromCloud(orders);
   }
 
   Future<void> getOrdersFromCloud() async {
@@ -20,15 +52,15 @@ class DataSource {
 
   Future<List<Map<String, dynamic>>> getLocationByName(
       String addressName) async {
-    return localDataSource.getLocationByName(addressName);
+    return getDataLocalDataSource.getLocationByName(addressName);
   }
 
   Future<List<Map<String, dynamic>>> getOrders() async {
-    return localDataSource.getOrders();
+    return getDataLocalDataSource.getOrders();
   }
 
   Future<List<Map<String, dynamic>>> getProductsByIds(String ordersIds) async {
-    return localDataSource.getProductsByIds(ordersIds);
+    return getDataLocalDataSource.getProductsByIds(ordersIds);
   }
 
   Future<void> addOrder(
@@ -44,7 +76,7 @@ class DataSource {
       String colors,
       String sizes,
       String amounts) async {
-    localDataSource.addOrder(
+    setDataLocalDataSource.addOrder(
         ordersIds,
         totalPrice,
         orderDate,
@@ -60,7 +92,7 @@ class DataSource {
   }
 
   Future<void> clearAddToCartTable() async {
-    return localDataSource.cleareAddToCartTable();
+    return updateDeleteLocalDataSource.cleareAddToCartTable();
   }
 
   Future<void> addOrdersToCloudDataBase(
@@ -75,36 +107,36 @@ class DataSource {
   }
 
   Future<void> getProductsFormCloudDataBase() async {
-    await localDataSource
+    await setDataLocalDataSource
         .insertDataIntoLocalDataBase(await remoteDataSource.getProducts());
   }
 
   Future<List<Map<String, dynamic>>> getLocations() async {
-    return localDataSource.getLocations();
+    return getDataLocalDataSource.getLocations();
   }
 
   Future<void> addNewLocation(AddressModel address) async {
-    return localDataSource.addNewLocation(address);
+    return setDataLocalDataSource.addNewLocation(address);
   }
 
   Future<List<Map<String, dynamic>>> getAddToCartProducts() async {
-    return localDataSource.getAddToCartProduct();
+    return getDataLocalDataSource.getAddToCartProduct();
   }
 
   Future<void> removeItemFromAddToCartProducts(int id) async {
-    localDataSource.removeItemFromAddToCartProducts(id);
+    updateDeleteLocalDataSource.removeItemFromAddToCartProducts(id);
   }
 
   Future<void> addToCart(AddToCartProductModel addToCartTableModel) async {
-    localDataSource.addToCart(addToCartTableModel);
+    setDataLocalDataSource.addToCart(addToCartTableModel);
   }
 
   Future<void> updateQuantity(int id, int quantity) async {
-    localDataSource.updateQuantity(id, quantity);
+    updateDeleteLocalDataSource.updateQuantity(id, quantity);
   }
 
   Future<Map<String, dynamic>> getAddToCartProductById(int id) async {
-    return localDataSource.getAddToCartProductById(id);
+    return getDataLocalDataSource.getAddToCartProductById(id);
   }
 
   Future<List<Map<String, Object?>>> searchInCategory({
@@ -116,7 +148,7 @@ class DataSource {
     required List<bool> ratingFilter,
     required List<bool> colorFilter,
   }) async {
-    return localDataSource.searchInCategory(
+    return searchDataSource.searchInCategory(
       discountfilter: discountFilter,
       minPrice: minPrice,
       maxPrice: maxPrice,
@@ -128,20 +160,20 @@ class DataSource {
   }
 
   Future<Map<String, dynamic>> getProductById(int id) async {
-    return localDataSource.getProductById(id);
+    return getDataLocalDataSource.getProductById(id);
   }
 
   Future<List<Map<String, dynamic>>> getDiscountsProducts() {
-    return localDataSource.getDiscountProduct();
+    return getDataLocalDataSource.getDiscountProduct();
   }
 
   Future<List<Map<String, dynamic>>> getSimilarProducts(
       ProductModel product) async {
-    return localDataSource.getSimilarProducts(product);
+    return getDataLocalDataSource.getSimilarProducts(product);
   }
 
   Future<List<Map<String, dynamic>>> getReviews(int id) async {
-    return localDataSource.getReviews(id);
+    return getDataLocalDataSource.getReviews(id);
   }
 
   Future<List<Map<String, Object?>>> searchInDiscountProducts({
@@ -153,7 +185,7 @@ class DataSource {
     required List<bool> ratingFilter,
     required List<bool> colorFilter,
   }) {
-    return localDataSource.searchInDiscountProducts(
+    return searchDataSource.searchInDiscountProducts(
         minPrice: minPrice,
         maxPrice: maxPrice,
         searchWord: searchWord,
@@ -172,7 +204,7 @@ class DataSource {
     required List<bool> ratingFilter,
     required List<bool> colorFilter,
   }) async {
-    return localDataSource.searchProducts(
+    return searchDataSource.searchProducts(
       discountfilter: discountFilter,
       search: search,
       minPrice: minPrice,
@@ -184,18 +216,18 @@ class DataSource {
   }
 
   Future<void> setSearchHistory(String searchWord) {
-    return localDataSource.setSearchHistory(searchWord);
+    return setDataLocalDataSource.setSearchHistory(searchWord);
   }
 
   Future<List<Map<String, dynamic>>> getSearchHistory() async {
-    return localDataSource.getSearchHistory();
+    return getDataLocalDataSource.getSearchHistory();
   }
 
   Future<void> deleteWordFormSearchHistory(String word) async {
-    return localDataSource.deleteWordFormSearchHistory(word);
+    return updateDeleteLocalDataSource.deleteWordFormSearchHistory(word);
   }
 
   Future<void> setFavorateProduct(int id, bool value) async {
-    localDataSource.setFavorateProduct(id, value);
+    setDataLocalDataSource.setFavorateProduct(id, value);
   }
 }

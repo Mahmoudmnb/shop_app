@@ -31,14 +31,17 @@ class ProfileScreen extends StatelessWidget {
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                    color: Colors.red,
+                                    color: Colors.black,
                                     borderRadius: BorderRadius.circular(12)),
                                 child: Constant.currentUser!.imgUrl == null
                                     ? SizedBox(
                                         height: 100.h,
                                         width: 100.h,
                                         child: const Center(
-                                            child: Text('No image')),
+                                            child: Text(
+                                          'No image',
+                                          style: TextStyle(color: Colors.white),  
+                                        )),
                                       )
                                     : Image(
                                         height: 100.h,
