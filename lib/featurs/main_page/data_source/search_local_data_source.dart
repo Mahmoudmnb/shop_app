@@ -176,179 +176,26 @@ class SearchDataSource {
       List<bool> discountFilter,
       List<bool> ratingFilter,
       List<bool> colorFilter) async {
-    return allProducts.where((element) {
-      if ((colorFilter[0] &&
-              element['colors'].toString().contains(hexaColors[0])) ||
-          (colorFilter[1] &&
-              element['colors'].toString().contains(hexaColors[1])) ||
-          (colorFilter[2] &&
-              element['colors'].toString().contains(hexaColors[2])) ||
-          (colorFilter[3] &&
-              element['colors'].toString().contains(hexaColors[3])) ||
-          (colorFilter[4] &&
-              element['colors'].toString().contains(hexaColors[4])) ||
-          (colorFilter[5] &&
-              element['colors'].toString().contains(hexaColors[5])) ||
-          (colorFilter[6] &&
-              element['colors'].toString().contains(hexaColors[6])) ||
-          (colorFilter[7] &&
-              element['colors'].toString().contains(hexaColors[7])) ||
-          (colorFilter[8] &&
-              element['colors'].toString().contains(hexaColors[8]))) {
-        if ((element['name'])
-                .toString()
-                .toLowerCase()
-                .contains(searchWord.toLowerCase()) ||
-            (element['discription'])
-                .toString()
-                .toLowerCase()
-                .contains(searchWord.toLowerCase()) ||
-            (element['makerCompany'])
-                .toString()
-                .toLowerCase()
-                .contains(searchWord.toLowerCase())) {
-          if ((discountFilter[0] && element['discount'] == 10) ||
-              (discountFilter[1] && element['discount'] == 15) ||
-              (discountFilter[2] && element['discount'] == 20) ||
-              (discountFilter[3] && element['discount'] == 30) ||
-              (discountFilter[4] && element['discount'] == 50) ||
-              (discountFilter[5] && element['discount'] == 70)) {
-            if ((ratingFilter[0] && element['rating'] == 1) ||
-                (ratingFilter[1] && element['rating'] == 2) ||
-                (ratingFilter[2] && element['rating'] == 3) ||
-                (ratingFilter[3] && element['rating'] == 4) ||
-                (ratingFilter[4] && element['rating'] == 5)) {
-              return true;
-            } else {
-              bool key = false;
-              for (var element in ratingFilter) {
-                if (element) {
-                  key = true;
-                }
-              }
-              if (key) {
-                return false;
-              } else {
-                return true;
-              }
-            }
-          } else {
-            bool key = false;
-            for (var element in discountFilter) {
-              if (element) {
-                key = true;
-              }
-            }
-            if (key) {
-              return false;
-            } else {
-              if ((ratingFilter[0] && element['rating'] == 1) ||
-                  (ratingFilter[1] && element['rating'] == 2) ||
-                  (ratingFilter[2] && element['rating'] == 3) ||
-                  (ratingFilter[3] && element['rating'] == 4) ||
-                  (ratingFilter[4] && element['rating'] == 5)) {
-                return true;
-              } else {
-                bool key = false;
-                for (var element in ratingFilter) {
-                  if (element) {
-                    key = true;
-                  }
-                }
-                if (key) {
-                  return false;
-                } else {
-                  return true;
-                }
-              }
-            }
-          }
-        } else {
-          return false;
-        }
-      } else {
-        bool key = false;
-        for (var element in colorFilter) {
-          if (element) {
-            key = true;
-          }
-        }
-        if (key) {
-          return false;
-        } else {
-          if ((element['name'])
-                  .toString()
-                  .toLowerCase()
-                  .contains(searchWord.toLowerCase()) ||
-              (element['discription'])
-                  .toString()
-                  .toLowerCase()
-                  .contains(searchWord.toLowerCase()) ||
-              (element['makerCompany'])
-                  .toString()
-                  .toLowerCase()
-                  .contains(searchWord.toLowerCase())) {
-            if ((discountFilter[0] && element['discount'] == 10) ||
-                (discountFilter[1] && element['discount'] == 15) ||
-                (discountFilter[2] && element['discount'] == 20) ||
-                (discountFilter[3] && element['discount'] == 30) ||
-                (discountFilter[4] && element['discount'] == 50) ||
-                (discountFilter[5] && element['discount'] == 70)) {
-              if ((ratingFilter[0] && element['rating'] == 1) ||
-                  (ratingFilter[1] && element['rating'] == 2) ||
-                  (ratingFilter[2] && element['rating'] == 3) ||
-                  (ratingFilter[3] && element['rating'] == 4) ||
-                  (ratingFilter[4] && element['rating'] == 5)) {
-                return true;
-              } else {
-                bool key = false;
-                for (var element in ratingFilter) {
-                  if (element) {
-                    key = true;
-                  }
-                }
-                if (key) {
-                  return false;
-                } else {
-                  return true;
-                }
-              }
-            } else {
-              bool key = false;
-              for (var element in discountFilter) {
-                if (element) {
-                  key = true;
-                }
-              }
-              if (key) {
-                return false;
-              } else {
-                if ((ratingFilter[0] && element['rating'] == 1) ||
-                    (ratingFilter[1] && element['rating'] == 2) ||
-                    (ratingFilter[2] && element['rating'] == 3) ||
-                    (ratingFilter[3] && element['rating'] == 4) ||
-                    (ratingFilter[4] && element['rating'] == 5)) {
-                  return true;
-                } else {
-                  bool key = false;
-                  for (var element in ratingFilter) {
-                    if (element) {
-                      key = true;
-                    }
-                  }
-                  if (key) {
-                    return false;
-                  } else {
-                    return true;
-                  }
-                }
-              }
-            }
-          } else {
-            return false;
-          }
-        }
-      }
+    var data = filterWithoutSearchWordProducts(selectedCategory, allProducts,
+        discountFilter, ratingFilter, colorFilter);
+    return data.where((element) {
+      log(element.toString());
+      return ((element['name'])
+              .toString()
+              .toLowerCase()
+              .contains(searchWord.toLowerCase()) ||
+          (element['category'])
+              .toString()
+              .toLowerCase()
+              .contains(searchWord.toLowerCase()) ||
+          (element['discription'])
+              .toString()
+              .toLowerCase()
+              .contains(searchWord.toLowerCase()) ||
+          (element['makerCompany'])
+              .toString()
+              .toLowerCase()
+              .contains(searchWord.toLowerCase()));
     }).toList();
   }
 
@@ -419,15 +266,14 @@ class SearchDataSource {
     return searchResult;
   }
 
-  Future<List<Map<String, Object?>>> searchProducts({
-    required String search,
-    required double minPrice,
-    required double maxPrice,
-    required String selectedCategory,
-    required List<bool> discountfilter,
-    required List<bool> ratingFilter,
-    required List<bool> colorFilter,
-  }) async {
+  Future<List<Map<String, Object?>>> searchProducts(
+      {required String search,
+      required double minPrice,
+      required double maxPrice,
+      required String selectedCategory,
+      required List<bool> discountfilter,
+      required List<bool> ratingFilter,
+      required List<bool> colorFilter}) async {
     Database db = await openDatabase(Constant.productDataBasePath);
     List<Map<String, dynamic>> searchResult = [];
     List<Map<String, dynamic>> allProducts = [];

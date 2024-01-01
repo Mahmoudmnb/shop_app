@@ -41,7 +41,6 @@ class MyDataBase {
     }
   }
 
-  //! working on it
   Future<void> createOrdersTable() async {
     String path = await getDatabasesPath();
     String dataBasePath = '$path/orders.db';
@@ -126,13 +125,5 @@ class MyDataBase {
     } catch (e) {
       log(e.toString());
     }
-  }
-
-  Future<void> insertData() async {
-    Database db = await openDatabase(Constant.productDataBasePath);
-    for (var element in Constant.data) {
-      db.insert('products', element);
-    }
-    log('done');
   }
 }

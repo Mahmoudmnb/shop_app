@@ -144,6 +144,10 @@ class GetDataLocalDataSource {
     } catch (e) {
       log(e.toString());
     }
+    if (trendyProducts.isEmpty) {
+      Database db = await openDatabase(Constant.productDataBasePath);
+      trendyProducts = await db.rawQuery('SELECT * FROM  products ');
+    }
     return trendyProducts;
   }
 }

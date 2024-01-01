@@ -76,37 +76,6 @@ class HomePage extends StatelessWidget {
                         discount: product.disCount.toString());
                   })),
           SizedBox(height: 15.h),
-          CollectionsSpacer(
-              onTap: () async {
-                context.read<SearchCubit>().reset('', false);
-                // ToDo: i have to update trendy product before user can get here
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => SeeAllProductsPage(
-                      searchWord: '',
-                      categoryName: 'Trendy',
-                      categoryProducts: trindyProducts),
-                ));
-              },
-              collectoinTitle: 'Trendy'),
-          //! Trendy products
-          SizedBox(height: 15.h),
-          Container(
-            padding: EdgeInsets.only(left: 3.w, top: 1.h),
-            width: 123.w,
-            height: 180.h,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: trindyProducts.length,
-              itemBuilder: (_, index) => TrendyImage(
-                makerCompany: trindyProducts[index]['makerCompany'],
-                imageUrl: trindyProducts[index]['imgUrl'].split('|')[0],
-                price: trindyProducts[index]['price'].toString(),
-                productName: trindyProducts[index]['name'],
-              ),
-            ),
-          ),
-          SizedBox(height: 15.h),
-
           CollectionsSpacer(onTap: () {}, collectoinTitle: 'Recommended'),
           //! Recommended products
           SizedBox(height: 15.h),
@@ -120,6 +89,37 @@ class HomePage extends StatelessWidget {
                 imageUrl: 'assets/images/1.png',
                 productPrice: '10 \$',
                 productNamge: 'Coffee polo shirt',
+              ),
+            ),
+          ),
+          SizedBox(height: 15.h),
+
+          //! Trendy products
+          CollectionsSpacer(
+              onTap: () async {
+                context.read<SearchCubit>().reset('', false);
+                // ToDo: i have to update trendy product before user can get here
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => SeeAllProductsPage(
+                      searchWord: '',
+                      categoryName: 'Trendy',
+                      categoryProducts: trindyProducts),
+                ));
+              },
+              collectoinTitle: 'Trendy'),
+          SizedBox(height: 15.h),
+          Container(
+            padding: EdgeInsets.only(left: 3.w, top: 1.h),
+            width: 123.w,
+            height: 180.h,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: trindyProducts.length,
+              itemBuilder: (_, index) => TrendyImage(
+                makerCompany: trindyProducts[index]['makerCompany'],
+                imageUrl: trindyProducts[index]['imgUrl'].split('|')[0],
+                price: trindyProducts[index]['price'].toString(),
+                productName: trindyProducts[index]['name'],
               ),
             ),
           ),
