@@ -9,7 +9,7 @@ class ProductModel {
   String colors;
   String discription;
   String imgUrl;
-  int disCount;
+  double disCount;
   String date;
   bool isFavorite;
   String? category;
