@@ -302,7 +302,12 @@ class SearchDataSource {
       List<bool> discountFilter,
       List<bool> ratingFilter,
       List<bool> colorFilter) async {
-    return filterWithoutSearchWordProducts(selectedCategory, trendyProducts,
-        discountFilter, ratingFilter, colorFilter);
+    if (searchWord == null) {
+      return filterWithoutSearchWordProducts(selectedCategory, trendyProducts,
+          discountFilter, ratingFilter, colorFilter);
+    } else {
+      return filterWithSearchWord(searchWord, selectedCategory, trendyProducts,
+          discountFilter, ratingFilter, colorFilter);
+    }
   }
 }
