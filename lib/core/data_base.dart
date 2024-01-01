@@ -92,7 +92,7 @@ class MyDataBase {
     log('done');
   }
 
-  Future<void> createTable() async {
+  Future<void> createProductTable() async {
     String path = await getDatabasesPath();
     String dataBasePath = '$path/prducts.db';
     try {
@@ -101,9 +101,7 @@ class MyDataBase {
         version: 1,
         onCreate: (db, version) async {
           db.execute(
-              'CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT NOT NULL , price DECIMAL NOT NULL , makerCompany TEXT NOT NULL , sizes TEXT NOT NULL , colors TEXT NOT NULL , discription TEXT NOT NULL , imgUrl TEXT NOT NULL ,discount INTEGER NOT NULL , date TEXT NOT NULL , category TEXT , rating INTEGER , isFavorate BOOLEAN)');
-          // SharedPreferences sh = await SharedPreferences.getInstance();
-          // sh.setString('DataBasePath', dataBasePath);
+              'CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT NOT NULL , price DECIMAL NOT NULL , makerCompany TEXT NOT NULL , sizes TEXT NOT NULL , colors TEXT NOT NULL , discription TEXT NOT NULL , imgUrl TEXT NOT NULL ,discount DECIMAL NOT NULL , date TEXT NOT NULL , category TEXT , rating INTEGER , isFavorate BOOLEAN)');
         },
       );
       log('products table created');

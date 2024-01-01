@@ -23,12 +23,14 @@ class GetDataLocalDataSource {
   Future<List<Map<String, dynamic>>> getSimilarProducts(
       ProductModel product) async {
     Database db = await openDatabase(Constant.productDataBasePath);
+
     List<Map<String, dynamic>> list1 = await db.rawQuery(
         "SELECT * FROM products WHERE category =='${product.category}' AND makerCompany =='${product.makerCompany}'");
     List<Map<String, dynamic>> list2 = await db.rawQuery(
         "SELECT * FROM products WHERE category =='${product.category}' AND makerCompany !='${product.makerCompany}'");
-    list1.addAll(list2);
-    return list1;
+    List<Map<String, dynamic>> finalList = List.of(list1);
+    finalList.addAll(list2);
+    return finalList;
   }
 
   Future<List<Map<String, dynamic>>> getReviews(int id) async {
