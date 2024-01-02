@@ -22,6 +22,7 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 393.w,
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -41,15 +42,14 @@ class ItemCard extends StatelessWidget {
           child: Row(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    bottomLeft: Radius.circular(10)),
-                child: Image.asset(
-                  url,
-                  fit: BoxFit.fill,
-                  width: 60.w,
-                ),
-              ),
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      bottomLeft: Radius.circular(10)),
+                  child: Image(
+                    image: AssetImage(url),
+                    fit: BoxFit.fill,
+                    width: 60.w,
+                  )),
               SizedBox(width: 10.w),
               Expanded(
                 child: Column(
@@ -112,25 +112,26 @@ class ItemCard extends StatelessWidget {
                           width: 1,
                           color: const Color(0xFF9B9B9B),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Size: $size',
-                              style: TextStyle(
-                                  fontFamily: 'DM Sans',
-                                  fontSize: 10.sp,
-                                  color: const Color(0xFF9B9B9B)),
-                            ),
-                            SizedBox(width: 160.w),
-                            Text(
-                              "x $quantity",
-                              style: TextStyle(
-                                  fontFamily: 'DM Sans',
-                                  fontSize: 12.sp,
-                                  color: const Color(0xFF9B9B9B)),
-                            )
-                          ],
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Size: $size',
+                                style: TextStyle(
+                                    fontFamily: 'DM Sans',
+                                    fontSize: 10.sp,
+                                    color: const Color(0xFF9B9B9B)),
+                              ),
+                              Text(
+                                "x $quantity  ",
+                                style: TextStyle(
+                                    fontFamily: 'DM Sans',
+                                    fontSize: 12.sp,
+                                    color: const Color(0xFF9B9B9B)),
+                              )
+                            ],
+                          ),
                         )
                       ],
                     ),

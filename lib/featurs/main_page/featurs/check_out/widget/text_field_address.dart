@@ -46,9 +46,9 @@ class TextFieldAddress extends StatelessWidget {
         validator: (value) {
           if (title == 'Address Name') {
             if (context.read<CheckOutCubit>().isAddressNameIsAvailable) {
-            } else {
-              return 'address name is used before please try another name';
-            }
+            }else {
+                return 'address name is used before please try another name';
+              }
           } else if (title == 'Full Name' || title == 'Address Name') {
             if (value == null || value.isEmpty || value.length < 3) {
               return '$title shold be more than three chrachters';

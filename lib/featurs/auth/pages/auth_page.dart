@@ -80,11 +80,8 @@ class AuthPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Image.asset(
-                      'assets/images/logo.png',
-                      height: 170.h,
-                      width: 170.h,
-                    ),
+                    Image.asset('assets/images/logo.png',
+                        height: 170.h, width: 170.h),
                     SizedBox(height: 8.5.h),
                     Row(
                       children: [
