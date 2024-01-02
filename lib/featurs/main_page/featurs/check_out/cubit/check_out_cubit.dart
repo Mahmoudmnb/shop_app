@@ -49,8 +49,14 @@ class CheckOutCubit extends Cubit<CheckOutState> {
     return sl.get<DataSource>().getLocations();
   }
 
+  Future<List<Map<String, dynamic>>> getLocationByName(
+      String addressName) async {
+    return sl.get<DataSource>().getLocationByName(addressName);
+  }
+
   List<Map<String, dynamic>> locations = [];
   bool isDelfaultLocatoin = false;
+  bool isAddressNameIsAvailable = true;
   void changeIsDelfaultLocatoin(bool value) {
     isDelfaultLocatoin = value;
     emit(IsDefaultLoacatoinState());

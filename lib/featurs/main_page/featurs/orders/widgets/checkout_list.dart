@@ -7,7 +7,16 @@ import '../model/order_model.dart';
 class CheckOutList extends StatelessWidget {
   final List<Map<String, dynamic>> products;
   final OrderModel order;
-  const CheckOutList({super.key, required this.products, required this.order});
+  final List<String> sizes;
+  final List<String> colors;
+  final List<String> amounts;
+  const CheckOutList(
+      {super.key,
+      required this.products,
+      required this.order,
+      required this.amounts,
+      required this.colors,
+      required this.sizes});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +60,7 @@ class CheckOutList extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        const Text('x 1'),
+                        Text('x ${amounts[index]}'),
                         SizedBox(width: 30.w),
                         Text('${product.price.toStringAsFixed(2)}\$'),
                       ],
@@ -75,7 +84,7 @@ class CheckOutList extends StatelessWidget {
                   ),
                 ),
                 Text(
-                    '${(order.totalPrice - deliveryCost).toStringAsFixed(2)} \$')
+                    '${(order.totalPrice - deliveryCost - 10).toStringAsFixed(2)} \$')
               ],
             ),
           ),
@@ -114,17 +123,17 @@ class CheckOutList extends StatelessWidget {
           const Divider(thickness: 1),
           Container(
             padding: EdgeInsets.symmetric(vertical: 10.h),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   "Total",
                   style: TextStyle(
                     fontFamily: 'Tenor Sans',
                     color: Color(0xFF393939),
                   ),
                 ),
-                Text('29.99 \$')
+                Text('${order.totalPrice} \$')
               ],
             ),
           ),

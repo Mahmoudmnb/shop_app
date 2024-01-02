@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/injection.dart';
 
 import '../../../cubit/main_page_cubit.dart';
 import '../../search/cubit/sreach_cubit.dart';
@@ -9,13 +11,16 @@ import '../models/product_model.dart';
 import '../widgets/collections_spacer.dart';
 import '../widgets/discount_image.dart';
 import '../widgets/recommended_image.dart';
-import '../widgets/top_collection_image.dart';
 import '../widgets/trendy_image.dart';
 import 'home_pages.dart';
 
 class HomePage extends StatelessWidget {
   final List<Map<String, Object?>> disCountProducts;
-  const HomePage({super.key, required this.disCountProducts});
+  final List<Map<String, dynamic>> trindyProducts;
+  const HomePage(
+      {super.key,
+      required this.disCountProducts,
+      required this.trindyProducts});
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +46,9 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 context
                     .read<SearchCubit>()
-                    .searchInDiscounts(null)
+                    .searchInSeeAllProducts(null, 'Discount', null)
                     .then((disCountProducts) {
+                  context.read<SearchCubit>().reset('', false);
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => SeeAllProductsPage(
                         searchWord: '',
@@ -72,40 +78,6 @@ class HomePage extends StatelessWidget {
                         discount: product.disCount.toString());
                   })),
           SizedBox(height: 15.h),
-          CollectionsSpacer(onTap: () async {}, collectoinTitle: 'Trendy'),
-          //! Trendy products
-          SizedBox(height: 15.h),
-          Container(
-            padding: EdgeInsets.only(left: 3.w, top: 1.h),
-            width: 123.w,
-            height: 180.h,
-            child: ListView(scrollDirection: Axis.horizontal, children: [
-              const TrendyImage(
-                imageUrl: 'assets/images/1.png',
-                percent: '50 %',
-                price: '17 \$',
-                productName: 'Wite contton Shirt',
-                makerCompany: 'elegance',
-              ),
-              SizedBox(width: 2.w),
-              const TrendyImage(
-                imageUrl: 'assets/images/1.png',
-                percent: '50 %',
-                price: '17 \$',
-                productName: 'Stripped contton Shirt',
-                makerCompany: 'elegance',
-              ),
-              SizedBox(width: 2.w),
-              const TrendyImage(
-                  imageUrl: 'assets/images/1.png',
-                  percent: '50 %',
-                  price: '17 \$',
-                  makerCompany: 'elegance',
-                  productName: 'Grey contton Shirt'),
-            ]),
-          ),
-          SizedBox(height: 15.h),
-
           CollectionsSpacer(onTap: () {}, collectoinTitle: 'Recommended'),
           //! Recommended products
           SizedBox(height: 15.h),
@@ -123,10 +95,44 @@ class HomePage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 15.h),
-          CollectionsSpacer(onTap: () {}, collectoinTitle: 'Top Collection'),
-          //! Top collection
+
+          //! Trendy products
+          CollectionsSpacer(
+              onTap: () async {
+                context.read<SearchCubit>().reset('', false);
+                List<Map<String, dynamic>> trendyProducts =
+                    await sl.get<DataSource>().getTrendyProducts();
+                if (context.mounted) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SeeAllProductsPage(
+                        searchWord: '',
+                        categoryName: 'Trendy',
+                        categoryProducts: trendyProducts),
+                  ));
+                }
+              },
+              collectoinTitle: 'Trendy'),
           SizedBox(height: 15.h),
-          const TopCollectionImage(),
+          Container(
+            padding: EdgeInsets.only(left: 3.w, top: 1.h),
+            width: 123.w,
+            height: 180.h,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: trindyProducts.length,
+              itemBuilder: (_, index) => TrendyImage(
+                makerCompany: trindyProducts[index]['makerCompany'],
+                imageUrl: trindyProducts[index]['imgUrl'].split('|')[0],
+                price: trindyProducts[index]['price'].toString(),
+                productName: trindyProducts[index]['name'],
+              ),
+            ),
+          ),
+          SizedBox(height: 15.h),
+          // CollectionsSpacer(onTap: () {}, collectoinTitle: 'Top Collection'),
+          //! Top collection
+          // SizedBox(height: 15.h),
+          // const TopCollectionImage(),
         ],
       ),
     );

@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/constant.dart';
 
 import '../model/order_model.dart';
-import '../screen/details_delivered.dart';
+import '../screen/order_details.dart';
 
 class BuildOrderCard extends StatelessWidget {
   final OrderModel order;
@@ -77,7 +77,7 @@ class BuildOrderCard extends StatelessWidget {
                   Text(
                     order.shoppingMethod == 'In store pick-up'
                         ? 'In store'
-                        : "${Constant.stringToDate(order.createdAt).add(const Duration(days: 3)).day}/${Constant.stringToDate(order.createdAt).add(const Duration(days: 3)).month}/${Constant.stringToDate(order.createdAt).add(const Duration(days: 3)).year}",
+                        : "${Constant.stringToDate(order.createdAt).add(Duration(days: order.shoppingMethod == 'Express delivery' ? 1 : 3)).day}/${Constant.stringToDate(order.createdAt).add(const Duration(days: 3)).month}/${Constant.stringToDate(order.createdAt).add(const Duration(days: 3)).year}",
                     style: TextStyle(color: Colors.black, fontSize: 13.sp),
                   ),
                 ],
@@ -113,7 +113,7 @@ class BuildOrderCard extends StatelessWidget {
               child: Row(
                 children: [
                   const Text(
-                    "Subtotal",
+                    "Total price",
                     style: TextStyle(
                         fontFamily: 'Tenor Sans', color: Color(0xFF828282)),
                   ),
@@ -159,10 +159,19 @@ class BuildOrderCard extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
+                List<String> amounts =
+                    Constant.stringToList(order.amounts) as List<String>;
+                List<String> colors =
+                    Constant.stringToList(order.colors) as List<String>;
+                List<String> sizes =
+                    Constant.stringToList(order.sizes) as List<String>;
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DetailsDelivered(
+                  builder: (context) => OrderDetails(
                     order: order,
                     isDeliverd: isDeliverd,
+                    sizes: sizes,
+                    colors: colors,
+                    amounts: amounts,
                   ),
                 ));
               },

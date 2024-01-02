@@ -1,9 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/featurs/main_page/featurs/products_view/models/add_to_cart_product_model.dart';
-import '../../../home/models/product_model.dart';
 
 import '../../../../../../injection.dart';
 import '../../../../data_source/data_source.dart';
+import '../../../home/models/product_model.dart';
 
 part 'states.dart';
 
@@ -70,13 +72,23 @@ class ProductCubit extends Cubit<ProductStates> {
     String color = product.colors.split('|')[indexOfColor];
     String size = product.sizes.split('|')[indexOfSize];
     String imgUrl = product.imgUrl.split('|')[0];
-    sl.get<DataSource>().addToCart(AddToCartProductModel(
-        imgUrl: imgUrl,
-        quantity: amountOfProduct,
-        color: color,
-        companyMaker: product.makerCompany,
-        productName: product.name,
-        price: product.price,
-        size: size));
+    log(amountOfProduct.toString());
+    sl
+        .get<DataSource>()
+        .addToCart(AddToCartProductModel(
+            orderId: product.id,
+            imgUrl: imgUrl,
+            quantity: amountOfProduct,
+            color: color,
+            companyMaker: product.makerCompany,
+            productName: product.name,
+            price: product.disCount > 0
+                ? (1 - product.disCount / 100) * product.price
+                : product.price,
+            size: size))
+        .then((value) {
+      amountOfProduct = 1;
+      emit(ChangeProductAmountState());
+    });
   }
 }

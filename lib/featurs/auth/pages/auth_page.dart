@@ -21,7 +21,7 @@ class AuthPage extends StatelessWidget {
       } else {
         sl.get<SharedPreferences>().setBool('isFirstTime', false);
         MyDataBase myDataBase = MyDataBase();
-        myDataBase.createTable().then((value) {
+        myDataBase.createProductTable().then((value) {
           myDataBase.createReviewTable().then((value) {
             myDataBase.createSearchHistoryTable().then((value) {
               myDataBase.createAddToCartTable().then((value) {
@@ -31,9 +31,11 @@ class AuthPage extends StatelessWidget {
                         .get<DataSource>()
                         .getProductsFormCloudDataBase()
                         .then((value) {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const MainPage(),
-                      ));
+                      sl.get<DataSource>().getOrdersFromCloud().then((value) {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => const MainPage(),
+                        ));
+                      });
                     });
                   });
                 });

@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import '../../../../../injection.dart';
@@ -14,12 +13,14 @@ import '../cubit/sreach_cubit.dart';
 class EndDrawer extends StatelessWidget {
   final String searchWord;
   final String fromPage;
+  final String? fromPageTitle;
   final String? oldCategoryName;
   final TextEditingController searchController;
   const EndDrawer(
       {super.key,
       required this.searchController,
       this.oldCategoryName,
+      this.fromPageTitle,
       required this.searchWord,
       required this.fromPage});
   @override
@@ -392,15 +393,21 @@ class EndDrawer extends StatelessWidget {
                                 cubit.reset(searchWord, false);
                                 cubit.setSelectedCategory('All');
                                 hidTextFromField();
-                                sl
-                                    .get<DataSource>()
-                                    .getDiscountsProducts()
-                                    .then((allDiscountProducts) {
+                                List<Map<String, dynamic>> products;
+                                if (fromPageTitle == 'Trendy') {
+                                  products = await sl
+                                      .get<DataSource>()
+                                      .getTrendyProducts();
+                                } else {
+                                  products = await sl
+                                      .get<DataSource>()
+                                      .getDiscountsProducts();
+                                }
+                                if (context.mounted) {
                                   context.read<DiscountProductsBloc>().add(
                                       GetAllDiscountEvent(
-                                          allDiscountProducts:
-                                              allDiscountProducts));
-                                });
+                                          allDiscountProducts: products));
+                                }
                               } else {
                                 await cubit.reset(searchWord, true);
                               }
@@ -421,18 +428,26 @@ class EndDrawer extends StatelessWidget {
                                 }
                               }
                               if (fromPage == 'seeAll') {
+                                List<Map<String, dynamic>> trendyProducts = [];
+                                if (fromPageTitle == 'Trendy') {
+                                  trendyProducts = await sl
+                                      .get<DataSource>()
+                                      .getTrendyProducts();
+                                }
+
                                 if (searchWord == '') {
                                   await cubit
-                                      .searchInDiscounts(null)
+                                      .searchInSeeAllProducts(null,
+                                          oldCategoryName!, trendyProducts)
                                       .then((searchResult) {
                                     context.read<DiscountProductsBloc>().add(
                                         SearchInDiscount(
                                             searchResult: searchResult));
                                   });
                                 } else {
-                                  log(searchWord);
                                   await cubit
-                                      .searchInDiscounts(searchWord)
+                                      .searchInSeeAllProducts(searchWord,
+                                          oldCategoryName!, trendyProducts)
                                       .then((searchResult) {
                                     context.read<DiscountProductsBloc>().add(
                                         SearchInDiscount(

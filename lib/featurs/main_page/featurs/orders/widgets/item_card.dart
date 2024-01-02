@@ -59,10 +59,10 @@ class ItemCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Flydat shirt',
+                        Text(
+                          title,
                           textAlign: TextAlign.start,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontFamily: "DM Sans",
                             fontWeight: FontWeight.bold,
                           ),

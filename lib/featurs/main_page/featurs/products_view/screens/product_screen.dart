@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/main_page/featurs/home/pages/home_pages.dart';
-import 'package:shop_app/featurs/main_page/featurs/search/pages/category_view_page.dart';
+import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/injection.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:toast/toast.dart';
 
 import '../../home/models/product_model.dart';
+import '../../home/pages/home_pages.dart';
 import '../../search/cubit/sreach_cubit.dart';
+import '../../search/pages/category_view_page.dart';
 import '../../search/pages/search_results_screen.dart';
 import '../cubits/product_screen/cubit.dart';
 import '../widgets/product_view/wishlist_view.dart';
@@ -23,8 +25,10 @@ class ProductScreen extends StatefulWidget {
   final ProductCubit cubit;
   final String fromPage;
   final String? categoryName;
+  final String? fromPageTitle;
   const ProductScreen({
     super.key,
+    this.fromPageTitle,
     required this.searchWord,
     required this.fromPage,
     required this.product,
@@ -140,21 +144,21 @@ class _ProductScreenState extends State<ProductScreen> {
                             ),
                             onPressed: () async {
                               ToastContext().init(context);
-                            Toast.show(
-                                'Mohammed disconnect favorite for testing',
-                                duration: Toast.lengthLong);
-                            showModalBottomSheet(
-                                isScrollControlled: true,
-                                backgroundColor: const Color(0xFF484848),
-                                shape: const OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
+                              Toast.show(
+                                  'Mohammed disconnect favorite for testing',
+                                  duration: Toast.lengthLong);
+                              showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: const Color(0xFF484848),
+                                  shape: const OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                    ),
                                   ),
-                                ),
-                                context: context,
-                                builder: (context) => const WishlistView());
+                                  context: context,
+                                  builder: (context) => const WishlistView());
                               // cubit.changeFavorite(product.id).then((value) {});
                             },
                           );
@@ -197,7 +201,6 @@ class _ProductScreenState extends State<ProductScreen> {
                           }
                           return true;
                         },
-                        
                         child: ProductDetails(
                           hidden: cubit.hidden,
                           categoryName: widget.fromPage == 'SearchReasults'
@@ -289,30 +292,40 @@ class _ProductScreenState extends State<ProductScreen> {
         });
       }
     } else if (widget.fromPage == 'seeAll') {
+      List<Map<String, dynamic>> trendyProducts = [];
+      if (widget.fromPageTitle == 'Trendy') {
+        trendyProducts = await sl.get<DataSource>().getTrendyProducts();
+      }
       if (widget.searchWord != '') {
-        context
-            .read<SearchCubit>()
-            .searchInDiscounts(widget.searchWord)
-            .then((categoryProducts) {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => SeeAllProductsPage(
-                searchWord: widget.searchWord,
-                categoryName: 'Discount ',
-                categoryProducts: categoryProducts),
-          ));
-        });
+        if (context.mounted) {
+          context
+              .read<SearchCubit>()
+              .searchInSeeAllProducts(
+                  widget.searchWord, widget.fromPageTitle!, trendyProducts)
+              .then((categoryProducts) {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => SeeAllProductsPage(
+                  searchWord: widget.searchWord,
+                  categoryName: widget.fromPageTitle!,
+                  categoryProducts: categoryProducts),
+            ));
+          });
+        }
       } else {
-        context
-            .read<SearchCubit>()
-            .searchInDiscounts(null)
-            .then((categoryProducts) {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => SeeAllProductsPage(
-                searchWord: widget.searchWord,
-                categoryName: 'Discount ',
-                categoryProducts: categoryProducts),
-          ));
-        });
+        if (context.mounted) {
+          context
+              .read<SearchCubit>()
+              .searchInSeeAllProducts(
+                  null, widget.fromPageTitle!, trendyProducts)
+              .then((categoryProducts) {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => SeeAllProductsPage(
+                  searchWord: widget.searchWord,
+                  categoryName: widget.fromPageTitle!,
+                  categoryProducts: categoryProducts),
+            ));
+          });
+        }
       }
     }
   }

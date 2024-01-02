@@ -9,7 +9,7 @@ class ProductModel {
   String colors;
   String discription;
   String imgUrl;
-  int disCount;
+  double disCount;
   String date;
   bool isFavorite;
   String? category;
@@ -49,7 +49,7 @@ class ProductModel {
       category: map['category'],
       isFavorite: map['isFavorate'] == 'true' ? true : false,
       date: map['date'] as String,
-      disCount: map['discount'] ?? 0,
+      disCount: map['discount'] * 1.0 ?? 0.0,
       imgUrl: map['imgUrl'] as String,
       id: map['id'] as int,
       price: double.parse(map['price'].toString()),

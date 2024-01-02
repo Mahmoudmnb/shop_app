@@ -52,9 +52,10 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Column(children: [
               SizedBox(height: 15.h),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: 300.w,
+                    width: 350.w,
                     child: Container(
                       alignment: Alignment.center,
                       decoration:
@@ -115,32 +116,32 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ),
                   ),
-                  Builder(builder: (context) {
-                    return Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          cubit.openDrawer(context);
-                        },
-                        child: Container(
-                          height: 55.h,
-                          // width: 30.w,
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.h, horizontal: 10.w),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            color: const Color(0xFFEAEAEA),
-                          ),
-                          margin: const EdgeInsets.all(10),
-                          child: Image(
-                            image: const AssetImage(
-                                'assets/images/Filter_big.png'),
-                            height: 22.h,
-                            width: 22.h,
-                          ),
-                        ),
-                      ),
-                    );
-                  })
+                  // Builder(builder: (context) {
+                  //   return Expanded(
+                  //     child: GestureDetector(
+                  //       onTap: () {
+                  //         cubit.openDrawer(context);
+                  //       },
+                  //       child: Container(
+                  //         height: 55.h,
+                  //         // width: 30.w,
+                  //         padding: EdgeInsets.symmetric(
+                  //             vertical: 10.h, horizontal: 10.w),
+                  //         decoration: BoxDecoration(
+                  //           borderRadius: BorderRadius.circular(4),
+                  //           color: const Color(0xFFEAEAEA),
+                  //         ),
+                  //         margin: const EdgeInsets.all(10),
+                  //         child: Image(
+                  //           image: const AssetImage(
+                  //               'assets/images/Filter_big.png'),
+                  //           height: 22.h,
+                  //           width: 22.h,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   );
+                  // })
                 ],
               ),
               Padding(
@@ -267,6 +268,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   search(SearchCubit cubit) async {
     if (searchController.text.isNotEmpty) {
+      context.read<SearchCubit>().reset('', false);
       sl.get<DataSource>().setSearchHistory(searchController.text);
       List<Map<String, dynamic>> searchProduts =
           await cubit.search(searchController.text.trim());

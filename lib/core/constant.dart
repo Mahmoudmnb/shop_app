@@ -13,6 +13,10 @@ class Constant {
         int.parse(time[0]), int.parse(time[1]), int.parse(time[2]));
   }
 
+  static List<dynamic> stringToList(String list) {
+    return list.split('|');
+  }
+
   static UserModel? currentUser;
   static String supabaseUrl = 'https://eujauxjltyekeqyohodz.supabase.co';
   static String supabaseAnonkey =

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,22 +15,25 @@ class MyOrdersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<MainPageCubit>().changePageIndex(2);
+    List<OrderModel> pendingOrders = [];
+    List<OrderModel> deliverdOrders = [];
     return BlocBuilder<OrdersCubit, OrdersState>(
       builder: (context, state) {
         return FutureBuilder(
             future: sl.get<DataSource>().getOrders(),
             builder: (ctx, snapshot) {
-              List<OrderModel> pendingOrders = [];
-              List<OrderModel> deliverdOrders = [];
               if (snapshot.hasData) {
+                pendingOrders = [];
+                deliverdOrders = [];
                 List<Map<String, dynamic>> orders = snapshot.data!;
-                log(snapshot.data.toString());
                 for (var element in orders) {
                   OrderModel order = OrderModel.fromMap(element);
+                  int deliveryTime =
+                      order.shoppingMethod == 'Express delivery' ? 1 : 3;
                   if (DateTime.now()
                           .difference(Constant.stringToDate(order.createdAt))
                           .inDays >=
-                      3) {
+                      deliveryTime) {
                     deliverdOrders.add(order);
                   } else {
                     pendingOrders.add(order);
@@ -176,7 +177,7 @@ class MyOrdersScreen extends StatelessWidget {
                         ],
                       ),
                     )
-                  : const CircularProgressIndicator();
+                  : const Center(child: CircularProgressIndicator());
             });
       },
     );

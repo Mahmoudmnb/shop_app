@@ -44,45 +44,19 @@ Future<void> main(List<String> args) async {
     Constant.baseUrl = baseUrl;
   }
   runApp(MultiBlocProvider(providers: [
-    BlocProvider(
-      create: (context) => VisiblePsswordBloc(),
-    ),
-    BlocProvider(
-      create: (context) => EmailTextBloc(),
-    ),
-    BlocProvider(
-      create: (context) => SignUpBloc(),
-    ),
-    BlocProvider(
-      create: (context) => SignInLoadingBloc(),
-    ),
-    BlocProvider(
-      create: (context) => DiscountProductsBloc(),
-    ),
-    BlocProvider(
-      create: (context) => SearchCubit(),
-    ),
-    BlocProvider(
-      create: (context) => ProductCubit(),
-    ),
-    BlocProvider(
-      create: (context) => MainPageCubit(),
-    ),
-    BlocProvider(
-      create: (context) => OrdersCubit(),
-    ),
-    BlocProvider(
-      create: (context) => ProfileCubit(),
-    ),
-    BlocProvider(
-      create: (context) => AddToCartCubit(),
-    ),
-    BlocProvider(
-      create: (context) => ItemProductCubit(),
-    ),
-    BlocProvider(
-      create: (context) => CheckOutCubit(),
-    ),
+    BlocProvider(create: (context) => VisiblePsswordBloc()),
+    BlocProvider(create: (context) => EmailTextBloc()),
+    BlocProvider(create: (context) => SignUpBloc()),
+    BlocProvider(create: (context) => SignInLoadingBloc()),
+    BlocProvider(create: (context) => DiscountProductsBloc()),
+    BlocProvider(create: (context) => SearchCubit()),
+    BlocProvider(create: (context) => ProductCubit()),
+    BlocProvider(create: (context) => MainPageCubit()),
+    BlocProvider(create: (context) => OrdersCubit()),
+    BlocProvider(create: (context) => ProfileCubit()),
+    BlocProvider(create: (context) => AddToCartCubit()),
+    BlocProvider(create: (context) => ItemProductCubit()),
+    BlocProvider(create: (context) => CheckOutCubit()),
   ], child: const MyApp()));
 }
 
@@ -91,6 +65,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // debugInvertOversizedImages = true;
     return ScreenUtilInit(
         designSize: const Size(393, 852),
         builder: (context, child) => MaterialApp(

@@ -15,4 +15,8 @@ class MainPageCubit extends Cubit<MainPageState> {
     isAddLocationLoading = value;
     emit(AddLocationLoading());
   }
+
+  void updateProfilePageData() {
+    emit(UpdateProfilePage());
+  }
 }

@@ -29,6 +29,7 @@ class _MainPageState extends State<MainPage>
   @override
   void initState() {
     tabController = TabController(length: 4, vsync: this);
+
     super.initState();
   }
 
@@ -85,7 +86,43 @@ class _MainPageState extends State<MainPage>
           padding: EdgeInsets.only(right: 4.0.w),
           child: IconButton(
             icon: const Icon(Icons.favorite_border),
-            onPressed: () {},
+            onPressed: () async {
+              // try {
+              //   final client = Client()
+              //       .setEndpoint('https://cloud.appwrite.io/v1')
+              //       .setProject(Constant.appWriteProjectId);
+              //   Realtime realtime = Realtime(client);
+              //   Databases databases = Databases(client);
+              //   var data = realtime
+              //       .subscribe([
+              //         'databases.65585f55e896c3e87515.collections.655860259ae4b331bee6'
+              //       ])
+              //       .stream
+              //       .listen((event) {
+              //         log('error');
+              //         log(event.payload.toString());
+              //       });
+              // } catch (e) {
+              //   log(e.toString());
+              // }
+
+              //   try {
+              //     File file1 = File(Constant.addToCartTable);
+              //     Stream<String> lines = file1
+              //         .openRead()
+              //         .transform(utf8.decoder) // Decode bytes to UTF-8.
+              //         .transform(const LineSplitter());
+              //     await for (var line in lines) {
+              //       print(line);
+              //     }
+              //     // File file = File(Constant.addToCartTable);
+              //     // var res = await OpenFile.open(Constant.addToCartTable);
+              //     // log(res.message);
+              //     // log(file.existsSync().toString());
+              //   } catch (e) {
+              //     log(e.toString());
+              //   }
+            },
           ),
         )
       ],
@@ -110,6 +147,7 @@ class _MainPageState extends State<MainPage>
       backgroundColor: Colors.white,
       appBar: appBar,
       drawer: const Drawer(
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(15),
@@ -151,7 +189,16 @@ class _MainPageState extends State<MainPage>
             FutureBuilder(
               future: sl.get<DataSource>().getDiscountsProducts(),
               builder: (context, snapshot) => snapshot.hasData
-                  ? HomePage(disCountProducts: snapshot.data!)
+                  ? FutureBuilder(
+                      future: sl.get<DataSource>().getTrendyProducts(),
+                      builder: (context, snapshot1) => snapshot1.hasData
+                          ? HomePage(
+                              disCountProducts: snapshot.data!,
+                              trindyProducts: snapshot1.data!,
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ))
                   : const SizedBox.shrink(),
             ),
             const SearchScreen(),

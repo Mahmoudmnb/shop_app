@@ -36,7 +36,7 @@ class CheckOutAddressCard extends StatelessWidget {
                   padding: EdgeInsets.only(bottom: 15.h),
                   child: Radio(
                       activeColor: Colors.black,
-                      value: cubit.selectAddress,
+                      value: title,
                       groupValue: cubit.selectAddress,
                       onChanged: (value) {
                         cubit.changeAddress(value!);
@@ -54,9 +54,7 @@ class CheckOutAddressCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           fontFamily: 'DM Sans'),
                     ),
-                    SizedBox(
-                      height: 4.h,
-                    ),
+                    SizedBox(height: 4.h),
                     Text(
                       description,
                       style: const TextStyle(

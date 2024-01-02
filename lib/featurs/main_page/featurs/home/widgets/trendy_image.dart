@@ -5,7 +5,6 @@ class TrendyImage extends StatelessWidget {
   final String imageUrl;
   final String price;
   final String productName;
-  final String percent;
   final String makerCompany;
   const TrendyImage({
     Key? key,
@@ -13,7 +12,6 @@ class TrendyImage extends StatelessWidget {
     required this.imageUrl,
     required this.price,
     required this.productName,
-    required this.percent,
   }) : super(key: key);
 
   @override

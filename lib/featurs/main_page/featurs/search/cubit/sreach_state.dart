@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 part of 'sreach_cubit.dart';
 
 @immutable
@@ -25,7 +27,10 @@ class FilterRatringState extends SearchState {}
 
 class FilterDiscountState extends SearchState {}
 
-class ResetFilter extends SearchState {}
+class ResetFilter extends SearchState {
+  List<Map<String, dynamic>>? products;
+  ResetFilter({this.products});
+}
 
 class GetCategoryProducts extends SearchState {
   final List<Map<String, dynamic>> categoryProducts;

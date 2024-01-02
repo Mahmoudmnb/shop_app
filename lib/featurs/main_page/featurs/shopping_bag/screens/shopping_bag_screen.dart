@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/main_page/featurs/shopping_bag/widgets/custom_app_bar.dart';
 
 import '../../check_out/cubit/check_out_cubit.dart';
 import '../../check_out/screens/first_step.dart';
 import '../cubits/products_cubit/products_cubit.dart';
-import '../widgets/shopping_bag_body.dart';
+import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_button.dart';
+import '../widgets/shopping_bag_body.dart';
 
 class ShoppingBagScreen extends StatelessWidget {
   const ShoppingBagScreen({super.key});
@@ -54,8 +54,6 @@ class ShoppingBagScreen extends StatelessWidget {
                       ),
                     )
                   : Expanded(
-                      // height: 852.h,
-                      // width: 393.w,
                       child: Stack(
                         children: [
                           const ShoppingBagBody(),

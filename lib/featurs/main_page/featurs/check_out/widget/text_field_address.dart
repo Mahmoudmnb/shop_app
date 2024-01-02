@@ -1,5 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../cubit/check_out_cubit.dart';
 
 class TextFieldAddress extends StatelessWidget {
   const TextFieldAddress({
@@ -22,17 +27,35 @@ class TextFieldAddress extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       // height: 50.h,
       child: TextFormField(
+        onChanged: (value) {
+          if (title == 'Address Name') {
+            log('address name');
+            context
+                .read<CheckOutCubit>()
+                .getLocationByName(value.trim())
+                .then((value) {
+              log(value.toString());
+              context.read<CheckOutCubit>().isAddressNameIsAvailable =
+                  value.isEmpty;
+            });
+          }
+        },
         onTapOutside: (event) {
           FocusScope.of(context).unfocus();
         },
         validator: (value) {
-          if (title == 'Full Name' || title == 'Address Name') {
-            if (value == null || value.isEmpty || value.length <= 6) {
-              return '$title shold be more than six chrachters';
+          if (title == 'Address Name') {
+            if (context.read<CheckOutCubit>().isAddressNameIsAvailable) {
+            } else {
+              return 'address name is used before please try another name';
+            }
+          } else if (title == 'Full Name' || title == 'Address Name') {
+            if (value == null || value.isEmpty || value.length < 3) {
+              return '$title shold be more than three chrachters';
             }
           } else if (title == 'Phone Number') {
-            if (value == null || value.isEmpty || value.length != 10) {
-              return 'Phone Number shold be 10 digits';
+            if (value == null || value.isEmpty || value.length != 9) {
+              return 'Phone Number shold be 9 digits';
             }
           } else if (title == 'Email Address') {
             if (value == null ||
