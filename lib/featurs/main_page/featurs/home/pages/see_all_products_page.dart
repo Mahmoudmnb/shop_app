@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/injection.dart';
 
 import '../../home/models/product_model.dart';
 import '../../products_view/cubits/product_screen/cubit.dart';
@@ -35,6 +37,11 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
   bool isSearch = false;
   @override
   void initState() {
+    if (widget.searchWord != '') {
+      context
+          .read<DiscountProductsBloc>()
+          .add(ChangeIsSearchEvent(isSearch: true));
+    }
     searchController = TextEditingController(text: widget.searchWord);
     categoryProducts = widget.categoryProducts;
     categoryName = widget.categoryName;
@@ -56,6 +63,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
         oldCategoryName: widget.categoryName,
         searchWord: searchController.text,
         fromPage: 'seeAll',
+        fromPageTitle: widget.categoryName,
         searchController: searchController,
       ),
       backgroundColor: Colors.white,
@@ -161,9 +169,17 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                       FocusScope.of(context).unfocus();
                                       context.read<DiscountProductsBloc>().add(
                                           ChangeIsSearchEvent(isSearch: false));
+
+                                      if (categoryName == 'Trendy') {
+                                        List<Map<String, dynamic>>
+                                            trendyProducts = await sl
+                                                .get<DataSource>()
+                                                .getTrendyProducts();
+                                        categoryProducts = trendyProducts;
+                                      }
                                       cubit
-                                          .searchInDiscounts(null, categoryName,
-                                              categoryProducts)
+                                          .searchInSeeAllProducts(null,
+                                              categoryName, categoryProducts)
                                           .then((allDiscountProducts) {
                                         context
                                             .read<DiscountProductsBloc>()
@@ -290,6 +306,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                       searchCubit: cubit,
                                       searchWord: searchController.text,
                                       product: product,
+                                      fromPageTitle: categoryName,
                                       cubit: BlocProvider.of<ProductCubit>(
                                           context),
                                     ),
@@ -330,7 +347,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                                             !product.isFavorite)
                                                         .then((value) {
                                                       cubit
-                                                          .searchInDiscounts(
+                                                          .searchInSeeAllProducts(
                                                               null,
                                                               categoryName,
                                                               categoryProducts)
@@ -350,7 +367,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                                             !product.isFavorite)
                                                         .then((value) {
                                                       cubit
-                                                          .searchInDiscounts(
+                                                          .searchInSeeAllProducts(
                                                               searchController
                                                                   .text,
                                                               categoryName,
@@ -443,7 +460,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
   searchIn(SearchCubit cubit) async {
     if (searchController.text != '') {
       cubit
-          .searchInDiscounts(
+          .searchInSeeAllProducts(
               searchController.text, categoryName, categoryProducts)
           .then((searchResult) {
         log(searchResult.toString());
