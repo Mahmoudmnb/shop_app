@@ -222,6 +222,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.1.3"
+  flutter_hooks:
+    dependency: transitive
+    description:
+      name: flutter_hooks
+      sha256: "6a126f703b89499818d73305e4ce1e3de33b4ae1c5512e3b8eab4b986f46774c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.18.6"
   flutter_inappwebview:
     dependency: transitive
     description:
@@ -808,6 +816,16 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.1"
+
+  rate_in_stars:
+    dependency: "direct main"
+    description:
+      name: rate_in_stars
+      sha256: "1873da5b3b15b67de163ed4bc72d38725078111eb668c5399d7236946b277d9a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
+
   realtime_client:
     dependency: transitive
     description:
@@ -989,6 +1007,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.1"
+  star_rating:
+    dependency: "direct main"
+    description:
+      name: star_rating
+      sha256: "8944bad655403a2f92a80903db669532f72616e3ba2939b9bc25dc2156c41d5c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.11.0"
   storage_client:
     dependency: transitive
     description:
