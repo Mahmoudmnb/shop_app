@@ -106,7 +106,7 @@ class _MainPageState extends State<MainPage>
       ),
       actions: [
         Padding(
-          padding: EdgeInsets.only(right: 4.0.w),
+          padding: EdgeInsets.only(right: 4.w),
           child: IconButton(
               icon: const Icon(Icons.favorite_border),
               onPressed: () async {
@@ -158,17 +158,19 @@ class _MainPageState extends State<MainPage>
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: appBar,
-      drawer: const Drawer(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(15),
-              bottomRight: Radius.circular(15),
+      drawer: const SafeArea(
+        child: Drawer(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(15),
+                bottomRight: Radius.circular(15),
+              ),
             ),
-          ),
-          child: HomeDrawer()),
+            child: HomeDrawer()),
+      ),
       body: WillPopScope(
         onWillPop: () async {
           if (tabController.index == 0) {

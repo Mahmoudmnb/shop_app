@@ -17,7 +17,7 @@ class AuthCustomButton extends StatelessWidget {
           duration: Constant.duration,
           width: state is IsLoading
               ? state.isLoading
-                  ? 76.h
+                  ? 90.h
                   : 156.w
               : 156.w,
           height: 51.h,
