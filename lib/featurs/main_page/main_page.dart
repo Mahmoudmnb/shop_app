@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,10 +29,30 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
+  testRealTime() {
+    try {
+      final client = Client()
+          .setEndpoint('https://cloud.appwrite.io/v1')
+          .setProject(Constant.appWriteProjectId);
+
+      final realtime = Realtime(client);
+
+// Subscribe to files channel  'databases.A.collections.A.documents.A'
+
+      final subscription = realtime.subscribe([
+        'databases.655da767bc3f1651db70.collections.655da771422b6ac710aa.documents'
+      ]);
+      subscription.stream.listen((event) {
+        log(event.payload.toString());
+      });
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   @override
   void initState() {
     tabController = TabController(length: 4, vsync: this);
-
     super.initState();
   }
 
@@ -85,45 +108,36 @@ class _MainPageState extends State<MainPage>
         Padding(
           padding: EdgeInsets.only(right: 4.0.w),
           child: IconButton(
-            icon: const Icon(Icons.favorite_border),
-            onPressed: () async {
-              // try {
-              //   final client = Client()
-              //       .setEndpoint('https://cloud.appwrite.io/v1')
-              //       .setProject(Constant.appWriteProjectId);
-              //   Realtime realtime = Realtime(client);
-              //   Databases databases = Databases(client);
-              //   var data = realtime
-              //       .subscribe([
-              //         'databases.65585f55e896c3e87515.collections.655860259ae4b331bee6'
-              //       ])
-              //       .stream
-              //       .listen((event) {
-              //         log('error');
-              //         log(event.payload.toString());
-              //       });
-              // } catch (e) {
-              //   log(e.toString());
-              // }
-
-              //   try {
-              //     File file1 = File(Constant.addToCartTable);
-              //     Stream<String> lines = file1
-              //         .openRead()
-              //         .transform(utf8.decoder) // Decode bytes to UTF-8.
-              //         .transform(const LineSplitter());
-              //     await for (var line in lines) {
-              //       print(line);
-              //     }
-              //     // File file = File(Constant.addToCartTable);
-              //     // var res = await OpenFile.open(Constant.addToCartTable);
-              //     // log(res.message);
-              //     // log(file.existsSync().toString());
-              //   } catch (e) {
-              //     log(e.toString());
-              //   }
-            },
-          ),
+              icon: const Icon(Icons.favorite_border),
+              onPressed: () async {
+                Client client = Client();
+                client = Client()
+                    .setEndpoint("https://cloud.appwrite.io/v1")
+                    .setProject(Constant.appWriteProjectId);
+                Databases database = Databases(client);
+                try {
+                  await database.createDocument(
+                      databaseId: '655da767bc3f1651db70',
+                      collectionId: '655da771422b6ac710aa',
+                      documentId: ID.unique(),
+                      data: {
+                        'email': 'email',
+                        'name': 'name',
+                        'password': 'password'
+                      });
+                  log('done');
+                } on AppwriteException catch (e) {
+                  log(e.toString());
+                  if (e.message != null &&
+                      e.message!.contains('user_already_exists')) {
+                    Toast.show('user already exists for this email');
+                  } else {
+                    Toast.show('unkown error please try again');
+                  }
+                } catch (e) {
+                  log(e.toString());
+                }
+              }),
         )
       ],
       centerTitle: true,

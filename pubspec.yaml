@@ -54,8 +54,7 @@ dependencies:
   flutter_paypal_checkout:
   appwrite: ^11.0.0
   uuid: ^4.2.1
-
-  star_rating: 
+  star_rating:
   rate_in_stars:
 
   image_picker: ^1.0.5

@@ -40,7 +40,6 @@ class RemoteDataSource {
     String colorsForLocal = '';
     String sizesForLocal = '';
     String amountsForLocal = '';
-    log(orderProducts.toString());
     for (var element in orderProducts) {
       ordersIds.add(element['order_id']);
       colors.add(element['color']);

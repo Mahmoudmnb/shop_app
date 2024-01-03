@@ -459,6 +459,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
 
   searchIn(SearchCubit cubit) async {
     if (searchController.text != '') {
+      categoryProducts = await sl.get<DataSource>().getTrendyProducts();
       cubit
           .searchInSeeAllProducts(
               searchController.text, categoryName, categoryProducts)

@@ -83,7 +83,7 @@ class SearchCubit extends Cubit<SearchState> {
   Future<List<Map<String, dynamic>>> search(String search) async {
     List<Map<String, dynamic>> searchResult =
         await sl.get<DataSource>().searchProducts(
-              search: search,
+              searchWord: search,
               minPrice: minPrice,
               maxPrice: maxPrice,
               discountFilter: filterDiscount,

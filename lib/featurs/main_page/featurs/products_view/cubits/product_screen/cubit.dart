@@ -1,11 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/featurs/main_page/featurs/products_view/models/add_to_cart_product_model.dart';
 
 import '../../../../../../injection.dart';
 import '../../../../data_source/data_source.dart';
 import '../../../home/models/product_model.dart';
+import '../../models/add_to_cart_product_model.dart';
 
 part 'states.dart';
 

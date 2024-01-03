@@ -196,7 +196,7 @@ class DataSource {
   }
 
   Future<List<Map<String, Object?>>> searchProducts({
-    required String search,
+    required String searchWord,
     required double minPrice,
     required double maxPrice,
     required List<bool> discountFilter,
@@ -206,7 +206,7 @@ class DataSource {
   }) async {
     return searchDataSource.searchProducts(
       discountfilter: discountFilter,
-      search: search,
+      search: searchWord,
       minPrice: minPrice,
       maxPrice: maxPrice,
       selectedCategory: selectedCategory,

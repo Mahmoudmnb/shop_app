@@ -44,11 +44,11 @@ class HomePage extends StatelessWidget {
           SizedBox(height: 15.h),
           CollectionsSpacer(
               onTap: () {
+                context.read<SearchCubit>().reset('', false);
                 context
                     .read<SearchCubit>()
                     .searchInSeeAllProducts(null, 'Discount', null)
                     .then((disCountProducts) {
-                  context.read<SearchCubit>().reset('', false);
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => SeeAllProductsPage(
                         searchWord: '',
