@@ -65,7 +65,6 @@ class GetDataLocalDataSource {
     } catch (e) {
       log(e.toString());
     }
-    log(products.toString());
     return products;
   }
 
@@ -110,12 +109,11 @@ class GetDataLocalDataSource {
     List<Map<String, dynamic>> trendyProducts = [];
     try {
       List<Map<String, dynamic>> searchWords = await getSearchHistory();
-
       for (var i = 0; i < searchWords.length; i++) {
         List<Map<String, dynamic>> data = await sl
             .get<DataSource>()
             .searchProducts(
-                search: searchWords[i]['word'],
+                searchWord: searchWords[i]['word'],
                 minPrice: 0,
                 maxPrice: 100,
                 discountFilter: [false, false, false, false, false, false],

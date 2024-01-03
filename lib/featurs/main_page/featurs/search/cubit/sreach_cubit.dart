@@ -84,7 +84,7 @@ class SearchCubit extends Cubit<SearchState> {
   Future<List<Map<String, dynamic>>> search(String search) async {
     List<Map<String, dynamic>> searchResult =
         await sl.get<DataSource>().searchProducts(
-              search: search,
+              searchWord: search,
               minPrice: minPrice,
               maxPrice: maxPrice,
               discountFilter: filterDiscount,
@@ -148,8 +148,8 @@ class SearchCubit extends Cubit<SearchState> {
     return data;
   }
 
-  Future<List<Map<String, dynamic>>> searchInDiscounts(String? searchWord,
-      String categoryName, List<Map<String, dynamic>>? trendyProducts) {
+  Future<List<Map<String, dynamic>>> searchInSeeAllProducts(String? searchWord,
+      String categoryName, List<Map<String, dynamic>>? trendyProducts) async {
     if (categoryName == 'Discount') {
       return sl.get<DataSource>().searchInDiscountProducts(
           minPrice: minPrice,

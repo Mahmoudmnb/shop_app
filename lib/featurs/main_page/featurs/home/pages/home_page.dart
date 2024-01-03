@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/injection.dart';
 
 import '../../../cubit/main_page_cubit.dart';
 import '../../search/cubit/sreach_cubit.dart';
@@ -42,11 +44,11 @@ class HomePage extends StatelessWidget {
           SizedBox(height: 15.h),
           CollectionsSpacer(
               onTap: () {
+                context.read<SearchCubit>().reset('', false);
                 context
                     .read<SearchCubit>()
-                    .searchInDiscounts(null, 'Discount', null)
+                    .searchInSeeAllProducts(null, 'Discount', null)
                     .then((disCountProducts) {
-                  context.read<SearchCubit>().reset('', false);
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => SeeAllProductsPage(
                         searchWord: '',
@@ -98,13 +100,16 @@ class HomePage extends StatelessWidget {
           CollectionsSpacer(
               onTap: () async {
                 context.read<SearchCubit>().reset('', false);
-                // ToDo: i have to update trendy product before user can get here
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => SeeAllProductsPage(
-                      searchWord: '',
-                      categoryName: 'Trendy',
-                      categoryProducts: trindyProducts),
-                ));
+                List<Map<String, dynamic>> trendyProducts =
+                    await sl.get<DataSource>().getTrendyProducts();
+                if (context.mounted) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SeeAllProductsPage(
+                        searchWord: '',
+                        categoryName: 'Trendy',
+                        categoryProducts: trendyProducts),
+                  ));
+                }
               },
               collectoinTitle: 'Trendy'),
           SizedBox(height: 15.h),
