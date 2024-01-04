@@ -41,10 +41,15 @@ class AuthPage extends StatelessWidget {
                                 .get<DataSource>()
                                 .getOrdersFromCloud()
                                 .then((value) {
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                builder: (context) => const MainPage(),
-                              ));
+                              sl
+                                  .get<DataSource>()
+                                  .getReviewsFromCloud()
+                                  .then((value) {
+                                Navigator.of(context)
+                                    .pushReplacement(MaterialPageRoute(
+                                  builder: (context) => const MainPage(),
+                                ));
+                              });
                             });
                           });
                         });
@@ -53,11 +58,6 @@ class AuthPage extends StatelessWidget {
                   });
                 });
               });
-              // myDataBase.insertReviewTable().then((value) {
-              //   myDataBase.insertData().then((value) {
-
-              //   });
-              // });
             });
           });
         });

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/featurs/main_page/featurs/orders/cubit/orders_cubit.dart';
+import 'package:shop_app/featurs/main_page/featurs/orders/screen/rate_order.dart';
 
 class ItemCard extends StatelessWidget {
+  final int productId;
   final String url;
   final String title;
   final String type;
@@ -11,6 +15,7 @@ class ItemCard extends StatelessWidget {
   final double price;
   const ItemCard(
       {super.key,
+      required this.productId,
       required this.url,
       required this.title,
       required this.type,
@@ -141,10 +146,23 @@ class ItemCard extends StatelessWidget {
             ],
           ),
         ),
-        Container(
-          decoration: const BoxDecoration(),
-          padding: EdgeInsets.symmetric(vertical: 10.h),
-          child: const Text("Rate"),
+        InkWell(
+          onTap: () {
+            context.read<OrdersCubit>().opinionController =
+                TextEditingController();
+            context.read<OrdersCubit>().character = 50;
+            context.read<OrdersCubit>().rating = 0;
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => RateOrder(
+                      productId: productId,
+                    )));
+          },
+          child: Container(
+            alignment: Alignment.center,
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 10.h),
+            child: const Text("Rate"),
+          ),
         )
       ]),
     );

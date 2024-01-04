@@ -108,19 +108,7 @@ class _MainPageState extends State<MainPage>
         Padding(
           padding: EdgeInsets.only(right: 4.w),
           child: IconButton(
-              icon: const Icon(Icons.favorite_border),
-              onPressed: () async {
-                // await MyDataBase().createBorderTable();
-                // await MyDataBase().createBorderProductsTable();
-                // sl.get<DataSource>().addBorder('All items');
-
-                try {
-                  var data = await sl.get<DataSource>().getBorders();
-                  log(data.toString());
-                } catch (e) {
-                  log('error is$e');
-                }
-              }),
+              icon: const Icon(Icons.favorite_border), onPressed: () async {}),
         )
       ],
       centerTitle: true,

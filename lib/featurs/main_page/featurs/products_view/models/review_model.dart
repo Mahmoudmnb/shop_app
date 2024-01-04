@@ -1,14 +1,17 @@
 import 'dart:convert';
+
 class ReviewModel {
-  int id;
+  int? id;
+  String email;
   String description;
-  int stars;
+  double stars;
   String date;
   String userName;
-  String userImage;
+  String? userImage;
   int productId;
   ReviewModel({
-    required this.id,
+    this.id,
+    required this.email,
     required this.description,
     required this.stars,
     required this.date,
@@ -19,6 +22,7 @@ class ReviewModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'email': email,
       'id': id,
       'description': description,
       'stars': stars,
@@ -31,17 +35,19 @@ class ReviewModel {
 
   factory ReviewModel.fromMap(Map<String, dynamic> map) {
     return ReviewModel(
+      email: map['email'] as String,
       id: map['id'] as int,
       description: map['description'] as String,
-      stars: map['stars'] as int,
+      stars: map['stars'] * 1.0,
       date: map['date'] as String,
       userName: map['userName'] as String,
-      userImage: map['userImage'] as String,
+      userImage: map['userImage'],
       productId: map['productId'] as int,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory ReviewModel.fromJson(String source) => ReviewModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ReviewModel.fromJson(String source) =>
+      ReviewModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

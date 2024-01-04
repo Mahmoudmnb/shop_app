@@ -113,7 +113,7 @@ class MyDataBase {
       version: 1,
       onCreate: (db, version) async {
         db.execute(
-            'CREATE TABLE reviews (id INTEGER PRIMARY KEY , description TEXT NOT NULL , stars INTEGER NOT NULL , date TEXT NOT NULL , userName TEXT NOT NULL , userImage TEXT , productId INTEGER NOT NULL )');
+            'CREATE TABLE reviews (id INTEGER PRIMARY KEY , description TEXT NOT NULL , stars INTEGER NOT NULL , date TEXT NOT NULL , userName TEXT NOT NULL , email TEXT NOT NULL, userImage TEXT , productId INTEGER NOT NULL )');
       },
     );
     log('created');

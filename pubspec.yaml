@@ -55,7 +55,7 @@ dependencies:
   appwrite: ^11.0.0
   uuid: ^4.2.1
   star_rating:
-  rate_in_stars:
+  smooth_star_rating_null_safety: ^1.0.4+2
 
   image_picker: ^1.0.5
   better_open_file:

@@ -7,8 +7,46 @@ import 'package:sqflite/sqflite.dart';
 import '../../../core/constant.dart';
 import '../featurs/check_out/models/address_model.dart';
 import '../featurs/products_view/models/add_to_cart_product_model.dart';
+import '../featurs/products_view/models/review_model.dart';
 
 class InsertDataLocalDataSource {
+  Future<void> addDataToReviewTableFromCloue(List<Document> reviews) async {
+    try {
+      Database db = await openDatabase(Constant.reviewsDataBasePath);
+
+      for (var element in reviews) {
+        Map<String, dynamic> data = {
+          'description': element.data['description'],
+          'stars': element.data['stars'],
+          'date': element.data['date'],
+          'userName': element.data['userName'],
+          'userImage': element.data['userImage'],
+          'productId': element.data['productId'],
+          'email': element.data['email'],
+        };
+        try {
+          await db.insert('reviews', data);
+        } catch (e) {
+          log(e.toString());
+        }
+      }
+      log('done inserting data in local dataBase');
+    } on PlatformException catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> addReviewToProduct(ReviewModel review) async {
+    Database db = await openDatabase(Constant.reviewsDataBasePath);
+    if (review.userImage != null) {
+      db.rawInsert(
+          'INSERT INTO reviews(description, stars, date, userName, userImage, productId,email) VALUES("${review.description}",${review.stars},"${review.date}","${review.userName}","${review.userImage}",${review.productId},"${review.email}")');
+    } else {
+      db.rawInsert(
+          'INSERT INTO reviews(description, stars, date, userName, productId,email) VALUES("${review.description}",${review.stars},"${review.date}","${review.userName}",${review.productId},"${review.email}")');
+    }
+  }
+
   Future<void> addBorder(String borderName) async {
     Database db = await openDatabase(Constant.projectDataBasePath);
     db.rawInsert('INSERT INTO borders(borderName) VALUES("$borderName")');

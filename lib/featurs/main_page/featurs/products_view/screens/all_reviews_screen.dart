@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/core/constant.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/core/constant.dart';
 
 import '../models/review_model.dart';
 import '../widgets/product_view_widgets.dart';
@@ -98,8 +98,10 @@ class AllReviewsScreen extends StatelessWidget {
       return '${currentDatetime.day - dateTime.day} days ago';
     } else if (dateTime.hour != currentDatetime.hour) {
       return '${currentDatetime.hour - dateTime.hour} hours ago';
-    } else {
+    } else if (dateTime.minute != currentDatetime.minute) {
       return '${currentDatetime.minute - dateTime.minute} minute ago';
+    } else {
+      return '${currentDatetime.second - dateTime.second} seconds ago';
     }
   }
 }
