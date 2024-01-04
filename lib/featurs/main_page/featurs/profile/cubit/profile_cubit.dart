@@ -14,4 +14,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     log(selectAddress);
     emit(ChangeAddressState());
   }
+
+  updateProfileImageWidget() {
+    emit(ProfileInitial());
+  }
 }

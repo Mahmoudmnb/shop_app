@@ -4,6 +4,42 @@ import 'package:shop_app/core/constant.dart';
 import 'package:sqflite/sqflite.dart';
 
 class MyDataBase {
+  Future<void> createBorderTable() async {
+    String path = await getDatabasesPath();
+    String dataBasePath = '$path/elegance.db';
+    try {
+      await openDatabase(
+        dataBasePath,
+        version: 2,
+        onCreate: (db, version) async {
+          db.execute(
+              'CREATE TABLE borders (id INTEGER PRIMARY KEY , borderName TEXT NOT NULL)');
+        },
+      );
+      log('borders table created');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> createBorderProductsTable() async {
+    String path = await getDatabasesPath();
+    String dataBasePath = '$path/borderProducts.db';
+    try {
+      await openDatabase(
+        dataBasePath,
+        version: 2,
+        onCreate: (db, version) async {
+          db.execute(
+              'CREATE TABLE borderProducts (id INTEGER PRIMARY KEY, productId INT NOT NULL,borderId INT NOT NULL)');
+        },
+      );
+      log('borders products table created');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   Future<void> createAddToCartTable() async {
     String path = await getDatabasesPath();
     String dataBasePath = '$path/AddToCartTable.db';

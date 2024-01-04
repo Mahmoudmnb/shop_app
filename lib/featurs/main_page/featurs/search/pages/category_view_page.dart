@@ -243,7 +243,6 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
               } else if (state is SaveState) {
                 categoryProducts = state.categoryProducts;
               } else if (state is SearchResults) {
-                // todo i have to work on it
                 categoryProducts = state.searchResult;
               }
               return Expanded(
@@ -319,27 +318,27 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                                             backgroundColor: Colors.white,
                                             child: GestureDetector(
                                                 onTap: () {
-                                                  if (searchController.text ==
-                                                      '') {
-                                                    cubit
-                                                        .setFavorateProduct(
-                                                            product.id,
-                                                            !product.isFavorite)
-                                                        .then((value) {
-                                                      cubit.searchInCategory(
-                                                          null, categoryName);
-                                                    });
-                                                  } else {
-                                                    cubit
-                                                        .setFavorateProduct(
-                                                            product.id,
-                                                            !product.isFavorite)
-                                                        .then((value) {
-                                                      cubit.searchInCategory(
-                                                          searchController.text,
-                                                          categoryName);
-                                                    });
-                                                  }
+                                                  // if (searchController.text ==
+                                                  //     '') {
+                                                  //   cubit
+                                                  //       .setFavorateProduct(
+                                                  //           product.id,
+                                                  //           !product.isFavorite)
+                                                  //       .then((value) {
+                                                  //     cubit.searchInCategory(
+                                                  //         null, categoryName);
+                                                  //   });
+                                                  // } else {
+                                                  //   cubit
+                                                  //       .setFavorateProduct(
+                                                  //           product.id,
+                                                  //           !product.isFavorite)
+                                                  //       .then((value) {
+                                                  //     cubit.searchInCategory(
+                                                  //         searchController.text,
+                                                  //         categoryName);
+                                                  //   });
+                                                  // }
                                                 },
                                                 child: Container(
                                                     height: 33.h,

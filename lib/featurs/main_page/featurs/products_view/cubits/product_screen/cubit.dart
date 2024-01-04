@@ -1,11 +1,13 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../injection.dart';
 import '../../../../data_source/data_source.dart';
 import '../../../home/models/product_model.dart';
 import '../../models/add_to_cart_product_model.dart';
+import '../../widgets/product_view/wishlist_view.dart';
 
 part 'states.dart';
 
@@ -47,6 +49,14 @@ class ProductCubit extends Cubit<ProductStates> {
   double widthOfPrice = 145;
   bool hidden = false;
   bool b = true;
+  bool isBorderNameIsAvailable = true;
+  String selectedBorder = 'All items';
+  int selectedBorderIndex = 0;
+  void changeSelectedBorderName(String borderName) {
+    selectedBorder = borderName;
+    emit(ChangeSelectedBorderName());
+  }
+
   void changeWidthOfPrice() {
     emit(ChangeWidthOfPrice());
   }
@@ -90,5 +100,37 @@ class ProductCubit extends Cubit<ProductStates> {
       amountOfProduct = 1;
       emit(ChangeProductAmountState());
     });
+  }
+
+  Future<void> createModelBottomSheet(BuildContext context,
+      List<Map<String, dynamic>> borders, ProductModel product) async {
+    try {
+      await showModalBottomSheet(
+          isScrollControlled: true,
+          backgroundColor: const Color(0xFF484848),
+          shape: const OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
+          ),
+          context: context,
+          builder: (context) => WishListView(
+                product: product,
+                borders: borders,
+                borderNameCon: TextEditingController(),
+                fromKey: GlobalKey<FormState>(),
+              )).then((value) {
+        sl.get<DataSource>().addProductToBorder(
+            product.id, context.read<ProductCubit>().selectedBorderIndex);
+        context
+            .read<ProductCubit>()
+            .changeFavorite(product.id)
+            .then((value) {});
+      });
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }

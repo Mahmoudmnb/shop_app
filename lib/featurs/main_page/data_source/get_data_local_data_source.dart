@@ -8,6 +8,33 @@ import '../featurs/home/models/product_model.dart';
 import 'data_source_paths.dart';
 
 class GetDataLocalDataSource {
+  Future<List<Map<String, dynamic>>> getCountOfProductsInBorder(
+      int borderId) async {
+    Database db = await openDatabase(Constant.broderProductsDataBasePath);
+    List<Map<String, dynamic>> data = await db.rawQuery(
+        'SELECT count(id) FROM borderProducts WHERE borderId==$borderId');
+    log(data.toString());
+    return data;
+  }
+
+  Future<List<Map<String, dynamic>>> getBorderProducts() async {
+    Database db = await openDatabase(Constant.broderProductsDataBasePath);
+    return db.rawQuery('SELECT * FROM borderProducts');
+  }
+
+  Future<List<Map<String, dynamic>>> getBorderByName(String borderName) async {
+    Database db = await openDatabase(Constant.projectDataBasePath);
+    List<Map<String, dynamic>> borders = await db
+        .rawQuery("SELECT * FROM borders WHERE borderName='$borderName'");
+
+    return borders;
+  }
+
+  Future<List<Map<String, dynamic>>> getBorders() async {
+    Database db = await openDatabase(Constant.projectDataBasePath);
+    return db.rawQuery('SELECT * FROM borders');
+  }
+
   Future<List<Map<String, dynamic>>> getSearchHistory() async {
     Database db = await openDatabase(Constant.searchHistoryDataBasePath);
     return db.rawQuery('SELECT * FROM searchHistory ORDER BY count DESC');
@@ -69,7 +96,7 @@ class GetDataLocalDataSource {
   }
 
   Future<List<Map<String, dynamic>>> getLocations() async {
-    Database db = await openDatabase(Constant.locationsDataBasePath);
+    Database db = await openDatabase(Constant.broderProductsDataBasePath);
     List<Map<String, dynamic>> locations =
         await db.rawQuery('SELECT * FROM locations');
     return locations;
@@ -82,7 +109,7 @@ class GetDataLocalDataSource {
 
   Future<List<Map<String, dynamic>>> getLocationByName(
       String addressName) async {
-    Database db = await openDatabase(Constant.locationsDataBasePath);
+    Database db = await openDatabase(Constant.broderProductsDataBasePath);
     return db
         .rawQuery('SELECT * FROM locations WHERE addressName="$addressName"');
   }

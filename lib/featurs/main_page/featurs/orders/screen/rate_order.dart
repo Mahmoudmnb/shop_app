@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rate_in_stars/rate_in_stars.dart';
-import 'package:shop_app/featurs/main_page/featurs/orders/cubit/orders_cubit.dart';
-import 'package:shop_app/featurs/main_page/featurs/orders/widgets/build_back_arrow.dart';
+
+import '../cubit/orders_cubit.dart';
+import '../widgets/build_back_arrow.dart';
 
 class RateOrder extends StatelessWidget {
   const RateOrder({super.key});
@@ -23,9 +24,7 @@ class RateOrder extends StatelessWidget {
                     Row(
                       children: [
                         const buildBackArrow(),
-                        SizedBox(
-                          width: 20.w,
-                        ),
+                        SizedBox(width: 20.w),
                         Text(
                           'feedback',
                           style: TextStyle(
@@ -35,9 +34,7 @@ class RateOrder extends StatelessWidget {
                         )
                       ],
                     ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
+                    SizedBox(height: 20.h),
                     Container(
                       padding: EdgeInsets.only(left: 10.w),
                       width: double.infinity,
@@ -51,9 +48,7 @@ class RateOrder extends StatelessWidget {
                             color: const Color(0XFF393939)),
                       ),
                     ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
+                    SizedBox(height: 20.h),
                     Container(
                       width: double.infinity,
                       padding: EdgeInsets.only(left: 10.w),
@@ -62,9 +57,7 @@ class RateOrder extends StatelessWidget {
                               color: Color(0xFF6D6D6D),
                               fontFamily: 'Tenor Sans')),
                     ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
+                    SizedBox(height: 10.h),
                     Row(
                       children: [
                         RatingStars(rating: 2, editable: true),

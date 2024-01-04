@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../home/models/product_model.dart';
+
 class WishlistBorder extends StatelessWidget {
-  const WishlistBorder({super.key, this.onTap});
   final void Function()? onTap;
+  final Map<String, dynamic> border;
+  final ProductModel product;
+  const WishlistBorder(
+      {super.key, this.onTap, required this.border, required this.product});
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -18,7 +24,7 @@ class WishlistBorder extends StatelessWidget {
             ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               child: Image(
-                image: const AssetImage('assets/images/11.jpg'),
+                image: AssetImage(product.imgUrl.split('|')[0]),
                 fit: BoxFit.cover,
                 width: 60.w,
                 height: 60.w,
@@ -28,9 +34,9 @@ class WishlistBorder extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Shirts',
-                  style: TextStyle(
+                Text(
+                  border['borderName'],
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontFamily: 'DM Sans',

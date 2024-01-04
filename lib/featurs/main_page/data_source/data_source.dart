@@ -8,7 +8,7 @@ import 'data_source_paths.dart';
 class DataSource {
   RemoteDataSource remoteDataSource;
   SearchDataSource searchDataSource;
-  SetDataLocalDataSource setDataLocalDataSource;
+  InsertDataLocalDataSource insertDataLocalDataSource;
   GetDataLocalDataSource getDataLocalDataSource;
   UpdateDeleteLocalDataSource updateDeleteLocalDataSource;
   DataSource({
@@ -16,8 +16,37 @@ class DataSource {
     required this.remoteDataSource,
     required this.searchDataSource,
     required this.getDataLocalDataSource,
-    required this.setDataLocalDataSource,
+    required this.insertDataLocalDataSource,
   });
+  Future<List<Map<String, dynamic>>> getCountOfProductInBorder(
+      int borderId) async {
+    return getDataLocalDataSource.getCountOfProductsInBorder(borderId);
+  }
+
+  Future<void> deleteFromPorderBroducts(int productId) async {
+    return updateDeleteLocalDataSource.deleteProductFromBorder(productId);
+  }
+
+  Future<List<Map<String, dynamic>>> getBorderProducts() async {
+    return getDataLocalDataSource.getBorderProducts();
+  }
+
+  Future<List<Map<String, dynamic>>> getBorderByName(String borderName) async {
+    return getDataLocalDataSource.getBorderByName(borderName);
+  }
+
+  Future<List<Map<String, dynamic>>> getBorders() async {
+    return getDataLocalDataSource.getBorders();
+  }
+
+  Future<void> addBorder(String borderName) async {
+    return insertDataLocalDataSource.addBorder(borderName);
+  }
+
+  Future<void> addProductToBorder(int productId, int borderId) async {
+    return insertDataLocalDataSource.addProductToBorder(productId, borderId);
+  }
+
   Future<List<Map<String, dynamic>>> searchInTrendy(
       String selectedCategory,
       String? searchWord,
@@ -43,7 +72,7 @@ class DataSource {
   }
 
   Future<void> insertDataInOrderTableFromCloud(List<Document> orders) async {
-    setDataLocalDataSource.insertDataInOrderTableFromCloud(orders);
+    insertDataLocalDataSource.insertDataInOrderTableFromCloud(orders);
   }
 
   Future<void> getOrdersFromCloud() async {
@@ -76,7 +105,7 @@ class DataSource {
       String colors,
       String sizes,
       String amounts) async {
-    setDataLocalDataSource.addOrder(
+    insertDataLocalDataSource.addOrder(
         ordersIds,
         totalPrice,
         orderDate,
@@ -107,7 +136,7 @@ class DataSource {
   }
 
   Future<void> getProductsFormCloudDataBase() async {
-    await setDataLocalDataSource
+    await insertDataLocalDataSource
         .insertDataIntoLocalDataBase(await remoteDataSource.getProducts());
   }
 
@@ -116,7 +145,7 @@ class DataSource {
   }
 
   Future<void> addNewLocation(AddressModel address) async {
-    return setDataLocalDataSource.addNewLocation(address);
+    return insertDataLocalDataSource.addNewLocation(address);
   }
 
   Future<List<Map<String, dynamic>>> getAddToCartProducts() async {
@@ -128,7 +157,7 @@ class DataSource {
   }
 
   Future<void> addToCart(AddToCartProductModel addToCartTableModel) async {
-    setDataLocalDataSource.addToCart(addToCartTableModel);
+    insertDataLocalDataSource.addToCart(addToCartTableModel);
   }
 
   Future<void> updateQuantity(int id, int quantity) async {
@@ -216,7 +245,7 @@ class DataSource {
   }
 
   Future<void> setSearchHistory(String searchWord) {
-    return setDataLocalDataSource.setSearchHistory(searchWord);
+    return insertDataLocalDataSource.setSearchHistory(searchWord);
   }
 
   Future<List<Map<String, dynamic>>> getSearchHistory() async {
@@ -228,6 +257,6 @@ class DataSource {
   }
 
   Future<void> setFavorateProduct(int id, bool value) async {
-    setDataLocalDataSource.setFavorateProduct(id, value);
+    insertDataLocalDataSource.setFavorateProduct(id, value);
   }
 }

@@ -11,12 +11,12 @@ Future<void> init() async {
   sl.registerLazySingleton<SearchDataSource>(() => SearchDataSource());
   sl.registerLazySingleton<GetDataLocalDataSource>(
       () => GetDataLocalDataSource());
-  sl.registerLazySingleton<SetDataLocalDataSource>(
-      () => SetDataLocalDataSource());
+  sl.registerLazySingleton<InsertDataLocalDataSource>(
+      () => InsertDataLocalDataSource());
 
   sl.registerLazySingleton<DataSource>(() => DataSource(
         updateDeleteLocalDataSource: sl.get<UpdateDeleteLocalDataSource>(),
-        setDataLocalDataSource: sl.get<SetDataLocalDataSource>(),
+        insertDataLocalDataSource: sl.get<InsertDataLocalDataSource>(),
         getDataLocalDataSource: sl.get<GetDataLocalDataSource>(),
         searchDataSource: sl.get<SearchDataSource>(),
         remoteDataSource: RemoteDataSource(),

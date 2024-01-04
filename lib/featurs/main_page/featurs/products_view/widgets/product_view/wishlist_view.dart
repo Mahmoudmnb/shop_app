@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/main_page/featurs/products_view/widgets/product_view/wishlist_border.dart';
+import 'package:shop_app/injection.dart';
 
-class WishlistView extends StatelessWidget {
-  const WishlistView({super.key});
+import '../../../../data_source/data_source.dart';
+import '../../../home/models/product_model.dart';
+import '../../cubits/product_screen/cubit.dart';
+import 'wishlist_border.dart';
+
+class WishListView extends StatelessWidget {
+  final List<Map<String, dynamic>> borders;
+  final ProductModel product;
+  final TextEditingController borderNameCon;
+  final GlobalKey<FormState> fromKey;
+  const WishListView(
+      {super.key,
+      required this.borders,
+      required this.product,
+      required this.fromKey,
+      required this.borderNameCon});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +46,7 @@ class WishlistView extends StatelessWidget {
                   ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(5)),
                     child: Image(
-                      image: const AssetImage('assets/images/11.jpg'),
+                      image: AssetImage(product.imgUrl.split('|')[0]),
                       fit: BoxFit.cover,
                       width: 60.w,
                       height: 60.w,
@@ -54,16 +69,20 @@ class WishlistView extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 7.h),
-                      const Text(
-                        'All items',
-                        style: TextStyle(
-                          color: Color(0xFFEEEEEE),
-                          fontSize: 10,
-                          fontFamily: 'DM Sans',
-                          fontWeight: FontWeight.w400,
-                          height: 1.06,
-                          letterSpacing: 1,
-                        ),
+                      BlocBuilder<ProductCubit, ProductStates>(
+                        builder: (context, state) {
+                          return Text(
+                            context.read<ProductCubit>().selectedBorder,
+                            style: const TextStyle(
+                              color: Color(0xFFEEEEEE),
+                              fontSize: 10,
+                              fontFamily: 'DM Sans',
+                              fontWeight: FontWeight.w400,
+                              height: 1.06,
+                              letterSpacing: 1,
+                            ),
+                          );
+                        },
                       ),
                       SizedBox(height: 3.h),
                     ],
@@ -111,7 +130,7 @@ class WishlistView extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pop();
+                                Navigator.of(context).pop(true);
                                 showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
@@ -136,29 +155,76 @@ class WishlistView extends StatelessWidget {
                                         ),
                                       )),
                                     ),
-                                    content: TextFormField(
-                                      cursorColor: Colors.grey,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                        fontFamily: 'DM Sans',
-                                        letterSpacing: 1,
-                                      ),
-                                      decoration: const InputDecoration(
-                                        
-                                        filled: true,
-                                        fillColor: Color(0xFF5A5A5A),
-                                        hintText: 'Border Name',
-                                        hintStyle:
-                                            TextStyle(color: Colors.white),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10)),
-                                            borderSide: BorderSide.none),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10)),
-                                            borderSide: BorderSide.none),
+                                    content: Form(
+                                      key: fromKey,
+                                      child: TextFormField(
+                                        controller: borderNameCon,
+                                        onEditingComplete: () async {
+                                          List<Map<String, dynamic>> borders =
+                                              await sl
+                                                  .get<DataSource>()
+                                                  .getBorderByName(borderNameCon
+                                                      .text
+                                                      .trim());
+                                          if (context.mounted) {
+                                            context
+                                                    .read<ProductCubit>()
+                                                    .isBorderNameIsAvailable =
+                                                borders.isEmpty;
+                                          }
+                                          if (fromKey.currentState!
+                                              .validate()) {
+                                            await sl
+                                                .get<DataSource>()
+                                                .addBorder(
+                                                    borderNameCon.text.trim());
+                                            borders = await sl
+                                                .get<DataSource>()
+                                                .getBorders();
+                                            if (context.mounted) {
+                                              Navigator.of(context).pop();
+                                              context
+                                                  .read<ProductCubit>()
+                                                  .createModelBottomSheet(
+                                                      context,
+                                                      borders,
+                                                      product);
+                                            }
+                                          }
+                                        },
+                                        validator: (value) {
+                                          if (!context
+                                              .read<ProductCubit>()
+                                              .isBorderNameIsAvailable) {
+                                            return 'border name should be uniqe';
+                                          } else if (value == null ||
+                                              value.length < 3) {
+                                            return 'border name should be more than three charcters';
+                                          }
+                                          return null;
+                                        },
+                                        cursorColor: Colors.grey,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontFamily: 'DM Sans',
+                                          letterSpacing: 1,
+                                        ),
+                                        decoration: const InputDecoration(
+                                          filled: true,
+                                          fillColor: Color(0xFF5A5A5A),
+                                          hintText: 'Border Name',
+                                          hintStyle:
+                                              TextStyle(color: Colors.white),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10)),
+                                              borderSide: BorderSide.none),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10)),
+                                              borderSide: BorderSide.none),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -194,12 +260,27 @@ class WishlistView extends StatelessWidget {
                         child: Column(
                           //! here is the list of borders
                           children: List.generate(
-                            5,
-                            (index) => Padding(
-                              padding: EdgeInsets.only(
-                                  left: 25.w, right: 22.w, bottom: 15.h),
-                              child: const WishlistBorder(),
-                            ),
+                            borders.length,
+                            (index) {
+                              //Todo: get count of products in each border
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                    left: 25.w, right: 22.w, bottom: 15.h),
+                                child: WishlistBorder(
+                                  onTap: () {
+                                    context
+                                        .read<ProductCubit>()
+                                        .selectedBorderIndex = index;
+                                    context
+                                        .read<ProductCubit>()
+                                        .changeSelectedBorderName(
+                                            borders[index]['borderName']);
+                                  },
+                                  border: borders[index],
+                                  product: product,
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),

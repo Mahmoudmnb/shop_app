@@ -8,7 +8,18 @@ import '../../../core/constant.dart';
 import '../featurs/check_out/models/address_model.dart';
 import '../featurs/products_view/models/add_to_cart_product_model.dart';
 
-class SetDataLocalDataSource {
+class InsertDataLocalDataSource {
+  Future<void> addBorder(String borderName) async {
+    Database db = await openDatabase(Constant.projectDataBasePath);
+    db.rawInsert('INSERT INTO borders(borderName) VALUES("$borderName")');
+  }
+
+  Future<void> addProductToBorder(int productId, int borderId) async {
+    Database db = await openDatabase(Constant.broderProductsDataBasePath);
+    await db.rawInsert(
+        'INSERT INTO borderProducts(productId,borderId) VALUES($productId,$borderId)');
+  }
+
   Future<void> addOrder(
     List<int> ordersIds,
     double totalPrice,
@@ -105,7 +116,7 @@ class SetDataLocalDataSource {
   }
 
   Future<void> addNewLocation(AddressModel address) async {
-    Database db = await openDatabase(Constant.locationsDataBasePath);
+    Database db = await openDatabase(Constant.broderProductsDataBasePath);
     db.rawInsert(
       "INSERT INTO locations (firstName, lastName, phoneNumber, emailAddress,addressName, longitude_code, latitude_code,city,country,address) VALUES ('${address.fullName}', '${address.lastName}','${address.phoneNumber}','${address.emailAddress}','${address.addressName}','${address.longitude}','${address.latitude}','${address.city}','${address.country}','${address.address}')",
     );

@@ -110,32 +110,15 @@ class _MainPageState extends State<MainPage>
           child: IconButton(
               icon: const Icon(Icons.favorite_border),
               onPressed: () async {
-                Client client = Client();
-                client = Client()
-                    .setEndpoint("https://cloud.appwrite.io/v1")
-                    .setProject(Constant.appWriteProjectId);
-                Databases database = Databases(client);
+                // await MyDataBase().createBorderTable();
+                // await MyDataBase().createBorderProductsTable();
+                // sl.get<DataSource>().addBorder('All items');
+
                 try {
-                  await database.createDocument(
-                      databaseId: '655da767bc3f1651db70',
-                      collectionId: '655da771422b6ac710aa',
-                      documentId: ID.unique(),
-                      data: {
-                        'email': 'email',
-                        'name': 'name',
-                        'password': 'password'
-                      });
-                  log('done');
-                } on AppwriteException catch (e) {
-                  log(e.toString());
-                  if (e.message != null &&
-                      e.message!.contains('user_already_exists')) {
-                    Toast.show('user already exists for this email');
-                  } else {
-                    Toast.show('unkown error please try again');
-                  }
+                  var data = await sl.get<DataSource>().getBorders();
+                  log(data.toString());
                 } catch (e) {
-                  log(e.toString());
+                  log('error is$e');
                 }
               }),
         )
