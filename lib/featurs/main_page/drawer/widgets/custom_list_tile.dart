@@ -7,19 +7,19 @@ class CustomListTile extends StatelessWidget {
   const CustomListTile({
     super.key,
     this.isSelected,
+    this.onTap,
     required this.icon,
     required this.title,
   });
   final bool? isSelected;
   final IconData icon;
   final String title;
+  final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: const BorderRadius.all(Radius.circular(5)),
-      onTap: () {
-        log('home');
-      },
+      onTap: onTap,
       child: Ink(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
         width: 393.w,

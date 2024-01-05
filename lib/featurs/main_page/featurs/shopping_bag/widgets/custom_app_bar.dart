@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({super.key});
-
+  const CustomAppBar({super.key, required this.title});
+  final String title;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -29,13 +29,13 @@ class CustomAppBar extends StatelessWidget {
               onPressed: () {},
             ),
             const Spacer(flex: 1),
-            const Text(
-              'Shopping Bag',
-              style: TextStyle(
+            Text(
+              title,
+              style: const TextStyle(
                 fontSize: 25,
                 fontFamily: 'DM Sans',
-                fontWeight: FontWeight.w500,
-                letterSpacing: -0.30,
+                fontWeight: FontWeight.w400,
+                letterSpacing: -0.50,
               ),
             ),
             const Spacer(flex: 2),
