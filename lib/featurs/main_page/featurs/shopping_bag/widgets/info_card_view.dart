@@ -18,7 +18,8 @@ class InfoCardView extends StatelessWidget {
       children: [
         PriceInfo(
           title: 'Product Price',
-          price: '\$$productPrice',
+          //! this edit for showing 2 numbers after the point just
+          price: '\$${productPrice.toStringAsFixed(2)}',
           color: const Color(0xFFAAAAAA),
         ),
         SizedBox(height: 10.h),
@@ -26,7 +27,7 @@ class InfoCardView extends StatelessWidget {
         SizedBox(height: 10.h),
         PriceInfo(
           title: 'Shipping',
-          price: '\$$shipping',
+          price: '\$${shipping.toStringAsFixed(2)}',
           color: const Color(0xFFAAAAAA),
         ),
         SizedBox(height: 10.h),
@@ -34,7 +35,7 @@ class InfoCardView extends StatelessWidget {
         SizedBox(height: 10.h),
         PriceInfo(
           title: 'Subtotal',
-          price: '\$${productPrice + shipping}',
+          price: '\$${(productPrice + shipping).toStringAsFixed(2)}',
         ),
       ],
     );
