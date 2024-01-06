@@ -159,32 +159,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                       .read<ProductCubit>()
                                       .createModelBottomSheet(
                                           context, borders, product);
-                                  // showModalBottomSheet(
-                                  //     isScrollControlled: true,
-                                  //     backgroundColor: const Color(0xFF484848),
-                                  //     shape: const OutlineInputBorder(
-                                  //       borderSide: BorderSide.none,
-                                  //       borderRadius: BorderRadius.only(
-                                  //         topLeft: Radius.circular(10),
-                                  //         topRight: Radius.circular(10),
-                                  //       ),
-                                  //     ),
-                                  //     context: context,
-                                  //     builder: (context) => WishlistView(
-                                  //           product: product,
-                                  //           borders: borders,
-                                  //         )).then((value) {
-                                  //   if (value == null) {
-                                  //     sl.get<DataSource>().addProductToBorder(
-                                  //         product.id,
-                                  //         context
-                                  //             .read<ProductCubit>()
-                                  //             .selectedBorderIndex);
-                                  //     cubit
-                                  //         .changeFavorite(product.id)
-                                  //         .then((value) {});
-                                  //   }
-                                  // });
                                 }
                               }
                             },
@@ -212,11 +186,11 @@ class _ProductScreenState extends State<ProductScreen> {
                     NotificationListener<DraggableScrollableNotification>(
                         onNotification:
                             (DraggableScrollableNotification notification) {
-                          if (notification.extent >= 0.99) {
+                          if (notification.extent >= 0.999) {
                             cubit.widthOfPrice = 3.w;
                             cubit.hidden = true;
                             cubit.changeWidthOfPrice();
-                          } else if (notification.extent <= 0.50) {
+                          } else if (notification.extent <= 0.49) {
                             cubit.widthOfPrice = 141.w;
                             cubit.hidden = false;
                             cubit.changeWidthOfPrice();

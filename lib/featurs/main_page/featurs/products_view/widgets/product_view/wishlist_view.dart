@@ -13,8 +13,10 @@ class WishListView extends StatelessWidget {
   final ProductModel product;
   final TextEditingController borderNameCon;
   final GlobalKey<FormState> fromKey;
+  final BuildContext ctx;
   const WishListView(
       {super.key,
+      required this.ctx,
       required this.borders,
       required this.product,
       required this.fromKey,
@@ -130,7 +132,7 @@ class WishListView extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pop(true);
+                                // Navigator.of(context).pop(true);
                                 showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
@@ -185,10 +187,7 @@ class WishListView extends StatelessWidget {
                                               Navigator.of(context).pop();
                                               context
                                                   .read<ProductCubit>()
-                                                  .createModelBottomSheet(
-                                                      context,
-                                                      borders,
-                                                      product);
+                                                  .updateBordersList();
                                             }
                                           }
                                         },
@@ -257,31 +256,62 @@ class WishListView extends StatelessWidget {
                           decelerationRate: ScrollDecelerationRate.fast),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          //! here is the list of borders
-                          children: List.generate(
-                            borders.length,
-                            (index) {
-                              //Todo: get count of products in each border
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                    left: 25.w, right: 22.w, bottom: 15.h),
-                                child: WishlistBorder(
-                                  onTap: () {
-                                    context
-                                        .read<ProductCubit>()
-                                        .selectedBorderIndex = index;
-                                    context
-                                        .read<ProductCubit>()
-                                        .changeSelectedBorderName(
-                                            borders[index]['borderName']);
-                                  },
-                                  border: borders[index],
-                                  product: product,
-                                ),
-                              );
-                            },
-                          ),
+                        child: BlocBuilder<ProductCubit, ProductStates>(
+                          builder: (context, state) {
+                            return FutureBuilder(
+                              future: sl.get<DataSource>().getBorders(),
+                              builder: (_, snapshoot) {
+                                List<Map<String, dynamic>> data = [];
+                                if (snapshoot.hasData) {
+                                  data = snapshoot.data!;
+                                } else {
+                                  data = borders;
+                                }
+                                return Column(
+                                  //! here is the list of borders
+                                  children: List.generate(
+                                    data.length,
+                                    (index) {
+                                      return FutureBuilder(
+                                          future: sl
+                                              .get<DataSource>()
+                                              .getCountOfProductInBorder(
+                                                  data[index]['id']),
+                                          builder: (_, snapshoot) {
+                                            return !snapshoot.hasData
+                                                ? const SizedBox.shrink()
+                                                : Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 25.w,
+                                                        right: 22.w,
+                                                        bottom: 15.h),
+                                                    child: WishlistBorder(
+                                                      countOfProductInThisBorder:
+                                                          snapshoot
+                                                              .data!.length,
+                                                      onTap: () {
+                                                        context
+                                                            .read<
+                                                                ProductCubit>()
+                                                            .selectedBorderIndex = index;
+                                                        context
+                                                            .read<
+                                                                ProductCubit>()
+                                                            .changeSelectedBorderName(
+                                                                borders[index][
+                                                                    'borderName']);
+                                                      },
+                                                      border: data[index],
+                                                      product: product,
+                                                    ),
+                                                  );
+                                          });
+                                    },
+                                  ),
+                                );
+                              },
+                            );
+                          },
                         ),
                       ),
                     ),

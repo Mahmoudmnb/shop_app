@@ -9,6 +9,22 @@ import '../featurs/products_view/models/review_model.dart';
 import 'data_source.dart';
 
 class RemoteDataSource {
+  Future<bool> uploadImage() async {
+    // final client = Client()
+    //     .setEndpoint('https://cloud.appwrite.io/v1')
+    //     .setProject('[PROJECT_ID]');
+
+    // final storage = Storage(client);
+
+    // final file = await storage.createFile(
+    //   bucketId: '[BUCKET_ID]',
+    //   fileId: ID.unique(),
+    //   file: InputFile.fromPath(
+    //       path: './path-to-files/image.jpg', filename: 'image.jpg'),
+    // );
+    return true;
+  }
+
   Future<List<Document>> getProducts() async {
     List<Document> data = [];
     final client = Client()

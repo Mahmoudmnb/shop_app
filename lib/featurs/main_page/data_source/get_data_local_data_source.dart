@@ -11,9 +11,14 @@ class GetDataLocalDataSource {
   Future<List<Map<String, dynamic>>> getCountOfProductsInBorder(
       int borderId) async {
     Database db = await openDatabase(Constant.broderProductsDataBasePath);
-    List<Map<String, dynamic>> data = await db.rawQuery(
-        'SELECT count(id) FROM borderProducts WHERE borderId==$borderId');
-    log(data.toString());
+    List<Map<String, dynamic>> data = [];
+    try {
+      data = await db
+          .rawQuery('SELECT * FROM borderProducts WHERE borderId==$borderId');
+      log(data.toString());
+    } catch (e) {
+      log(e.toString());
+    }
     return data;
   }
 

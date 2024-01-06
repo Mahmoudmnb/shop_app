@@ -54,8 +54,9 @@ class InsertDataLocalDataSource {
 
   Future<void> addProductToBorder(int productId, int borderId) async {
     Database db = await openDatabase(Constant.broderProductsDataBasePath);
-    await db.rawInsert(
-        'INSERT INTO borderProducts(productId,borderId) VALUES($productId,$borderId)');
+    db.insert('borderProducts', {'productId': productId, 'borderId': borderId});
+    // await db.rawInsert(
+    //     'INSERT INTO borderProducts(productId,borderId) VALUES($productId,$borderId)');
   }
 
   Future<void> addOrder(
