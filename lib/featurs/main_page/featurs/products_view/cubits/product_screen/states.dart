@@ -19,3 +19,5 @@ class SetFavorateState extends ProductStates {}
 class ChangeWidthOfPrice extends ProductStates {}
 
 class ChangeSelectedBorderName extends ProductStates {}
+
+class UpdateBordersList extends ProductStates {}

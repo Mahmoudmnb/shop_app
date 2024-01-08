@@ -7,8 +7,13 @@ class WishlistBorder extends StatelessWidget {
   final void Function()? onTap;
   final Map<String, dynamic> border;
   final ProductModel product;
+  final int countOfProductInThisBorder;
   const WishlistBorder(
-      {super.key, this.onTap, required this.border, required this.product});
+      {super.key,
+      this.onTap,
+      required this.border,
+      required this.product,
+      required this.countOfProductInThisBorder});
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +51,9 @@ class WishlistBorder extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 7.h),
-                const Text(
-                  '24 item',
-                  style: TextStyle(
+                Text(
+                  '$countOfProductInThisBorder items',
+                  style: const TextStyle(
                     color: Color(0xFFEEEEEE),
                     fontSize: 10,
                     fontFamily: 'DM Sans',

@@ -124,6 +124,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                                 borderRadius: BorderRadius.circular(5)),
                             clipBehavior: Clip.antiAlias,
                             child: TextField(
+                              cursorColor: Colors.black,
                               onSubmitted: (value) async {
                                 searchInCategory(cubit);
                               },

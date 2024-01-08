@@ -23,7 +23,7 @@ class ShoppingBagScreen extends StatelessWidget {
           // backgroundColor: Colors.white,
           body: Column(
             children: [
-              const CustomAppBar(),
+              const CustomAppBar(title: 'Shopping Bag'),
               Padding(
                 padding: EdgeInsets.only(right: 25.w, left: 25.w, top: 7.h),
                 child: const Divider(color: Color(0xFFC6C6C6), height: 0),

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/featurs/auth/pages/splash_screen.dart';
+import 'package:shop_app/featurs/main_page/featurs/wishlist/bloc/wishlist_cubit.dart';
 import 'package:shop_app/featurs/main_page/main_page.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -57,6 +58,7 @@ Future<void> main(List<String> args) async {
     BlocProvider(create: (context) => AddToCartCubit()),
     BlocProvider(create: (context) => ItemProductCubit()),
     BlocProvider(create: (context) => CheckOutCubit()),
+    BlocProvider(create: (context) => WishListCubit()),
   ], child: const MyApp()));
 }
 
@@ -74,7 +76,6 @@ class MyApp extends StatelessWidget {
               home: sl.get<SharedPreferences>().getBool('isFirstTime') == null
                   ? SplashScreen(deviceHeight: 852.h, deviceWidth: 393.w)
                   : const MainPage(),
-                  
             ));
   }
 }

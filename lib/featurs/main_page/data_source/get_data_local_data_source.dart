@@ -8,12 +8,22 @@ import '../featurs/home/models/product_model.dart';
 import 'data_source_paths.dart';
 
 class GetDataLocalDataSource {
-  Future<List<Map<String, dynamic>>> getCountOfProductsInBorder(
-      int borderId) async {
+  Future<List<Map<String, dynamic>>> getAllFavoritProducts() async {
+    Database db = await openDatabase(Constant.productDataBasePath);
+    var data =
+        await db.rawQuery('SELECT * FROM products WHERE isFavorate == "true"');
+    return data;
+  }
+
+  Future<List<Map<String, dynamic>>> getProductsInBorder(int borderId) async {
     Database db = await openDatabase(Constant.broderProductsDataBasePath);
-    List<Map<String, dynamic>> data = await db.rawQuery(
-        'SELECT count(id) FROM borderProducts WHERE borderId==$borderId');
-    log(data.toString());
+    List<Map<String, dynamic>> data = [];
+    try {
+      data = await db
+          .rawQuery('SELECT * FROM borderProducts WHERE borderId==$borderId');
+    } catch (e) {
+      log(e.toString());
+    }
     return data;
   }
 
@@ -96,7 +106,7 @@ class GetDataLocalDataSource {
   }
 
   Future<List<Map<String, dynamic>>> getLocations() async {
-    Database db = await openDatabase(Constant.broderProductsDataBasePath);
+    Database db = await openDatabase(Constant.locationsDataBasePath);
     List<Map<String, dynamic>> locations =
         await db.rawQuery('SELECT * FROM locations');
     return locations;

@@ -8,6 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/core/constant.dart';
 import 'package:shop_app/featurs/auth/models/user_model.dart';
 import 'package:shop_app/injection.dart';
+import 'package:toast/toast.dart';
+
+import '../../../../../core/internet_info.dart';
 
 class PersonalDetails extends StatefulWidget {
   const PersonalDetails({super.key});
@@ -96,23 +99,32 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        ImagePicker imagePicker = ImagePicker();
-                        XFile? file = await imagePicker.pickImage(
-                            source: ImageSource.gallery);
-                        if (file != null) {
-                          try {
-                            File profileImage = await File(file.path)
-                                .copy('${Constant.baseUrl}/profileImage.jpg');
-                            Constant.currentUser!.imgUrl = profileImage.path;
-                            await sl.get<SharedPreferences>().setString(
-                                'currentUser', Constant.currentUser!.toJson());
-                            imgUrl = Constant.currentUser!.imgUrl;
-                          } catch (e) {
-                            log(e.toString());
+                        InternetInfo.isconnected().then((value) async {
+                          if (value) {
+                            ImagePicker imagePicker = ImagePicker();
+                            XFile? file = await imagePicker.pickImage(
+                                source: ImageSource.gallery);
+                            if (file != null) {
+                              try {
+                                File profileImage = await File(file.path).copy(
+                                    '${Constant.baseUrl}/profileImage.jpg');
+                                Constant.currentUser!.imgUrl =
+                                    profileImage.path;
+                                await sl.get<SharedPreferences>().setString(
+                                    'currentUser',
+                                    Constant.currentUser!.toJson());
+                                imgUrl = Constant.currentUser!.imgUrl;
+                              } catch (e) {
+                                log(e.toString());
+                              }
+                            } else {
+                              log('empty image');
+                            }
+                          } else {
+                            ToastContext().init(context);
+                            Toast.show('check you internet');
                           }
-                        } else {
-                          log('empty image');
-                        }
+                        });
                       },
                       child: Container(
                         height: 40.h,
@@ -152,6 +164,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 width: 393.w,
                 height: 50.h,
                 child: TextField(
+                  cursorColor: Colors.black,
                   onTapOutside: (value) {
                     FocusScope.of(context).unfocus();
                   },
@@ -168,6 +181,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ),
             ),
             TextField(
+              cursorColor: Colors.black,
               onTapOutside: (value) {
                 FocusScope.of(context).unfocus();
               },
@@ -188,6 +202,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 height: 50.h,
                 width: 393.w,
                 child: TextField(
+                  cursorColor: Colors.black,
                   onTapOutside: (value) {
                     FocusScope.of(context).unfocus();
                   },

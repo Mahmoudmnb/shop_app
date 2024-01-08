@@ -117,13 +117,14 @@ class ProductCubit extends Cubit<ProductStates> {
           ),
           context: context,
           builder: (context) => WishListView(
+                ctx: context,
                 product: product,
                 borders: borders,
                 borderNameCon: TextEditingController(),
                 fromKey: GlobalKey<FormState>(),
               )).then((value) {
         sl.get<DataSource>().addProductToBorder(
-            product.id, context.read<ProductCubit>().selectedBorderIndex);
+            product.id, context.read<ProductCubit>().selectedBorderIndex + 1);
         context
             .read<ProductCubit>()
             .changeFavorite(product.id)
@@ -132,5 +133,9 @@ class ProductCubit extends Cubit<ProductStates> {
     } catch (e) {
       log(e.toString());
     }
+  }
+
+  void updateBordersList() {
+    emit(UpdateBordersList());
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/featurs/main_page/featurs/wishlist/screens/wishlist_screen.dart';
 
 import 'widgets/custom_button.dart';
 import 'widgets/custom_list_tile.dart';
@@ -54,9 +55,15 @@ class HomeDrawer extends StatelessWidget {
                   title: 'Shopping Bag',
                 ),
                 SizedBox(height: 10.h),
-                const CustomListTile(
+                CustomListTile(
                   icon: Icons.favorite_outline_rounded,
                   title: 'Wishlist',
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const WishListScreen(
+                              borders: [],
+                            )));
+                  },
                 ),
                 SizedBox(height: 10.h),
                 const Divider(color: Color(0xFFEAEAEA)),
