@@ -148,7 +148,7 @@ class MyOrdersScreen extends StatelessWidget {
                             child: Container(
                               padding: EdgeInsets.symmetric(horizontal: 25.w),
                               child: ListView.separated(
-                                // physics: const BouncingScrollPhysics(),
+                                physics: const BouncingScrollPhysics(),
                                 separatorBuilder: (context, index) =>
                                     SizedBox(height: 15.h),
                                 // shrinkWrap: true,
@@ -165,9 +165,8 @@ class MyOrdersScreen extends StatelessWidget {
                                             "Pending"
                                         ? pendingOrders[index]
                                         : deliverdOrders[index],
-                                    isDeliverd: context
-                                            .read<OrdersCubit>()
-                                            .kindOfOrder ==
+                                isDeliverd:
+                                    context.read<OrdersCubit>().kindOfOrder ==
                                         "Delivered",
                                   );
                                 },
@@ -177,7 +176,7 @@ class MyOrdersScreen extends StatelessWidget {
                         ],
                       ),
                     )
-                  : const Center(child: CircularProgressIndicator(color: Colors.black));
+                  : const Center(child: CircularProgressIndicator());
             });
       },
     );
