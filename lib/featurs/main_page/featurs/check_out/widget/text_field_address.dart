@@ -27,6 +27,7 @@ class TextFieldAddress extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       // height: 50.h,
       child: TextFormField(
+        
         onChanged: (value) {
           if (title == 'Address Name') {
             log('address name');
@@ -43,6 +44,7 @@ class TextFieldAddress extends StatelessWidget {
         onTapOutside: (event) {
           FocusScope.of(context).unfocus();
         },
+        cursorColor: Colors.black,
         validator: (value) {
           if (title == 'Address Name') {
             if (!context.read<CheckOutCubit>().isAddressNameIsAvailable) {

@@ -65,6 +65,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         builder: (context, state) {
                           bool isSearch = cubit.isSearch;
                           return TextField(
+                            cursorColor: Colors.black,
                             onTapOutside: (event) {
                               FocusScope.of(context).unfocus();
                             },

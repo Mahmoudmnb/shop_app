@@ -93,6 +93,7 @@ class RateOrder extends StatelessWidget {
                     child: Column(
                       children: [
                         TextField(
+                          cursorColor: Colors.black,
                           maxLength: 50,
                           onTapOutside: (value) {
                             FocusScope.of(context).unfocus();

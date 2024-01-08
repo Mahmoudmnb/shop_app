@@ -106,12 +106,15 @@ class DataSource {
   }
 
   //! this section for getting data
-  Future<List<Map<String, dynamic>>> getCountOfProductInBorder(
-      int borderId) async {
-    return getDataLocalDataSource.getCountOfProductsInBorder(borderId);
+  Future<List<Map<String, dynamic>>> getAllFavoritProducts() async {
+    return getDataLocalDataSource.getAllFavoritProducts();
   }
 
-  Future<List<Map<String, dynamic>>> getBorderProducts() async {
+  Future<List<Map<String, dynamic>>> getProductsInBorder(int borderId) async {
+    return getDataLocalDataSource.getProductsInBorder(borderId);
+  }
+
+  Future<List<Map<String, dynamic>>> getAllBorderProducts() async {
     return getDataLocalDataSource.getBorderProducts();
   }
 

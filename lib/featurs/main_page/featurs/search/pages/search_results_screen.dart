@@ -86,6 +86,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
               SizedBox(width: 10.w),
               Expanded(
                   child: TextField(
+                cursorColor: Colors.black,
                 controller: searchController,
                 style:
                     TextStyle(fontSize: 24.sp, color: const Color(0xff797979)),

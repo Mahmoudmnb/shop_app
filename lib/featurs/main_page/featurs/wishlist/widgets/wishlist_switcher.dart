@@ -9,7 +9,7 @@ class WishlistSwitcher extends StatelessWidget {
   final String text1, text2;
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WishlistCubit, WishlistState>(
+    return BlocBuilder<WishListCubit, WishListState>(
       builder: (context, state) {
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 30.w),
@@ -20,14 +20,14 @@ class WishlistSwitcher extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      context.read<WishlistCubit>().changeKingOfOrder(text1);
+                      context.read<WishListCubit>().changeKingOfOrder(text1);
                     },
                     child: Container(
                       padding: EdgeInsets.only(bottom: 8.h),
                       width: 150.w,
                       decoration: BoxDecoration(
                           border:
-                              context.read<WishlistCubit>().kindOfOrder == text1
+                              context.read<WishListCubit>().kindOfOrder == text1
                                   ? const Border(
                                       bottom: BorderSide(
                                           color: Color(0xFF3D3D3D), width: 1))
@@ -38,7 +38,7 @@ class WishlistSwitcher extends StatelessWidget {
                         style: TextStyle(
                             fontFamily: "DM Sans",
                             fontSize: 18.sp,
-                            color: context.read<WishlistCubit>().kindOfOrder ==
+                            color: context.read<WishListCubit>().kindOfOrder ==
                                     text1
                                 ? const Color(0xFF3D3D3D)
                                 : const Color(0xFF9B9B9B),
@@ -53,14 +53,14 @@ class WishlistSwitcher extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      context.read<WishlistCubit>().changeKingOfOrder(text2);
+                      context.read<WishListCubit>().changeKingOfOrder(text2);
                     },
                     child: Container(
                       padding: EdgeInsets.only(bottom: 8.h),
                       width: 150.w,
                       decoration: BoxDecoration(
                           border:
-                              context.read<WishlistCubit>().kindOfOrder == text2
+                              context.read<WishListCubit>().kindOfOrder == text2
                                   ? const Border(
                                       bottom: BorderSide(
                                           color: Color(0xFF3D3D3D), width: 1))
@@ -72,7 +72,7 @@ class WishlistSwitcher extends StatelessWidget {
                           fontFamily: "DM Sans",
                           fontSize: 18.sp,
                           color:
-                              context.read<WishlistCubit>().kindOfOrder == text2
+                              context.read<WishListCubit>().kindOfOrder == text2
                                   ? const Color(0xFF3D3D3D)
                                   : const Color(0xFF9B9B9B),
                           shadows: [

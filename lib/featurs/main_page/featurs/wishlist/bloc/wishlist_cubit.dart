@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'wishlist_state.dart';
 
-class WishlistCubit extends Cubit<WishlistState> {
-  WishlistCubit() : super(WishlistInitial());
-  static WishlistCubit get(context) => BlocProvider.of(context);
+class WishListCubit extends Cubit<WishListState> {
+  WishListCubit() : super(WishlistInitial());
+  static WishListCubit get(context) => BlocProvider.of(context);
   TextEditingController opinionController = TextEditingController();
   int character = 50;
   double rating = 0;

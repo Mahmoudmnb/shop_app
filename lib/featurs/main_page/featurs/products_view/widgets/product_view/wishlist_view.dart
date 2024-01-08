@@ -275,7 +275,7 @@ class WishListView extends StatelessWidget {
                                       return FutureBuilder(
                                           future: sl
                                               .get<DataSource>()
-                                              .getCountOfProductInBorder(
+                                              .getProductsInBorder(
                                                   data[index]['id']),
                                           builder: (_, snapshoot) {
                                             return !snapshoot.hasData

@@ -60,7 +60,9 @@ class HomeDrawer extends StatelessWidget {
                   title: 'Wishlist',
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const WishlistScreen()));
+                        builder: (context) => const WishListScreen(
+                              borders: [],
+                            )));
                   },
                 ),
                 SizedBox(height: 10.h),

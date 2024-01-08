@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/featurs/main_page/featurs/wishlist/screens/border_products_view.dart';
+import 'package:shop_app/featurs/main_page/featurs/wishlist/screens/wishlist_screen.dart';
 import 'package:shop_app/injection.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -327,6 +329,29 @@ class _ProductScreenState extends State<ProductScreen> {
             ));
           });
         }
+      }
+    } else if (widget.fromPage == 'WishList') {
+      List<Map<String, dynamic>> borders =
+          await sl.get<DataSource>().getBorders();
+      if (context.mounted) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => WishListScreen(borders: borders)));
+      }
+    } else if (widget.fromPage == 'BorderProducts') {
+      List<Map<String, dynamic>> products = [];
+      List<Map<String, dynamic>> border =
+          await sl.get<DataSource>().getBorderByName(widget.categoryName!);
+      List<Map<String, dynamic>> borderProducts =
+          await sl.get<DataSource>().getProductsInBorder(border[0]['id']);
+      for (var i = 0; i < borderProducts.length; i++) {
+        products.add(await sl
+            .get<DataSource>()
+            .getProductById(borderProducts[i]['productId']));
+      }
+      if (context.mounted) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => BorderProductView(
+                borderName: widget.categoryName!, borderProducts: products)));
       }
     }
   }

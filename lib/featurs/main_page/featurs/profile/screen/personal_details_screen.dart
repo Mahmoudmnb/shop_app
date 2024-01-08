@@ -6,10 +6,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/core/constant.dart';
-import 'package:shop_app/core/internet_info.dart';
 import 'package:shop_app/featurs/auth/models/user_model.dart';
 import 'package:shop_app/injection.dart';
 import 'package:toast/toast.dart';
+
+import '../../../../../core/internet_info.dart';
 
 class PersonalDetails extends StatefulWidget {
   const PersonalDetails({super.key});
@@ -163,6 +164,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 width: 393.w,
                 height: 50.h,
                 child: TextField(
+                  cursorColor: Colors.black,
                   onTapOutside: (value) {
                     FocusScope.of(context).unfocus();
                   },
@@ -179,6 +181,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ),
             ),
             TextField(
+              cursorColor: Colors.black,
               onTapOutside: (value) {
                 FocusScope.of(context).unfocus();
               },
@@ -199,6 +202,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 height: 50.h,
                 width: 393.w,
                 child: TextField(
+                  cursorColor: Colors.black,
                   onTapOutside: (value) {
                     FocusScope.of(context).unfocus();
                   },

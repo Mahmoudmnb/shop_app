@@ -136,6 +136,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                               onSubmitted: (value) async {
                                 searchIn(cubit);
                               },
+                              cursorColor: Colors.black,
                               controller: searchController,
                               textAlign: TextAlign.start,
                               onTapOutside: (event) {

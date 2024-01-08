@@ -1,14 +1,14 @@
 part of 'wishlist_cubit.dart';
 
 @immutable
-sealed class WishlistState {}
+sealed class WishListState {}
 
-final class WishlistInitial extends WishlistState {}
+final class WishlistInitial extends WishListState {}
 
-class ChangKindOfOrderState extends WishlistState {}
+class ChangKindOfOrderState extends WishListState {}
 
-class ChanegNumOfCharacterState extends WishlistState {}
+class ChanegNumOfCharacterState extends WishListState {}
 
-class ChangeRating extends WishlistState {}
+class ChangeRating extends WishListState {}
 
-class IsLoading extends WishlistState {}
+class IsLoading extends WishListState {}

@@ -58,7 +58,7 @@ Future<void> main(List<String> args) async {
     BlocProvider(create: (context) => AddToCartCubit()),
     BlocProvider(create: (context) => ItemProductCubit()),
     BlocProvider(create: (context) => CheckOutCubit()),
-    BlocProvider(create: (context) => WishlistCubit()),
+    BlocProvider(create: (context) => WishListCubit()),
   ], child: const MyApp()));
 }
 
@@ -76,7 +76,6 @@ class MyApp extends StatelessWidget {
               home: sl.get<SharedPreferences>().getBool('isFirstTime') == null
                   ? SplashScreen(deviceHeight: 852.h, deviceWidth: 393.w)
                   : const MainPage(),
-                  
             ));
   }
 }
