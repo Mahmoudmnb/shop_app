@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,10 +29,30 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
+  testRealTime() {
+    try {
+      final client = Client()
+          .setEndpoint('https://cloud.appwrite.io/v1')
+          .setProject(Constant.appWriteProjectId);
+
+      final realtime = Realtime(client);
+
+// Subscribe to files channel  'databases.A.collections.A.documents.A'
+
+      final subscription = realtime.subscribe([
+        'databases.655da767bc3f1651db70.collections.655da771422b6ac710aa.documents'
+      ]);
+      subscription.stream.listen((event) {
+        log(event.payload.toString());
+      });
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   @override
   void initState() {
     tabController = TabController(length: 4, vsync: this);
-
     super.initState();
   }
 
@@ -83,47 +106,9 @@ class _MainPageState extends State<MainPage>
       ),
       actions: [
         Padding(
-          padding: EdgeInsets.only(right: 4.0.w),
+          padding: EdgeInsets.only(right: 4.w),
           child: IconButton(
-            icon: const Icon(Icons.favorite_border),
-            onPressed: () async {
-              // try {
-              //   final client = Client()
-              //       .setEndpoint('https://cloud.appwrite.io/v1')
-              //       .setProject(Constant.appWriteProjectId);
-              //   Realtime realtime = Realtime(client);
-              //   Databases databases = Databases(client);
-              //   var data = realtime
-              //       .subscribe([
-              //         'databases.65585f55e896c3e87515.collections.655860259ae4b331bee6'
-              //       ])
-              //       .stream
-              //       .listen((event) {
-              //         log('error');
-              //         log(event.payload.toString());
-              //       });
-              // } catch (e) {
-              //   log(e.toString());
-              // }
-
-              //   try {
-              //     File file1 = File(Constant.addToCartTable);
-              //     Stream<String> lines = file1
-              //         .openRead()
-              //         .transform(utf8.decoder) // Decode bytes to UTF-8.
-              //         .transform(const LineSplitter());
-              //     await for (var line in lines) {
-              //       print(line);
-              //     }
-              //     // File file = File(Constant.addToCartTable);
-              //     // var res = await OpenFile.open(Constant.addToCartTable);
-              //     // log(res.message);
-              //     // log(file.existsSync().toString());
-              //   } catch (e) {
-              //     log(e.toString());
-              //   }
-            },
-          ),
+              icon: const Icon(Icons.favorite_border), onPressed: () async {}),
         )
       ],
       centerTitle: true,
@@ -144,17 +129,19 @@ class _MainPageState extends State<MainPage>
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: appBar,
-      drawer: const Drawer(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(15),
-              bottomRight: Radius.circular(15),
+      drawer: const SafeArea(
+        child: Drawer(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(15),
+                bottomRight: Radius.circular(15),
+              ),
             ),
-          ),
-          child: HomeDrawer()),
+            child: HomeDrawer()),
+      ),
       body: WillPopScope(
         onWillPop: () async {
           if (tabController.index == 0) {

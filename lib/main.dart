@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/featurs/auth/pages/splash_screen.dart';
+import 'package:shop_app/featurs/main_page/main_page.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'core/constant.dart';
@@ -21,7 +22,6 @@ import 'featurs/main_page/featurs/profile/cubit/profile_cubit.dart';
 import 'featurs/main_page/featurs/search/cubit/sreach_cubit.dart';
 import 'featurs/main_page/featurs/shopping_bag/cubits/item_product_cubit/item_product_cubit.dart';
 import 'featurs/main_page/featurs/shopping_bag/cubits/products_cubit/products_cubit.dart';
-import 'featurs/main_page/main_page.dart';
 import 'injection.dart';
 
 Future<void> main(List<String> args) async {
@@ -69,10 +69,12 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
         designSize: const Size(393, 852),
         builder: (context, child) => MaterialApp(
+              theme: ThemeData(scaffoldBackgroundColor: Colors.white),
               debugShowCheckedModeBanner: false,
               home: sl.get<SharedPreferences>().getBool('isFirstTime') == null
                   ? SplashScreen(deviceHeight: 852.h, deviceWidth: 393.w)
                   : const MainPage(),
+                  
             ));
   }
 }

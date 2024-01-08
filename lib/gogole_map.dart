@@ -80,7 +80,7 @@ class GoogleMapScreenState extends State<GoogleMapScreen> {
       child: Scaffold(
         body: Center(
           child: sourceLocation == null
-              ? const CircularProgressIndicator()
+              ? const CircularProgressIndicator(color: Colors.black)
               : Column(
                   children: [
                     SizedBox(
@@ -156,7 +156,7 @@ class GoogleMapScreenState extends State<GoogleMapScreen> {
                                 const BoxDecoration(color: Colors.black),
                             child: Center(
                               child: isLoading
-                                  ? const CircularProgressIndicator()
+                                  ? const CircularProgressIndicator(color: Colors.white)
                                   : Text(
                                       'Proceed',
                                       style: TextStyle(

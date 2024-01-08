@@ -31,7 +31,6 @@ class OrderDetails extends StatelessWidget {
             ? const Center(child: CircularProgressIndicator())
             : Scaffold(
                 body: SingleChildScrollView(
-                  // physics: const NeverScrollableScrollPhysics(),
                   child: Container(
                     padding:
                         EdgeInsets.symmetric(horizontal: 20.w, vertical: 60.h),
@@ -82,6 +81,7 @@ class OrderDetails extends StatelessWidget {
                               fontSize: 16.sp),
                         ),
                       ),
+                      //! _______________________________________________
                       SizedBox(height: 30.h),
                       OrderDetailsCard(
                         orderNumber: order.orderId,
@@ -111,12 +111,15 @@ class OrderDetails extends StatelessWidget {
                         ),
                       ),
                       ListView.builder(
-                        physics: const BouncingScrollPhysics(),
+                        //! I change it form Bouncing to Never
+                        //! I reqair Mahmoud bugs'
+                        physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           ProductModel product =
                               ProductModel.fromMap(snapshot.data![index]);
                           return ItemCard(
+                            productId: product.id,
                             title: product.name,
                             price: product.price,
                             type: product.makerCompany,

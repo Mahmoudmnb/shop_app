@@ -339,49 +339,49 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                             backgroundColor: Colors.white,
                                             child: GestureDetector(
                                                 onTap: () {
-                                                  if (searchController.text ==
-                                                      '') {
-                                                    cubit
-                                                        .setFavorateProduct(
-                                                            product.id,
-                                                            !product.isFavorite)
-                                                        .then((value) {
-                                                      cubit
-                                                          .searchInSeeAllProducts(
-                                                              null,
-                                                              categoryName,
-                                                              categoryProducts)
-                                                          .then((searchResult) {
-                                                        context
-                                                            .read<
-                                                                DiscountProductsBloc>()
-                                                            .add(SearchInDiscount(
-                                                                searchResult:
-                                                                    searchResult));
-                                                      });
-                                                    });
-                                                  } else {
-                                                    cubit
-                                                        .setFavorateProduct(
-                                                            product.id,
-                                                            !product.isFavorite)
-                                                        .then((value) {
-                                                      cubit
-                                                          .searchInSeeAllProducts(
-                                                              searchController
-                                                                  .text,
-                                                              categoryName,
-                                                              categoryProducts)
-                                                          .then((searchResult) {
-                                                        context
-                                                            .read<
-                                                                DiscountProductsBloc>()
-                                                            .add(SearchInDiscount(
-                                                                searchResult:
-                                                                    searchResult));
-                                                      });
-                                                    });
-                                                  }
+                                                  // if (searchController.text ==
+                                                  //     '') {
+                                                  //   cubit
+                                                  //       .setFavorateProduct(
+                                                  //           product.id,
+                                                  //           !product.isFavorite)
+                                                  //       .then((value) {
+                                                  //     cubit
+                                                  //         .searchInSeeAllProducts(
+                                                  //             null,
+                                                  //             categoryName,
+                                                  //             categoryProducts)
+                                                  //         .then((searchResult) {
+                                                  //       context
+                                                  //           .read<
+                                                  //               DiscountProductsBloc>()
+                                                  //           .add(SearchInDiscount(
+                                                  //               searchResult:
+                                                  //                   searchResult));
+                                                  //     });
+                                                  //   });
+                                                  // } else {
+                                                  //   cubit
+                                                  //       .setFavorateProduct(
+                                                  //           product.id,
+                                                  //           !product.isFavorite)
+                                                  //       .then((value) {
+                                                  //     cubit
+                                                  //         .searchInSeeAllProducts(
+                                                  //             searchController
+                                                  //                 .text,
+                                                  //             categoryName,
+                                                  //             categoryProducts)
+                                                  //         .then((searchResult) {
+                                                  //       context
+                                                  //           .read<
+                                                  //               DiscountProductsBloc>()
+                                                  //           .add(SearchInDiscount(
+                                                  //               searchResult:
+                                                  //                   searchResult));
+                                                  //     });
+                                                  //   });
+                                                  // }
                                                 },
                                                 child: Container(
                                                     height: 33.h,
@@ -459,6 +459,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
 
   searchIn(SearchCubit cubit) async {
     if (searchController.text != '') {
+      categoryProducts = await sl.get<DataSource>().getTrendyProducts();
       cubit
           .searchInSeeAllProducts(
               searchController.text, categoryName, categoryProducts)

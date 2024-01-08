@@ -5,6 +5,7 @@ import 'package:appwrite/models.dart';
 import 'package:shop_app/core/constant.dart';
 
 import '../../../injection.dart';
+import '../featurs/products_view/models/review_model.dart';
 import 'data_source.dart';
 
 class RemoteDataSource {
@@ -40,7 +41,6 @@ class RemoteDataSource {
     String colorsForLocal = '';
     String sizesForLocal = '';
     String amountsForLocal = '';
-    log(orderProducts.toString());
     for (var element in orderProducts) {
       ordersIds.add(element['order_id']);
       colors.add(element['color']);
@@ -136,5 +136,61 @@ class RemoteDataSource {
       log(e.message.toString());
     }
     sl.get<DataSource>().insertDataInOrderTableFromCloud(orders);
+  }
+
+  Future<void> getReviewsFromCloud() async {
+    List<Document> orders = [];
+    final client = Client()
+        .setEndpoint('https://cloud.appwrite.io/v1')
+        .setProject(Constant.appWriteProjectId);
+    Databases databases = Databases(client);
+    try {
+      var result = await databases.listDocuments(
+        databaseId: '65585f55e896c3e87515',
+        collectionId: "65966b22308a7832fddc",
+      );
+      orders = result.documents;
+    } on AppwriteException catch (e) {
+      log(e.message.toString());
+    }
+    sl.get<DataSource>().insertDataInReviewTableFromCloud(orders);
+  }
+
+  Future<void> addReviewToCloud(ReviewModel reviewModel) async {
+    Client client = Client()
+        .setEndpoint("https://cloud.appwrite.io/v1")
+        .setProject(Constant.appWriteProjectId);
+    Databases db = Databases(client);
+    Map<String, dynamic> data = {};
+    if (reviewModel.userImage == null) {
+      data = {
+        'description': reviewModel.description,
+        'stars': reviewModel.stars,
+        'date': reviewModel.date,
+        'userName': reviewModel.userName,
+        'productId': reviewModel.productId,
+        'email': reviewModel.email
+      };
+    } else {
+      data = {
+        'description': reviewModel.description,
+        'stars': reviewModel.stars,
+        'date': reviewModel.date,
+        'userName': reviewModel.userName,
+        'userImage': reviewModel.userImage,
+        'productId': reviewModel.productId,
+        'email': reviewModel.email
+      };
+    }
+    try {
+      db.createDocument(
+          databaseId: '65585f55e896c3e87515',
+          collectionId: '65966b22308a7832fddc',
+          documentId: ID.unique(),
+          data: data);
+      log('done');
+    } on AppwriteException catch (e) {
+      log(e.message.toString());
+    }
   }
 }

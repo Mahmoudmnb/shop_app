@@ -84,25 +84,29 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                                 ),
                               ),
                             )
-                          : Image(
-                              height: 130.h,
-                              width: 130.h,
-                              image: const AssetImage('assets/images/1.png')),
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image(
+                                  fit: BoxFit.cover,
+                                  height: 130.h,
+                                  width: 130.h,
+                                  image: FileImage(
+                                      File(Constant.currentUser!.imgUrl!))),
+                            ),
                     ),
                     GestureDetector(
                       onTap: () async {
-                        // Todo : code for select an image for profile
                         ImagePicker imagePicker = ImagePicker();
                         XFile? file = await imagePicker.pickImage(
                             source: ImageSource.gallery);
                         if (file != null) {
                           try {
-                            File profileImage = await File(file.path).copy(
-                                '/data/user/0/com.example.shop_app/mnb.jpg');
+                            File profileImage = await File(file.path)
+                                .copy('${Constant.baseUrl}/profileImage.jpg');
                             Constant.currentUser!.imgUrl = profileImage.path;
-                            sl.get<SharedPreferences>().setString(
+                            await sl.get<SharedPreferences>().setString(
                                 'currentUser', Constant.currentUser!.toJson());
-                            log(Constant.currentUser!.imgUrl!);
+                            imgUrl = Constant.currentUser!.imgUrl;
                           } catch (e) {
                             log(e.toString());
                           }

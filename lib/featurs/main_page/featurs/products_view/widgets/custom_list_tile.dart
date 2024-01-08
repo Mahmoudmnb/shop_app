@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomListTile extends StatelessWidget {
   final String username;
-  final int stars;
+  final double stars;
   final String date;
   final String description;
   final double width;
@@ -16,6 +16,26 @@ class CustomListTile extends StatelessWidget {
       required this.date,
       this.imgUrl,
       required this.description});
+  Container getLettersOfName() {
+    String nameLetters = 'mb';
+    var splittedName = username.split(' ');
+    nameLetters = splittedName.length >= 2
+        ? '${splittedName[0][0].toUpperCase()}${splittedName[splittedName.length - 1][0].toUpperCase()}'
+        : splittedName[0][0].toUpperCase();
+    return Container(
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.grey,
+      ),
+      width: 45.w,
+      height: 45.h,
+      child: Text(
+        nameLetters,
+        style: const TextStyle(color: Colors.black),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +48,7 @@ class CustomListTile extends StatelessWidget {
           child: CircleAvatar(
             backgroundColor: const Color(0xFFD9D9D9),
             backgroundImage: imgUrl != null ? AssetImage(imgUrl!) : null,
+            child: imgUrl == null ? getLettersOfName() : null,
           ),
         ),
         SizedBox(width: 8.w),
@@ -40,7 +61,6 @@ class CustomListTile extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // !username
                   SizedBox(
                     width: 137.w,
                     child: Text(
@@ -94,11 +114,11 @@ class CustomListTile extends StatelessWidget {
 
 class ReviewStars extends StatelessWidget {
   const ReviewStars({super.key, required this.numOfStars});
-  final int numOfStars;
+  final double numOfStars;
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.only(top: 3.h),
+      padding: EdgeInsets.only(top: 3.h),
       child: Row(
         children: [
           Icon(

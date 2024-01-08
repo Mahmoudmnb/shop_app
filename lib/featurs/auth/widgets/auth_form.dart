@@ -5,7 +5,6 @@ import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/core/constant.dart';
 import 'package:shop_app/core/internet_info.dart';
@@ -105,7 +104,8 @@ class _AuthFormState extends State<AuthForm> {
                       signIn(email.trim(), password.trim());
                     }
                   } else {
-                    Toast.show('Check you internet connection', duration: 2);
+                    Toast.show('Check you internet connection',
+                        duration: Toast.lengthLong);
                   }
                 }
               },
@@ -118,12 +118,15 @@ class _AuthFormState extends State<AuthForm> {
                     }
                   }
                   return isLoading
-                      ? const CircularProgressIndicator()
+                      ? const CircularProgressIndicator(color: Colors.black)
                       : SwitchBetweenTwoTextWithRotation(
                           isFirestText: isSignUP,
                           firstText: 'LOG IN',
                           secondText: 'SIGN UP',
-                          textStyle: GoogleFonts.dmSans(fontSize: 16.sp));
+                          textStyle: TextStyle(
+                              fontFamily: 'DM Sans',
+                              fontSize: 16.sp,
+                              color: Colors.white));
                 },
               ),
             );

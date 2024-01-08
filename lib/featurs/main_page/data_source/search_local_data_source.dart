@@ -169,17 +169,16 @@ class SearchDataSource {
     }).toList();
   }
 
-  Future<List<Map<String, dynamic>>> filterWithSearchWord(
+  List<Map<String, dynamic>> filterWithSearchWord(
       String searchWord,
       String selectedCategory,
       List<Map<String, dynamic>> allProducts,
       List<bool> discountFilter,
       List<bool> ratingFilter,
-      List<bool> colorFilter) async {
+      List<bool> colorFilter) {
     var data = filterWithoutSearchWordProducts(selectedCategory, allProducts,
         discountFilter, ratingFilter, colorFilter);
     return data.where((element) {
-      log(element.toString());
       return ((element['name'])
               .toString()
               .toLowerCase()
@@ -224,7 +223,7 @@ class SearchDataSource {
         searchResult = filterWithoutSearchWordProducts(selectedCategory,
             allProducts, discountfilter, ratingFilter, colorFilter);
       } else {
-        searchResult = await filterWithSearchWord(searchWord, selectedCategory,
+        searchResult = filterWithSearchWord(searchWord, selectedCategory,
             allProducts, discountfilter, ratingFilter, colorFilter);
       }
     } catch (e) {
@@ -257,7 +256,7 @@ class SearchDataSource {
         searchResult = filterWithoutSearchWordProducts(selectedCategory,
             allProducts, discountFilter, ratingFilter, colorFilter);
       } else {
-        searchResult = await filterWithSearchWord(searchWord, selectedCategory,
+        searchResult = filterWithSearchWord(searchWord, selectedCategory,
             allProducts, discountFilter, ratingFilter, colorFilter);
       }
     } catch (e) {
@@ -285,8 +284,8 @@ class SearchDataSource {
         allProducts = await db.rawQuery(
             "SELECT * FROM  products WHERE price >= $minPrice AND price<=$maxPrice AND category == '$selectedCategory'");
       }
-      searchResult = await filterWithSearchWord(search, selectedCategory,
-          allProducts, discountfilter, ratingFilter, colorFilter);
+      searchResult = filterWithSearchWord(search, selectedCategory, allProducts,
+          discountfilter, ratingFilter, colorFilter);
     } catch (e) {
       log(e.toString());
     }
@@ -302,12 +301,26 @@ class SearchDataSource {
       List<bool> discountFilter,
       List<bool> ratingFilter,
       List<bool> colorFilter) async {
+    List<Map<String, dynamic>> filteredData = [];
     if (searchWord == null) {
-      return filterWithoutSearchWordProducts(selectedCategory, trendyProducts,
-          discountFilter, ratingFilter, colorFilter);
+      filteredData = filterWithoutSearchWordProducts(selectedCategory,
+          trendyProducts, discountFilter, ratingFilter, colorFilter);
     } else {
-      return filterWithSearchWord(searchWord, selectedCategory, trendyProducts,
-          discountFilter, ratingFilter, colorFilter);
+      filteredData = filterWithSearchWord(searchWord, selectedCategory,
+          trendyProducts, discountFilter, ratingFilter, colorFilter);
     }
+    if (selectedCategory == 'All') {
+      trendyProducts = filteredData.where((element) {
+        return ((element['price'] >= minPrice && element['price'] <= maxPrice));
+      }).toList();
+    } else {
+      trendyProducts = filteredData.where((element) {
+        return ((element['price'] >= minPrice &&
+                element['price'] <= maxPrice) &&
+            (element['category'] == selectedCategory));
+      }).toList();
+    }
+
+    return trendyProducts;
   }
 }

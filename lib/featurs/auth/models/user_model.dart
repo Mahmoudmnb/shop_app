@@ -6,15 +6,18 @@ class UserModel {
   final String password;
   String? phoneNumber;
   String? imgUrl;
+  String? cloudImgUrl;
   UserModel(
       {required this.email,
       required this.name,
       required this.password,
+      this.cloudImgUrl,
       this.phoneNumber,
       this.imgUrl});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'cloudImgUrl': cloudImgUrl,
       'phoneNumber': phoneNumber,
       'imgUrl': imgUrl,
       'name': name,
@@ -25,6 +28,7 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
+      cloudImgUrl: map['cloudImgUrl'],
       phoneNumber: map['phoneNumber'],
       imgUrl: map['imgUrl'],
       name: map['name'] as String,

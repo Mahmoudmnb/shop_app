@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class buildBackArrow extends StatelessWidget {
-  const buildBackArrow({super.key});
+class BuildBackArrow extends StatelessWidget {
+  const BuildBackArrow({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.of(context).pop();
+      },
       child: Container(
         padding: EdgeInsets.all(7.h),
         decoration: BoxDecoration(

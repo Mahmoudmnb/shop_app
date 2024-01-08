@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
-import 'package:shop_app/featurs/main_page/main_page.dart';
 
 import '../../../core/data_base.dart';
 import '../../../injection.dart';
+import '../../main_page/data_source/data_source.dart';
+import '../../main_page/main_page.dart';
 import '../blocs/auth_blocs.dart';
 import '../widgets/auth_widgets.dart';
 
@@ -27,24 +27,37 @@ class AuthPage extends StatelessWidget {
               myDataBase.createAddToCartTable().then((value) {
                 myDataBase.createLoactionsTable().then((value) {
                   myDataBase.createOrdersTable().then((value) {
-                    sl
-                        .get<DataSource>()
-                        .getProductsFormCloudDataBase()
-                        .then((value) {
-                      sl.get<DataSource>().getOrdersFromCloud().then((value) {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => const MainPage(),
-                        ));
+                    myDataBase.createBorderTable().then((value) {
+                      myDataBase.createBorderProductsTable().then((value) {
+                        sl
+                            .get<DataSource>()
+                            .addBorder('All items')
+                            .then((value) {
+                          sl
+                              .get<DataSource>()
+                              .getProductsFormCloudDataBase()
+                              .then((value) {
+                            sl
+                                .get<DataSource>()
+                                .getOrdersFromCloud()
+                                .then((value) {
+                              sl
+                                  .get<DataSource>()
+                                  .getReviewsFromCloud()
+                                  .then((value) {
+                                Navigator.of(context)
+                                    .pushReplacement(MaterialPageRoute(
+                                  builder: (context) => const MainPage(),
+                                ));
+                              });
+                            });
+                          });
+                        });
                       });
                     });
                   });
                 });
               });
-              // myDataBase.insertReviewTable().then((value) {
-              //   myDataBase.insertData().then((value) {
-
-              //   });
-              // });
             });
           });
         });
@@ -80,11 +93,8 @@ class AuthPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Image.asset(
-                      'assets/images/logo.png',
-                      height: 170.h,
-                      width: 170.h,
-                    ),
+                    Image.asset('assets/images/logo.png',
+                        height: 170.h, width: 170.h),
                     SizedBox(height: 8.5.h),
                     Row(
                       children: [

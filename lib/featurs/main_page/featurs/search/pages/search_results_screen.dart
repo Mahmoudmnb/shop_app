@@ -224,9 +224,9 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                     right: 8.w,
                                     child: GestureDetector(
                                         onTap: () {
-                                          cubit.setFavorateProduct(
-                                              product.id, !product.isFavorite);
-                                          cubit.search(searchController.text);
+                                          // cubit.setFavorateProduct(
+                                          //     product.id, !product.isFavorite);
+                                          // cubit.search(searchController.text);
                                         },
                                         child: Container(
                                             height: 33.h,

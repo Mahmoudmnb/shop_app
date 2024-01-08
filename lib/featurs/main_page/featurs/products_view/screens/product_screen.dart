@@ -7,7 +7,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
 import 'package:shop_app/injection.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:toast/toast.dart';
 
 import '../../home/models/product_model.dart';
 import '../../home/pages/home_pages.dart';
@@ -15,7 +14,6 @@ import '../../search/cubit/sreach_cubit.dart';
 import '../../search/pages/category_view_page.dart';
 import '../../search/pages/search_results_screen.dart';
 import '../cubits/product_screen/cubit.dart';
-import '../widgets/product_view/wishlist_view.dart';
 import '../widgets/product_view_widgets.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -43,6 +41,7 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   //! mnb
+  bool isFavorate = false;
   bool isDiscount = true;
   late PageController pageController;
   late ProductModel product;
@@ -130,7 +129,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       top: 35,
                       child: BlocBuilder<ProductCubit, ProductStates>(
                         builder: (context, state) {
-                          bool isFavorate = cubit.isFavorite;
+                          isFavorate = cubit.isFavorite;
                           if (state is ChangeProductFavoriteState) {
                             isFavorate = cubit.isFavorite;
                           }
@@ -143,23 +142,51 @@ class _ProductScreenState extends State<ProductScreen> {
                                   isFavorate ? const Color(0xFFFF6E6E) : null,
                             ),
                             onPressed: () async {
-                              ToastContext().init(context);
-                              Toast.show(
-                                  'Mohammed disconnect favorite for testing',
-                                  duration: Toast.lengthLong);
-                              showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  backgroundColor: const Color(0xFF484848),
-                                  shape: const OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10),
-                                    ),
-                                  ),
-                                  context: context,
-                                  builder: (context) => const WishlistView());
-                              // cubit.changeFavorite(product.id).then((value) {});
+                              if (isFavorate) {
+                                cubit
+                                    .changeFavorite(product.id)
+                                    .then((value) {});
+                                sl
+                                    .get<DataSource>()
+                                    .deleteFromPorderBroducts(product.id);
+                              } else {
+                                List<Map<String, dynamic>> borders =
+                                    await sl.get<DataSource>().getBorders();
+                                if (context.mounted) {
+                                  context.read<ProductCubit>().selectedBorder =
+                                      'All items';
+                                  context
+                                      .read<ProductCubit>()
+                                      .createModelBottomSheet(
+                                          context, borders, product);
+                                  // showModalBottomSheet(
+                                  //     isScrollControlled: true,
+                                  //     backgroundColor: const Color(0xFF484848),
+                                  //     shape: const OutlineInputBorder(
+                                  //       borderSide: BorderSide.none,
+                                  //       borderRadius: BorderRadius.only(
+                                  //         topLeft: Radius.circular(10),
+                                  //         topRight: Radius.circular(10),
+                                  //       ),
+                                  //     ),
+                                  //     context: context,
+                                  //     builder: (context) => WishlistView(
+                                  //           product: product,
+                                  //           borders: borders,
+                                  //         )).then((value) {
+                                  //   if (value == null) {
+                                  //     sl.get<DataSource>().addProductToBorder(
+                                  //         product.id,
+                                  //         context
+                                  //             .read<ProductCubit>()
+                                  //             .selectedBorderIndex);
+                                  //     cubit
+                                  //         .changeFavorite(product.id)
+                                  //         .then((value) {});
+                                  //   }
+                                  // });
+                                }
+                              }
                             },
                           );
                         },

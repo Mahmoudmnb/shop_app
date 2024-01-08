@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -40,14 +42,18 @@ class ProfileScreen extends StatelessWidget {
                                         child: const Center(
                                             child: Text(
                                           'No image',
-                                          style: TextStyle(color: Colors.white),  
+                                          style: TextStyle(color: Colors.white),
                                         )),
                                       )
-                                    : Image(
-                                        height: 100.h,
-                                        width: 100.h,
-                                        image: AssetImage(
-                                            Constant.currentUser!.imgUrl!)),
+                                    : ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: Image(
+                                            fit: BoxFit.cover,
+                                            height: 100.h,
+                                            width: 100.h,
+                                            image: FileImage(File(Constant
+                                                .currentUser!.imgUrl!))),
+                                      ),
                               ),
                               SizedBox(height: 8.h),
                               Text(
