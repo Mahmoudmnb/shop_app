@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/core/constant.dart';
 
 import '../../../injection.dart';
@@ -9,20 +10,26 @@ import '../featurs/products_view/models/review_model.dart';
 import 'data_source.dart';
 
 class RemoteDataSource {
-  Future<bool> uploadImage() async {
-    // final client = Client()
-    //     .setEndpoint('https://cloud.appwrite.io/v1')
-    //     .setProject('[PROJECT_ID]');
+  Future<void> uploadImage(XFile image) async {
+    final client = Client()
+        .setEndpoint('https://cloud.appwrite.io/v1')
+        .setProject(Constant.appWriteProjectId);
 
-    // final storage = Storage(client);
-
-    // final file = await storage.createFile(
-    //   bucketId: '[BUCKET_ID]',
-    //   fileId: ID.unique(),
-    //   file: InputFile.fromPath(
-    //       path: './path-to-files/image.jpg', filename: 'image.jpg'),
-    // );
-    return true;
+    final storage = Storage(client);
+    if (Constant.currentUser!.imgUrl == null) {
+      await storage.deleteFile(
+          bucketId: '65969d60114e6c041d20',
+          fileId: Constant.currentUser!.email);
+    }
+    await storage.createFile(
+      onProgress: (value) {
+        log(value.progress.toString());
+      },
+      bucketId: '65969d60114e6c041d20',
+      fileId: Constant.currentUser!.email,
+      file: InputFile.fromPath(
+          path: image.path, filename: '${Constant.currentUser!.email}.jpg'),
+    );
   }
 
   Future<List<Document>> getProducts() async {

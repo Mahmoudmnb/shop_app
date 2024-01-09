@@ -29,7 +29,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   TextEditingController fullNameController = TextEditingController();
-  TextEditingController phoneNuberController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
   TextEditingController emailAddressController = TextEditingController();
   TextEditingController addressNameController = TextEditingController();
   // TextEditingController postalCodeController = TextEditingController();
@@ -44,7 +44,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
   void dispose() {
     super.dispose();
     fullNameController.dispose();
-    phoneNuberController.dispose();
+    phoneNumberController.dispose();
     emailAddressController.dispose();
     addressNameController.dispose();
     latController.dispose();
@@ -69,7 +69,8 @@ class _AddNewAddressState extends State<AddNewAddress> {
             element['code'] == placemark.isoCountryCode!.toUpperCase() ||
             element['name']!.toUpperCase() == placemark.country!.toUpperCase())
         .toList();
-    log(countryCode.toString());
+    context.read<CheckOutCubit>().selectedCountryCode =
+        countryCode[0]['dial_code'];
     super.initState();
   }
 
@@ -87,10 +88,10 @@ class _AddNewAddressState extends State<AddNewAddress> {
         sl.get<SharedPreferences>().getString('defaultLocation');
     context.read<CheckOutCubit>().isDelfaultLocatoin =
         (defaultLocation == null);
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (value) {
         backToGoogleMapScreen();
-        return false;
       },
       child: SafeArea(
         child: Scaffold(
@@ -130,7 +131,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                     TextFieldAddress(
                         countryCode: countryCode,
                         title: 'Phone Number',
-                        controller: phoneNuberController,
+                        controller: phoneNumberController,
                         keyboardType: TextInputType.number),
                     TextFieldAddress(
                         title: 'Email Address',
@@ -212,7 +213,10 @@ class _AddNewAddressState extends State<AddNewAddress> {
                               AddressModel address = AddressModel(
                                   fullName: fullNameController.text.trim(),
                                   lastName: fullNameController.text.trim(),
-                                  phoneNumber: phoneNuberController.text.trim(),
+                                  phoneNumber: context
+                                          .read<CheckOutCubit>()
+                                          .selectedCountryCode +
+                                      phoneNumberController.text.trim(),
                                   emailAddress:
                                       emailAddressController.text.trim(),
                                   addressName:

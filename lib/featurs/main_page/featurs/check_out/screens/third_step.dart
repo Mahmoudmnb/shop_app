@@ -9,15 +9,14 @@ class CheckOutScreen3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (value) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => const MainPage(),
             ),
             (route) => false);
-
-        return false;
       },
       child: Scaffold(
         body: Container(

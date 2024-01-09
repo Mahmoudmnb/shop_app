@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/main_page/featurs/wishlist/screens/wishlist_screen.dart';
 
-import 'widgets/custom_button.dart';
-import 'widgets/custom_list_tile.dart';
-import 'widgets/profile.dart';
+import '../../wishlist/screens/wishlist_screen.dart';
+import 'custom_button.dart';
+import 'custom_list_tile.dart';
+import 'profile.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({super.key});

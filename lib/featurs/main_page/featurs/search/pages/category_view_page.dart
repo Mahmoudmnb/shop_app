@@ -93,9 +93,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
               SizedBox(width: 10.w),
               BlocBuilder<SearchCubit, SearchState>(
                 builder: (context, state) {
-                  if (state is SaveState) {
-                    categoryName = cubit.selectedCategory;
-                  }
+                  categoryName = cubit.selectedCategory;
                   return SizedBox(
                     width: 320.w,
                     child: Row(

@@ -11,6 +11,7 @@ import 'package:shop_app/injection.dart';
 import 'package:toast/toast.dart';
 
 import '../../../../../core/internet_info.dart';
+import '../../../data_source/data_source_paths.dart';
 
 class PersonalDetails extends StatefulWidget {
   const PersonalDetails({super.key});
@@ -108,8 +109,10 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                               try {
                                 File profileImage = await File(file.path).copy(
                                     '${Constant.baseUrl}/profileImage.jpg');
+                                await sl.get<DataSource>().uploadImage(file);
                                 Constant.currentUser!.imgUrl =
                                     profileImage.path;
+                                log('done');
                                 await sl.get<SharedPreferences>().setString(
                                     'currentUser',
                                     Constant.currentUser!.toJson());
@@ -226,7 +229,6 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                     email: emailController.text.trim(),
                     name: fullNameController.text.trim(),
                     password: Constant.currentUser!.password);
-
                 Constant.currentUser = user;
                 await sl
                     .get<SharedPreferences>()

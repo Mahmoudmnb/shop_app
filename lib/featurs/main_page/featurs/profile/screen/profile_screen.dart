@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/constant.dart';
+import 'package:shop_app/featurs/auth/pages/auth_page.dart';
 
 import '../../../cubit/main_page_cubit.dart';
 import '../../orders/screen/orders_screen.dart';
@@ -19,7 +20,19 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Constant.currentUser == null
-          ? const Center(child: Text('You have to register'))
+          ? Center(
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('You have to register'),
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => const AuthPage()));
+                    },
+                    child: const Text('Register now'))
+              ],
+            ))
           : SingleChildScrollView(
               child: SizedBox(
                 width: double.infinity,

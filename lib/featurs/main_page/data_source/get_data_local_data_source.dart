@@ -119,7 +119,7 @@ class GetDataLocalDataSource {
 
   Future<List<Map<String, dynamic>>> getLocationByName(
       String addressName) async {
-    Database db = await openDatabase(Constant.broderProductsDataBasePath);
+    Database db = await openDatabase(Constant.locationsDataBasePath);
     return db
         .rawQuery('SELECT * FROM locations WHERE addressName="$addressName"');
   }

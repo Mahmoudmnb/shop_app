@@ -41,6 +41,7 @@ class CheckOutCubit extends Cubit<CheckOutState> {
   }
 
 //! mnb
+  String selectedCountryCode = '+963';
   Future<void> addNewAdress(AddressModel address) async {
     await sl.get<DataSource>().addNewLocation(address);
   }
@@ -60,5 +61,10 @@ class CheckOutCubit extends Cubit<CheckOutState> {
   void changeIsDelfaultLocatoin(bool value) {
     isDelfaultLocatoin = value;
     emit(IsDefaultLoacatoinState());
+  }
+
+  void changeSelectedCountryCode(value) {
+    selectedCountryCode = value;
+    emit(ChangeSelectedCountryCode());
   }
 }

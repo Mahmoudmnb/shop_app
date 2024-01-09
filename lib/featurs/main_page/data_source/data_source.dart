@@ -1,6 +1,5 @@
-import 'dart:async';
-
 import 'package:appwrite/models.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../featurs/check_out/models/address_model.dart';
 import '../featurs/home/models/product_model.dart';
@@ -22,6 +21,10 @@ class DataSource {
     required this.insertDataLocalDataSource,
   });
   //! this section for inserting data
+  Future<void> uploadImage(XFile image) async {
+    return remoteDataSource.uploadImage(image);
+  }
+
   Future<void> getReviewsFromCloud() async {
     return remoteDataSource.getReviewsFromCloud();
   }

@@ -33,7 +33,7 @@ class _SimilarItemState extends State<SimilarItem> {
           product: widget.product,
         ),
         Positioned(
-            right: 50.w,
+            right: 35.w,
             top: 10.w,
             child: CustomIconButton(
               size: 20,

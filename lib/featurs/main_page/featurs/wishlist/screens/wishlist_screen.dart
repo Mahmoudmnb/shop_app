@@ -107,6 +107,7 @@ class WishListScreen extends StatelessWidget {
                                                       ProductScreen(
                                                     categoryName: 'Wish list',
                                                     fromPage: 'WishList',
+                                                    fromPageTitle: 'WishList',
                                                     searchCubit: BlocProvider
                                                         .of<SearchCubit>(
                                                             context),
