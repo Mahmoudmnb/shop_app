@@ -13,6 +13,7 @@ import 'featurs/auth/blocs/email_text_bloc/email_text_bloc.dart';
 import 'featurs/auth/blocs/sign_in_loading/sign_in_loading_bloc.dart';
 import 'featurs/auth/blocs/sign_up_bloc/sign_up_bloc.dart';
 import 'featurs/auth/blocs/visible_password_bloc/visible_password_bloc.dart';
+import 'featurs/auth/models/user_model.dart';
 import 'featurs/main_page/cubit/main_page_cubit.dart';
 import 'featurs/main_page/featurs/check_out/cubit/check_out_cubit.dart';
 import 'featurs/main_page/featurs/home/blocs/discount/discount_products_bloc.dart';
@@ -33,10 +34,10 @@ Future<void> main(List<String> args) async {
   // );
   init();
   SharedPreferences db = await SharedPreferences.getInstance();
-  // String? user = db.getString('currentUser');
-  // if (user != null) {
-  //   Constant.currentUser = UserModel.fromJson(user);
-  // }
+  String? user = db.getString('currentUser');
+  if (user != null) {
+    Constant.currentUser = UserModel.fromJson(user);
+  }
   String? baseUrl = db.getString('baseUrl');
   if (baseUrl == null) {
     baseUrl = await getDatabasesPath();
