@@ -162,134 +162,152 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                 searchProducts = state.searchResult;
               }
 
-              return Expanded(
-                child: GridView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: searchProducts.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.65,
-                    mainAxisSpacing: 10.w,
-                    crossAxisSpacing: 10.h,
-                  ),
-                  itemBuilder: (context, index) {
-                    ProductModel product =
-                        ProductModel.fromMap(searchProducts[index]);
-                    return GestureDetector(
-                      onTap: () {
-                        ProductCubit productCubit =
-                            BlocProvider.of<ProductCubit>(context);
-                        productCubit.widthOfPrice = 145;
-                        productCubit.hidden = false;
-                        productCubit.getReviws(product.id).then((value) {
-                          productCubit
-                              .getSimilarProducts(product)
-                              .then((value) {
-                            Navigator.of(context)
-                                .pushReplacement(MaterialPageRoute(
-                              builder: (context) => ProductScreen(
-                                searchCubit: cubit,
-                                fromPage: 'SearchReasults',
-                                searchWord: searchController.text,
-                                product: product,
-                                cubit: BlocProvider.of<ProductCubit>(context),
-                              ),
-                            ));
-                          });
-                        });
-                      },
-                      child: SizedBox(
-                        width: 141.w,
-                        height: 248.h,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(boxShadow: [
-                                BoxShadow(
-                                    offset: const Offset(0, 4),
-                                    color: Colors.black.withOpacity(.25),
-                                    blurRadius: 2)
-                              ], borderRadius: BorderRadius.circular(10)),
-                              child: Stack(
-                                alignment: const Alignment(.80, -.89),
-                                children: [
-                                  Image.asset(
-                                    product.imgUrl.split('|')[0].trim(),
-                                    fit: BoxFit.cover,
-                                    height: 206.h,
-                                    width: 141.w,
-                                  ),
-                                  Positioned(
-                                    right: 8.w,
-                                    child: GestureDetector(
-                                        onTap: () {
-                                          // cubit.setFavorateProduct(
-                                          //     product.id, !product.isFavorite);
-                                          // cubit.search(searchController.text);
-                                        },
-                                        child: Container(
-                                            height: 33.h,
-                                            width: 33.h,
-                                            alignment: Alignment.center,
-                                            decoration: const BoxDecoration(
-                                                color: Colors.white,
-                                                shape: BoxShape.circle),
-                                            child: product.isFavorite
-                                                ? const Icon(
-                                                    Icons.favorite,
-                                                    color: Color(0xffFF6E6E),
-                                                  )
-                                                : const Icon(
-                                                    Icons.favorite,
-                                                    color: Color(0xffD8D8D8),
-                                                  ))),
-                                  )
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 15.h),
-                            SizedBox(
-                              height: 20.h,
-                              width: 141.w,
-                              child: Row(
-                                children: [
-                                  Text(
-                                    product.makerCompany,
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontFamily: 'Tenor Sans'),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    "${product.price} \$",
-                                    style: TextStyle(
-                                        fontFamily: 'Tenor Sans',
-                                        color: const Color(0xFFD57676),
-                                        fontSize: 10.sp),
-                                  )
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20.h,
-                              width: 141.w,
-                              child: Text(
-                                product.name,
-                                style: TextStyle(
-                                    fontFamily: 'Tenor Sans',
-                                    fontSize: 11.sp,
-                                    color: const Color(0xFF828282)),
-                              ),
-                            )
-                          ],
+              return searchProducts.isEmpty
+                  ? Column(
+                      children: [
+                        const Image(
+                          image: AssetImage('assets/icons/notFound.jpeg'),
                         ),
+                        Text(
+                          "No products founded",
+                          style: TextStyle(
+                              fontSize: 18.sp, color: Colors.grey[600]),
+                        )
+                      ],
+                    )
+                  : Expanded(
+                      child: GridView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: searchProducts.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.65,
+                          mainAxisSpacing: 10.w,
+                          crossAxisSpacing: 10.h,
+                        ),
+                        itemBuilder: (context, index) {
+                          ProductModel product =
+                              ProductModel.fromMap(searchProducts[index]);
+                          return GestureDetector(
+                            onTap: () {
+                              ProductCubit productCubit =
+                                  BlocProvider.of<ProductCubit>(context);
+                              productCubit.widthOfPrice = 145;
+                              productCubit.hidden = false;
+                              productCubit.getReviws(product.id).then((value) {
+                                productCubit
+                                    .getSimilarProducts(product)
+                                    .then((value) {
+                                  Navigator.of(context)
+                                      .pushReplacement(MaterialPageRoute(
+                                    builder: (context) => ProductScreen(
+                                      searchCubit: cubit,
+                                      fromPage: 'SearchReasults',
+                                      searchWord: searchController.text,
+                                      product: product,
+                                      cubit: BlocProvider.of<ProductCubit>(
+                                          context),
+                                    ),
+                                  ));
+                                });
+                              });
+                            },
+                            child: SizedBox(
+                              width: 141.w,
+                              height: 248.h,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(boxShadow: [
+                                      BoxShadow(
+                                          offset: const Offset(0, 4),
+                                          color: Colors.black.withOpacity(.25),
+                                          blurRadius: 2)
+                                    ], borderRadius: BorderRadius.circular(10)),
+                                    child: Stack(
+                                      alignment: const Alignment(.80, -.89),
+                                      children: [
+                                        Image.asset(
+                                          product.imgUrl.split('|')[0].trim(),
+                                          fit: BoxFit.cover,
+                                          height: 206.h,
+                                          width: 141.w,
+                                        ),
+                                        Positioned(
+                                          right: 8.w,
+                                          child: GestureDetector(
+                                              onTap: () {
+                                                // cubit.setFavorateProduct(
+                                                //     product.id, !product.isFavorite);
+                                                // cubit.search(searchController.text);
+                                              },
+                                              child: Container(
+                                                  height: 33.h,
+                                                  width: 33.h,
+                                                  alignment: Alignment.center,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                          color: Colors.white,
+                                                          shape:
+                                                              BoxShape.circle),
+                                                  child: product.isFavorite
+                                                      ? const Icon(
+                                                          Icons.favorite,
+                                                          color:
+                                                              Color(0xffFF6E6E),
+                                                        )
+                                                      : const Icon(
+                                                          Icons.favorite,
+                                                          color:
+                                                              Color(0xffD8D8D8),
+                                                        ))),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 15.h),
+                                  SizedBox(
+                                    height: 20.h,
+                                    width: 141.w,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          product.makerCompany,
+                                          style: TextStyle(
+                                              fontSize: 14.sp,
+                                              fontFamily: 'Tenor Sans'),
+                                        ),
+                                        const Spacer(),
+                                        Text(
+                                          "${product.price} \$",
+                                          style: TextStyle(
+                                              fontFamily: 'Tenor Sans',
+                                              color: const Color(0xFFD57676),
+                                              fontSize: 10.sp),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 20.h,
+                                    width: 141.w,
+                                    child: Text(
+                                      product.name,
+                                      style: TextStyle(
+                                          fontFamily: 'Tenor Sans',
+                                          fontSize: 11.sp,
+                                          color: const Color(0xFF828282)),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     );
-                  },
-                ),
-              );
             },
           ),
         ]),

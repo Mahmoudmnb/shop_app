@@ -112,28 +112,33 @@ class AddToCartBottomSheet extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
+                    contentPadding: const EdgeInsets.all(0),
                     shape: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15)),
+                        borderRadius: BorderRadius.circular(25)),
                     backgroundColor: Colors.black,
                     content: Container(
-                      width: 262.w,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.black,
+                      ),
+                      // width: 262.w,
                       height: 244.h,
-                      decoration: const BoxDecoration(color: Colors.black),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Item added to cart',
+                            'Item added \n    to cart',
                             style: TextStyle(
-                                fontSize: 22.sp,
+                                fontSize: 25.sp,
                                 color: Colors.white,
+                                fontWeight: FontWeight.bold,
                                 fontFamily: 'DM Sans'),
                           ),
                           SizedBox(height: 40.h),
                           Image.asset(
-                            'assets/images/icon.png',
-                            width: 60,
-                            height: 60,
+                            'assets/icons/bag.jpg',
+                            // width: 40.w, //! it have to comment don't return it
+                            height: 60.h,
                             fit: BoxFit.cover,
                           )
                         ],

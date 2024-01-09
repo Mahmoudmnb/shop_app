@@ -32,29 +32,25 @@ class ProfileScreen extends StatelessWidget {
                           return Column(
                             children: [
                               Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(12)),
-                                child: Constant.currentUser!.imgUrl == null
-                                    ? SizedBox(
-                                        height: 100.h,
-                                        width: 100.h,
-                                        child: const Center(
-                                            child: Text(
-                                          'No image',
-                                          style: TextStyle(color: Colors.white),
-                                        )),
-                                      )
-                                    : ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Image(
+                                  decoration: BoxDecoration(
+                                      color: Colors.black,
+                                      borderRadius: BorderRadius.circular(12)),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Constant.currentUser!.imgUrl == null
+                                        ? Image(
+                                            fit: BoxFit.cover,
+                                            height: 100.h,
+                                            width: 100.h,
+                                            image: const AssetImage(
+                                                'assets/icons/UnknownPerson.jpeg'))
+                                        : Image(
                                             fit: BoxFit.cover,
                                             height: 100.h,
                                             width: 100.h,
                                             image: FileImage(File(Constant
                                                 .currentUser!.imgUrl!))),
-                                      ),
-                              ),
+                                  )),
                               SizedBox(height: 8.h),
                               Text(
                                 Constant.currentUser!.name,
