@@ -4,6 +4,7 @@ import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/core/constant.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../injection.dart';
 import '../featurs/products_view/models/review_model.dart';
@@ -16,20 +17,23 @@ class RemoteDataSource {
         .setProject(Constant.appWriteProjectId);
 
     final storage = Storage(client);
-    if (Constant.currentUser!.imgUrl == null) {
+    String id = const Uuid().v1();
+    if (Constant.currentUser!.imgUrl != null) {
       await storage.deleteFile(
           bucketId: '65969d60114e6c041d20',
-          fileId: Constant.currentUser!.email);
+          fileId: Constant.currentUser!.cloudImgUrl!);
     }
     await storage.createFile(
       onProgress: (value) {
+        log('hi');
         log(value.progress.toString());
       },
       bucketId: '65969d60114e6c041d20',
-      fileId: Constant.currentUser!.email,
+      fileId: id,
       file: InputFile.fromPath(
           path: image.path, filename: '${Constant.currentUser!.email}.jpg'),
     );
+    Constant.currentUser!.cloudImgUrl = id;
   }
 
   Future<List<Document>> getProducts() async {

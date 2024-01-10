@@ -18,7 +18,7 @@ import '../data.dart';
 import 'auth_widgets.dart';
 
 class AuthForm extends StatefulWidget {
-  final void Function() goToHomePage;
+  final Future<void> Function() goToHomePage;
   const AuthForm({super.key, required this.goToHomePage});
 
   @override
@@ -157,7 +157,7 @@ class _AuthFormState extends State<AuthForm> {
       sl
           .get<SharedPreferences>()
           .setString('currentUser', Constant.currentUser!.toJson());
-      widget.goToHomePage();
+      await widget.goToHomePage();
       changeButtonLoadingState(false);
       log('done');
     } on AppwriteException catch (e) {
@@ -219,7 +219,7 @@ class _AuthFormState extends State<AuthForm> {
           collectionId: '655da771422b6ac710aa',
           documentId: id,
           data: {'email': email, 'name': name, 'password': password});
-      widget.goToHomePage();
+      await widget.goToHomePage();
       changeButtonLoadingState(false);
       log('done');
     } on AppwriteException catch (e) {

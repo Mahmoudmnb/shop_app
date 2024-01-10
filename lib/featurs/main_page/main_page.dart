@@ -139,16 +139,18 @@ class _MainPageState extends State<MainPage>
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: appBar,
-      drawer: const SafeArea(
+      drawer: SafeArea(
         child: Drawer(
             backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(15),
                 bottomRight: Radius.circular(15),
               ),
             ),
-            child: HomeDrawer()),
+            child: HomeDrawer(
+              tabController: tabController,
+            )),
       ),
       body: WillPopScope(
         onWillPop: () async {

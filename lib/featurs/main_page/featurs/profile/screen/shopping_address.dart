@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/featurs/main_page/featurs/check_out/models/address_model.dart';
 
-import '../model/shopping_address_model.dart';
 import '../widgets/shopping_address_card.dart';
 
 class ShoppingAddress extends StatelessWidget {
-  const ShoppingAddress({super.key});
+  final List<Map<String, dynamic>> addressList;
+  const ShoppingAddress({super.key, required this.addressList});
   @override
   Widget build(BuildContext context) {
-    List addressInfo = [
-      ShoppingAddressModel(
-          title: 'My Home', description: " 123 Building, Main Street"),
-      ShoppingAddressModel(
-          title: 'My Office', description: " 123 Building, Main Street"),
-    ];
     return Scaffold(
         body: Container(
             padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 60.h),
@@ -40,20 +35,18 @@ class ShoppingAddress extends StatelessWidget {
                     )
                   ],
                 ),
-                SizedBox(
-                  height: 40.h,
-                ),
+                SizedBox(height: 40.h),
                 Expanded(
                   child: ListView.separated(
                     physics: const BouncingScrollPhysics(),
-                    separatorBuilder: (context, index) => SizedBox(
-                      height: 2.h,
-                    ),
-                    itemCount: addressInfo.length,
+                    separatorBuilder: (context, index) => SizedBox(height: 2.h),
+                    itemCount: addressList.length,
                     itemBuilder: (BuildContext context, int index) {
+                      AddressModel address =
+                          AddressModel.fromMap(addressList[index]);
                       return ShoppingAddressCard(
-                          title: addressInfo[index].title,
-                          description: addressInfo[index].description);
+                          title: address.addressName,
+                          description: address.address);
                     },
                   ),
                 ),
@@ -61,7 +54,6 @@ class ShoppingAddress extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   onTap: () {},
                   child: Ink(
-                    
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(vertical: 13.h),
                     decoration: BoxDecoration(

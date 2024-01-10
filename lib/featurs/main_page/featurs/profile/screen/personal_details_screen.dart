@@ -2,16 +2,15 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/core/constant.dart';
 import 'package:shop_app/featurs/auth/models/user_model.dart';
 import 'package:shop_app/injection.dart';
-import 'package:toast/toast.dart';
 
-import '../../../../../core/internet_info.dart';
-import '../../../data_source/data_source_paths.dart';
+import '../cubit/profile_cubit.dart';
 
 class PersonalDetails extends StatefulWidget {
   const PersonalDetails({super.key});
@@ -74,60 +73,77 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                   alignment: const Alignment(1.2, 1.2),
                   children: [
                     Container(
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(12)),
-                      child: Constant.currentUser!.imgUrl == null
-                          ? const SizedBox(
-                              height: 130,
-                              width: 130,
-                              child: Center(
-                                child: Text(
-                                  'No Image',
-                                  style: TextStyle(color: Colors.white),
+                        height: 130.h,
+                        width: 130.w,
+                        decoration: BoxDecoration(
+                            image: Constant.currentUser!.imgUrl != null
+                                ? DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: FileImage(
+                                        File(Constant.currentUser!.imgUrl!)))
+                                : null,
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(12)),
+                        child: Constant.currentUser!.imgUrl == null
+                            ? SizedBox(
+                                height: 130,
+                                width: 130,
+                                child: Center(
+                                  child: Text(
+                                    Constant.getLetterName(
+                                        Constant.currentUser!.name),
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
                                 ),
-                              ),
-                            )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image(
-                                  fit: BoxFit.cover,
-                                  height: 130.h,
-                                  width: 130.h,
-                                  image: FileImage(
-                                      File(Constant.currentUser!.imgUrl!))),
-                            ),
-                    ),
+                              )
+                            : null
+                        // : ClipRRect(
+                        //     borderRadius: BorderRadius.circular(12),
+                        //     child: Image(
+                        //         fit: BoxFit.cover,
+                        //         height: 130.h,
+                        //         width: 130.h,
+                        //         image: FileImage(
+                        //             File(Constant.currentUser!.imgUrl!))),
+                        //   ),
+                        ),
                     GestureDetector(
                       onTap: () async {
-                        InternetInfo.isconnected().then((value) async {
-                          if (value) {
-                            ImagePicker imagePicker = ImagePicker();
-                            XFile? file = await imagePicker.pickImage(
-                                source: ImageSource.gallery);
-                            if (file != null) {
-                              try {
-                                File profileImage = await File(file.path).copy(
-                                    '${Constant.baseUrl}/profileImage.jpg');
-                                await sl.get<DataSource>().uploadImage(file);
-                                Constant.currentUser!.imgUrl =
-                                    profileImage.path;
-                                log('done');
-                                await sl.get<SharedPreferences>().setString(
-                                    'currentUser',
-                                    Constant.currentUser!.toJson());
-                                imgUrl = Constant.currentUser!.imgUrl;
-                              } catch (e) {
-                                log(e.toString());
-                              }
-                            } else {
-                              log('empty image');
+                        ImagePicker imagePicker = ImagePicker();
+                        XFile? file = await imagePicker.pickImage(
+                            source: ImageSource.gallery);
+                        if (file != null) {
+                          try {
+                            if (Constant.currentUser!.imgUrl != null) {
+                              await File(Constant.currentUser!.imgUrl!)
+                                  .delete();
+                              log(File(Constant.currentUser!.imgUrl!)
+                                  .existsSync()
+                                  .toString());
                             }
-                          } else {
-                            ToastContext().init(context);
-                            Toast.show('check you internet');
+                            File profileImage = await File(file.path)
+                                .copy('${Constant.baseUrl}profileImage.jpg');
+
+                            // await sl.get<DataSource>().uploadImage(file);
+                            Constant.currentUser!.imgUrl = profileImage.path;
+                            log('done');
+                            log(File(Constant.currentUser!.imgUrl!)
+                                .existsSync()
+                                .toString());
+                            await sl.get<SharedPreferences>().setString(
+                                'currentUser', Constant.currentUser!.toJson());
+                            imgUrl = profileImage.path;
+                            if (context.mounted) {
+                              context
+                                  .read<ProfileCubit>()
+                                  .changeProfileImagePath(imgUrl!);
+                            }
+                          } catch (e) {
+                            log(e.toString());
                           }
-                        });
+                        } else {
+                          log('empty image');
+                        }
                       },
                       child: Container(
                         height: 40.h,

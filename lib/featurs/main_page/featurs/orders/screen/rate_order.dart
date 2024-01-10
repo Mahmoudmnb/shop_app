@@ -203,7 +203,7 @@ class RateOrder extends StatelessWidget {
                             }
                           } else {
                             context.read<OrdersCubit>().changeIsLoading(false);
-
+                            ToastContext().init(context);
                             Toast.show('check your internet');
                           }
                         });

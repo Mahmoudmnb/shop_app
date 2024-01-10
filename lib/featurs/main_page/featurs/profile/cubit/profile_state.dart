@@ -6,3 +6,5 @@ sealed class ProfileState {}
 final class ProfileInitial extends ProfileState {}
 
 class ChangeAddressState extends ProfileState {}
+
+class ChangeProfileImagePath extends ProfileState {}
