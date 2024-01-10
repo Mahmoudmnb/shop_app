@@ -60,27 +60,48 @@ class AllReviewsScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 25.5.h),
-            Expanded(
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: reviews.length,
-                itemBuilder: (context, index) {
-                  ReviewModel review = ReviewModel.fromMap(reviews[index]);
-                  return Padding(
-                    padding:
-                        EdgeInsets.only(left: 30.w, right: 30.w, bottom: 15.h),
-                    child: CustomListTile(
-                      width: 273.w,
-                      username: review.userName,
-                      date: getOffsetDate(review.date),
-                      description: review.description,
-                      stars: review.stars,
-                      imgUrl: review.userImage,
+            reviews.isEmpty
+                ? SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      children: [
+                        const Image(
+                          // height: 300.h,
+                          image: AssetImage('assets/icons/noReveiws.png'),
+                        ),
+                        SizedBox(
+                          height: 25.h,
+                        ),
+                        Text(
+                          "No reviews published",
+                          style: TextStyle(
+                              fontSize: 18.sp, color: Colors.grey[600]),
+                        )
+                      ],
                     ),
-                  );
-                },
-              ),
-            )
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: reviews.length,
+                      itemBuilder: (context, index) {
+                        ReviewModel review =
+                            ReviewModel.fromMap(reviews[index]);
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              left: 30.w, right: 30.w, bottom: 15.h),
+                          child: CustomListTile(
+                            width: 273.w,
+                            username: review.userName,
+                            date: getOffsetDate(review.date),
+                            description: review.description,
+                            stars: review.stars,
+                            imgUrl: review.userImage,
+                          ),
+                        );
+                      },
+                    ),
+                  )
           ],
         ),
       ),

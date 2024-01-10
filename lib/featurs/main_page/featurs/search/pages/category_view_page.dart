@@ -301,7 +301,8 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                                         offset: const Offset(0, 4),
                                         color: Colors.black.withOpacity(.25),
                                         blurRadius: 2)
-                                  ], borderRadius: BorderRadius.circular(10)),
+                                  ],
+                                  borderRadius: BorderRadius.circular(10)),
                                   child: Stack(
                                     alignment: const Alignment(.80, -.89),
                                     children: [

@@ -177,43 +177,44 @@ class MyOrdersScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                Expanded(
-                                  child: Container(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 25.w),
-                                    child: ListView.separated(
-                                      // physics: const BouncingScrollPhysics(),
-                                      separatorBuilder: (context, index) =>
-                                          SizedBox(height: 15.h),
-                                      // shrinkWrap: true,
-                                      itemCount: context
-                                                  .read<OrdersCubit>()
-                                                  .kindOfOrder ==
-                                              "Pending"
-                                          ? pendingOrders.length
-                                          : deliverdOrders.length,
-                                      itemBuilder: (context, index) {
-                                        return BuildOrderCard(
-                                          order: context
-                                                      .read<OrdersCubit>()
-                                                      .kindOfOrder ==
-                                                  "Pending"
-                                              ? pendingOrders[index]
-                                              : deliverdOrders[index],
-                                          isDeliverd: context
-                                                  .read<OrdersCubit>()
-                                                  .kindOfOrder ==
-                                              "Delivered",
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                )
-                              ],
+                       
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 25.w),
+                              child: ListView.separated(
+                                physics: const BouncingScrollPhysics(),
+                                separatorBuilder: (context, index) =>
+                                    SizedBox(height: 15.h),
+                                // shrinkWrap: true,
+                                itemCount:
+                                    context.read<OrdersCubit>().kindOfOrder ==
+                                            "Pending"
+                                        ? pendingOrders.length
+                                        : deliverdOrders.length,
+                                itemBuilder: (context, index) {
+                                  return BuildOrderCard(
+                                    order: context
+                                                .read<OrdersCubit>()
+                                                .kindOfOrder ==
+                                            "Pending"
+                                        ? pendingOrders[index]
+                                        : deliverdOrders[index],
+                                isDeliverd:
+                                    context.read<OrdersCubit>().kindOfOrder ==
+                                        "Delivered",
+                                  );
+                                },
+                              ),
                             ),
+                          )
+                        ],
+                      ),
+                    )
+      
                     )
                   : const Center(
                       child: CircularProgressIndicator(color: Colors.black));
+
             });
       },
     );

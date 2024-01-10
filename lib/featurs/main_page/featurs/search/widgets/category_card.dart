@@ -39,8 +39,9 @@ class CategoryCard extends StatelessWidget {
       child: Column(
         children: [
           Container(
+            padding: EdgeInsets.all(15.w),
             width: 60.w,
-            height: 60.h,
+            height: 70.h,
             decoration: BoxDecoration(
                 border: Border.all(color: const Color(0xFF3D3D3D), width: 1.5),
                 borderRadius: BorderRadius.circular(10)),

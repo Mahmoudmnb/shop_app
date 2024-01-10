@@ -53,6 +53,7 @@ class ProfileScreen extends StatelessWidget {
                           return Column(
                             children: [
                               Container(
+
                                 decoration: BoxDecoration(
                                     color: Colors.black,
                                     borderRadius: BorderRadius.circular(12)),
@@ -82,6 +83,7 @@ class ProfileScreen extends StatelessWidget {
                                                 .profileImagePath!))),
                                       ),
                               ),
+
                               SizedBox(height: 8.h),
                               Text(
                                 Constant.currentUser!.name,

@@ -110,6 +110,7 @@ class AddToCartBottomSheet extends StatelessWidget {
                 ],
               ),
               onPressed: () {
+
                 if (Constant.currentUser == null) {
                   context.read<MainPageCubit>().showRegisterMessage(context);
                 } else {
@@ -143,6 +144,7 @@ class AddToCartBottomSheet extends StatelessWidget {
                             )
                           ],
                         ),
+
                       ),
                     ),
                   );
