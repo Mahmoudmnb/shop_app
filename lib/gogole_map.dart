@@ -6,12 +6,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shop_app/featurs/main_page/featurs/check_out/cubit/check_out_cubit.dart';
-import 'package:shop_app/featurs/main_page/featurs/check_out/screens/first_step.dart';
 import 'package:toast/toast.dart';
 
 import 'featurs/main_page/cubit/main_page_cubit.dart';
+import 'featurs/main_page/featurs/check_out/cubit/check_out_cubit.dart';
 import 'featurs/main_page/featurs/check_out/screens/add_another_address.dart';
+import 'featurs/main_page/featurs/check_out/screens/first_step.dart';
 
 class GoogleMapScreen extends StatefulWidget {
   final LatLng? currentLocation;
@@ -65,17 +65,15 @@ class GoogleMapScreenState extends State<GoogleMapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        List<Map<String, dynamic>> locations =
-            await context.read<CheckOutCubit>().getLocations();
-        if (context.mounted) {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (value) {
+        context.read<CheckOutCubit>().getLocations().then((locations) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => FirstStep(
                     locations: locations,
                   )));
-        }
-        return false;
+        });
       },
       child: Scaffold(
         body: Center(
@@ -156,7 +154,8 @@ class GoogleMapScreenState extends State<GoogleMapScreen> {
                                 const BoxDecoration(color: Colors.black),
                             child: Center(
                               child: isLoading
-                                  ? const CircularProgressIndicator(color: Colors.white)
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white)
                                   : Text(
                                       'Proceed',
                                       style: TextStyle(

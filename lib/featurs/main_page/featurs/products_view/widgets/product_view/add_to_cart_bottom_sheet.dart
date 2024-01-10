@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/core/constant.dart';
+import 'package:shop_app/featurs/main_page/cubit/main_page_cubit.dart';
 
 import '../../../home/models/product_model.dart';
 import '../../cubits/product_screen/cubit.dart';
@@ -108,63 +110,45 @@ class AddToCartBottomSheet extends StatelessWidget {
                 ],
               ),
               onPressed: () {
-                context.read<ProductCubit>().addToCart(product);
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    contentPadding: const EdgeInsets.all(0),
-                    shape: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25)),
-                    backgroundColor: Colors.black,
-                    content: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: Colors.black,
-                      ),
-                      // width: 262.w,
-                      height: 244.h,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Item added \n    to cart',
-                            style: TextStyle(
-                                fontSize: 25.sp,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'DM Sans'),
-                          ),
-                          SizedBox(height: 40.h),
-                          Image.asset(
-                            'assets/icons/bag.jpg',
-                            // width: 40.w, //! it have to comment don't return it
-                            height: 60.h,
-                            fit: BoxFit.cover,
-                          )
-                        ],
+
+                if (Constant.currentUser == null) {
+                  context.read<MainPageCubit>().showRegisterMessage(context);
+                } else {
+                  context.read<ProductCubit>().addToCart(product);
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      shape: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      backgroundColor: Colors.black,
+                      content: Container(
+                        width: 262.w,
+                        height: 244.h,
+                        decoration: const BoxDecoration(color: Colors.black),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Item added to cart',
+                              style: TextStyle(
+                                  fontSize: 22.sp,
+                                  color: Colors.white,
+                                  fontFamily: 'DM Sans'),
+                            ),
+                            SizedBox(height: 40.h),
+                            Image.asset(
+                              'assets/images/icon.png',
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                            )
+                          ],
+                        ),
+
                       ),
                     ),
-                  ),
-                );
-                // if (Constant.currentUser == null) {
-                //   showDialog(
-                //     context: context,
-                //     builder: (context) => AlertDialog(
-                //       content: const Text(
-                //           'you have to register before you can by any thing'),
-                //       actions: [
-                //         TextButton(
-                //             onPressed: () {
-                //               Navigator.of(context).pop();
-                //               Navigator.of(context).push(MaterialPageRoute(
-                //                 builder: (context) => const AuthPage(),
-                //               ));
-                //             },
-                //             child: const Text('register now'))
-                //       ],
-                //     ),
-                //   );
-                // } else {}
+                  );
+                }
               },
             ),
           )

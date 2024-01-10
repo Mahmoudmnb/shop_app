@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
-import 'package:shop_app/featurs/main_page/featurs/wishlist/screens/wishlist_screen.dart';
 import 'package:shop_app/injection.dart';
 
+import '../../../data_source/data_source.dart';
 import '../../home/models/product_model.dart';
 import '../../products_view/cubits/product_screen/cubit.dart';
 import '../../products_view/screens/product_view_secreens.dart';
 import '../../search/cubit/sreach_cubit.dart';
+import 'wishlist_screen.dart';
 
 class BorderProductView extends StatelessWidget {
   final List<Map<String, dynamic>> borderProducts;
@@ -123,6 +123,7 @@ class BorderProductView extends StatelessWidget {
                                   Navigator.of(context)
                                       .pushReplacement(MaterialPageRoute(
                                     builder: (context) => ProductScreen(
+                                      fromPageTitle: '$borderName Border',
                                       categoryName: borderName,
                                       fromPage: 'BorderProducts',
                                       searchCubit:

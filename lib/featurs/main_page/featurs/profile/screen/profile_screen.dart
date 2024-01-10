@@ -4,6 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/constant.dart';
+import 'package:shop_app/featurs/auth/pages/auth_page.dart';
+import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/featurs/main_page/featurs/profile/cubit/profile_cubit.dart';
+import 'package:shop_app/featurs/main_page/featurs/profile/screen/profile_order_screen.dart';
+import 'package:shop_app/featurs/main_page/featurs/shopping_bag/screens/shopping_bag_screen.dart';
+import 'package:shop_app/featurs/main_page/featurs/wishlist/screens/wishlist_screen.dart';
+import 'package:shop_app/injection.dart';
 
 import '../../../cubit/main_page_cubit.dart';
 import '../../orders/screen/orders_screen.dart';
@@ -16,10 +23,24 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<MainPageCubit>().changePageIndex(3);
+    context.read<ProfileCubit>().profileImagePath =
+        Constant.currentUser!.imgUrl;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Constant.currentUser == null
-          ? const Center(child: Text('You have to register'))
+          ? Center(
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('You have to register'),
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => const AuthPage()));
+                    },
+                    child: const Text('Register now'))
+              ],
+            ))
           : SingleChildScrollView(
               child: SizedBox(
                 width: double.infinity,
@@ -27,30 +48,42 @@ class ProfileScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(height: 80.h),
-                      BlocBuilder<MainPageCubit, MainPageState>(
+                      BlocBuilder<ProfileCubit, ProfileState>(
                         builder: (context, state) {
                           return Column(
                             children: [
                               Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.black,
-                                      borderRadius: BorderRadius.circular(12)),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Constant.currentUser!.imgUrl == null
-                                        ? Image(
+
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(12)),
+                                child: context
+                                            .read<ProfileCubit>()
+                                            .profileImagePath ==
+                                        null
+                                    ? SizedBox(
+                                        height: 100.h,
+                                        width: 100.h,
+                                        child: Center(
+                                            child: Text(
+                                          Constant.getLetterName(
+                                              Constant.currentUser!.name),
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        )),
+                                      )
+                                    : ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: Image(
                                             fit: BoxFit.cover,
                                             height: 100.h,
                                             width: 100.h,
-                                            image: const AssetImage(
-                                                'assets/icons/UnknownPerson.jpeg'))
-                                        : Image(
-                                            fit: BoxFit.cover,
-                                            height: 100.h,
-                                            width: 100.h,
-                                            image: FileImage(File(Constant
-                                                .currentUser!.imgUrl!))),
-                                  )),
+                                            image: FileImage(File(context
+                                                .read<ProfileCubit>()
+                                                .profileImagePath!))),
+                                      ),
+                              ),
+
                               SizedBox(height: 8.h),
                               Text(
                                 Constant.currentUser!.name,
@@ -81,9 +114,9 @@ class ProfileScreen extends StatelessWidget {
                                 builder: (context) => const PersonalDetails(),
                               ))
                                   .then((value) {
-                                context
-                                    .read<MainPageCubit>()
-                                    .updateProfilePageData();
+                                // context
+                                //     .read<MainPageCubit>()
+                                //     .updateProfilePageData();
                               });
                             },
                           ),
@@ -91,20 +124,25 @@ class ProfileScreen extends StatelessWidget {
                             context,
                             "assets/images/Frame.png",
                             "Shopping Address",
-                            () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const ShoppingAddress(),
-                              ));
+                            () async {
+                              List<Map<String, dynamic>> addressList =
+                                  await sl.get<DataSource>().getLocations();
+                              if (context.mounted) {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ShoppingAddress(
+                                    addressList: addressList,
+                                  ),
+                                ));
+                              }
                             },
                           ),
                           buildListTile(
                             context,
                             "assets/images/card.png",
-                            "My Card",
+                            "My Cart",
                             () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const ShoppingAddress(),
-                              ));
+                                  builder: (_) => const ShoppingBagScreen()));
                             },
                           ),
                           buildListTile(
@@ -113,7 +151,8 @@ class ProfileScreen extends StatelessWidget {
                             "My Order",
                             () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const MyOrdersScreen(),
+                                builder: (context) =>
+                                    const ProfileOrderScreen(),
                               ));
                             },
                           ),
@@ -121,10 +160,16 @@ class ProfileScreen extends StatelessWidget {
                             context,
                             "assets/images/Favorite_fill.png",
                             "My Wishlist",
-                            () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const MyOrdersScreen(),
-                              ));
+                            () async {
+                              List<Map<String, dynamic>> borders =
+                                  await sl.get<DataSource>().getBorders();
+                              if (context.mounted) {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => WishListScreen(
+                                    borders: borders,
+                                  ),
+                                ));
+                              }
                             },
                           ),
                           buildListTile(

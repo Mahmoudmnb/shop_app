@@ -5,12 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/constant.dart';
-import 'package:toast/toast.dart';
 
 import '../../injection.dart';
 import 'cubit/main_page_cubit.dart';
 import 'data_source/data_source.dart';
-import 'drawer/home_drawer.dart';
+import 'featurs/drawer/widgets/drawer.dart';
 import 'featurs/home/pages/home_page.dart';
 import 'featurs/home/widgets/main_page_tab_bar.dart';
 import 'featurs/orders/screen/orders_screen.dart';
@@ -97,9 +96,7 @@ class _MainPageState extends State<MainPage>
                     ));
                   });
                 } else {
-                  ToastContext().init(context);
-                  Toast.show('You have to register before you can go here',
-                      duration: 2);
+                  context.read<MainPageCubit>().showRegisterMessage(context);
                 }
               },
               icon: Icon(Icons.shopping_cart_outlined, size: 25.sp)),
@@ -142,16 +139,18 @@ class _MainPageState extends State<MainPage>
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: appBar,
-      drawer: const SafeArea(
+      drawer: SafeArea(
         child: Drawer(
             backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(15),
                 bottomRight: Radius.circular(15),
               ),
             ),
-            child: HomeDrawer()),
+            child: HomeDrawer(
+              tabController: tabController,
+            )),
       ),
       body: WillPopScope(
         onWillPop: () async {

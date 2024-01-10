@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/core/country_codes.dart';
 
 import '../cubit/check_out_cubit.dart';
 
@@ -27,10 +28,8 @@ class TextFieldAddress extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       // height: 50.h,
       child: TextFormField(
-        
         onChanged: (value) {
           if (title == 'Address Name') {
-            log('address name');
             context
                 .read<CheckOutCubit>()
                 .getLocationByName(value.trim())
@@ -76,9 +75,30 @@ class TextFieldAddress extends StatelessWidget {
         keyboardType: keyboardType,
         controller: controller,
         decoration: InputDecoration(
-            prefix: title == 'Phone Number'
-                ? Text(countryCode![0]['dial_code'] + '  ')
-                // ? Text('+963')     this for test (you can delete it)
+            prefixIcon: title == 'Phone Number'
+                ? DropdownButton(
+                    dropdownColor: Colors.white,
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.only(left: 10.w),
+                    menuMaxHeight: 300,
+                    value: context
+                        .watch<CheckOutCubit>()
+                        .selectedCountryCode
+                        .trim(),
+                    underline: const SizedBox(),
+                    items: [
+                      ...List.generate(countryCodes.length, (index) {
+                        return DropdownMenuItem(
+                          value: countryCodes[index]['dial_code']!,
+                          child: Text(countryCodes[index]['dial_code']!),
+                        );
+                      })
+                    ],
+                    onChanged: (value) {
+                      context
+                          .read<CheckOutCubit>()
+                          .changeSelectedCountryCode(value);
+                    })
                 : null,
             label:
                 Text(title, style: const TextStyle(color: Color(0xFF0C0C0C))),

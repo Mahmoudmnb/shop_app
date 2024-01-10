@@ -87,10 +87,10 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (value) {
         backToSomePage();
-        return false;
       },
       child: SafeArea(
         child: ScreenUtilInit(
@@ -205,6 +205,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           return true;
                         },
                         child: ProductDetails(
+                          fromPagetitle: widget.fromPageTitle!,
                           hidden: cubit.hidden,
                           categoryName: widget.fromPage == 'SearchReasults'
                               ? ''

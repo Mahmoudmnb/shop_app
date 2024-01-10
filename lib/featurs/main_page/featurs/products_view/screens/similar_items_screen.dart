@@ -16,9 +16,11 @@ class SimilarItemsScreen extends StatelessWidget {
   final SearchCubit searchCubit;
   final List<Map<String, dynamic>> similarProducts;
   final String fromPage;
+  final String fromPageTitle;
 
   const SimilarItemsScreen({
     super.key,
+    required this.fromPageTitle,
     required this.fromPage,
     required this.similarProducts,
     required this.searchCubit,
@@ -38,19 +40,20 @@ class SimilarItemsScreen extends StatelessWidget {
           searchCubit: searchCubit,
           fromPage: fromPage,
           categoryName: categoryName,
+          fromPageTitle: fromPageTitle,
           cubit: BlocProvider.of<ProductCubit>(context),
         ),
       ));
     }
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (value) {
         productCubit.widthOfPrice = 145;
         productCubit.hidden = false;
-        Map<String, dynamic> productMap =
-            await productCubit.getProductById(product.id);
-        navigateToProductScrean(ProductModel.fromMap(productMap));
-        return false;
+        productCubit.getProductById(product.id).then((productMap) {
+          navigateToProductScrean(ProductModel.fromMap(productMap));
+        });
       },
       child: SafeArea(
         child: Scaffold(

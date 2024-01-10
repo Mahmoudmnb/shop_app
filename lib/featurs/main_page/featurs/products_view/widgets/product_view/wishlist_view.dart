@@ -289,17 +289,24 @@ class WishListView extends StatelessWidget {
                                                       countOfProductInThisBorder:
                                                           snapshoot
                                                               .data!.length,
-                                                      onTap: () {
-                                                        context
-                                                            .read<
-                                                                ProductCubit>()
-                                                            .selectedBorderIndex = index;
-                                                        context
-                                                            .read<
-                                                                ProductCubit>()
-                                                            .changeSelectedBorderName(
-                                                                borders[index][
-                                                                    'borderName']);
+                                                      onTap: () async {
+                                                        var newBorders = await sl
+                                                            .get<DataSource>()
+                                                            .getBorders();
+                                                        if (context.mounted) {
+                                                          context
+                                                              .read<
+                                                                  ProductCubit>()
+                                                              .selectedBorderIndex = index;
+                                                          context
+                                                              .read<
+                                                                  ProductCubit>()
+                                                              .changeSelectedBorderName(
+                                                                  newBorders[
+                                                                          index]
+                                                                      [
+                                                                      'borderName']);
+                                                        }
                                                       },
                                                       border: data[index],
                                                       product: product,

@@ -19,10 +19,12 @@ class ProductDetails extends StatelessWidget {
   final String categoryName;
   final SearchCubit searchCubit;
   final String fromPage;
+  final String fromPagetitle;
   final bool hidden;
 
   const ProductDetails(
       {super.key,
+      required this.fromPagetitle,
       required this.fromPage,
       required this.cubit,
       required this.product,
@@ -325,6 +327,7 @@ class ProductDetails extends StatelessWidget {
                     SimilarProductsCard(
                       categoryName: categoryName,
                       fromPage: fromPage,
+                      fromPageTitle: fromPagetitle,
                       cubit: cubit,
                       searchCubit: searchCubit,
                       searchWord: searchWord,

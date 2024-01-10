@@ -40,7 +40,7 @@ List<Map<String, String>> countryCodes = [
   {"name": "Burundi", "dial_code": "+257", "code": "BI"},
   {"name": "Cambodia", "dial_code": "+855", "code": "KH"},
   {"name": "Cameroon", "dial_code": "+237", "code": "CM"},
-  {"name": "Canada", "dial_code": "+1", "code": "CA"},
+  {"name": "Canada", "dial_code": "+1 ", "code": "CA"},
   {"name": "Cape Verde", "dial_code": "+238", "code": "CV"},
   {"name": "Cayman Islands", "dial_code": "+ 345", "code": "KY"},
   {"name": "Central African Republic", "dial_code": "+236", "code": "CF"},

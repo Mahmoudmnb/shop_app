@@ -15,7 +15,7 @@ class AuthPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void goToHomePage() async {
+    Future<void> goToHomePage() async {
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
       } else {

@@ -17,6 +17,15 @@ class Constant {
     return list.split('|');
   }
 
+  static String getLetterName(String userName) {
+    String nameLetters = 'mb';
+    var splittedName = userName.split(' ');
+    nameLetters = splittedName.length >= 2
+        ? '${splittedName[0][0].toUpperCase()}${splittedName[splittedName.length - 1][0].toUpperCase()}'
+        : splittedName[0][0].toUpperCase();
+    return nameLetters;
+  }
+
   static UserModel? currentUser;
   static String supabaseUrl = 'https://eujauxjltyekeqyohodz.supabase.co';
   static String supabaseAnonkey =

@@ -3,7 +3,7 @@ part of 'check_out_cubit.dart';
 @immutable
 sealed class CheckOutState {}
 
-final class CheckOutInitial extends CheckOutState {}
+class CheckOutInitial extends CheckOutState {}
 
 class ChangeAddressState extends CheckOutState {}
 
@@ -14,5 +14,7 @@ class ChangePayState extends CheckOutState {}
 class ChangeAgreeState extends CheckOutState {}
 
 class IsDefaultLoacatoinState extends CheckOutState {}
+
 class IsLoadingState extends CheckOutState {}
 
+class ChangeSelectedCountryCode extends CheckOutState {}
