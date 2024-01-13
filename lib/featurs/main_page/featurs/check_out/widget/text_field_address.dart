@@ -10,6 +10,7 @@ import '../cubit/check_out_cubit.dart';
 class TextFieldAddress extends StatelessWidget {
   const TextFieldAddress({
     super.key,
+    required this.type,
     required this.title,
     required this.controller,
     this.keyboardType = TextInputType.name,
@@ -21,6 +22,7 @@ class TextFieldAddress extends StatelessWidget {
   final String title;
   final TextEditingController controller;
   final TextInputType keyboardType;
+  final String type;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,7 @@ class TextFieldAddress extends StatelessWidget {
         },
         cursorColor: Colors.black,
         validator: (value) {
-          if (title == 'Address Name') {
+          if (title == 'Address Name' && type != 'Edit') {
             if (!context.read<CheckOutCubit>().isAddressNameIsAvailable) {
               return 'address name is used before please try another name';
             }

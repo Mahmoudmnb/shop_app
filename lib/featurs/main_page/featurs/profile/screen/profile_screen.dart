@@ -23,8 +23,10 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<MainPageCubit>().changePageIndex(3);
-    context.read<ProfileCubit>().profileImagePath =
-        Constant.currentUser!.imgUrl;
+    if (Constant.currentUser != null) {
+      context.read<ProfileCubit>().profileImagePath =
+          Constant.currentUser!.imgUrl;
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       body: Constant.currentUser == null
@@ -53,7 +55,6 @@ class ProfileScreen extends StatelessWidget {
                           return Column(
                             children: [
                               Container(
-
                                 decoration: BoxDecoration(
                                     color: Colors.black,
                                     borderRadius: BorderRadius.circular(12)),
@@ -83,7 +84,6 @@ class ProfileScreen extends StatelessWidget {
                                                 .profileImagePath!))),
                                       ),
                               ),
-
                               SizedBox(height: 8.h),
                               Text(
                                 Constant.currentUser!.name,

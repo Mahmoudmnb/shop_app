@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/constant.dart';
+import 'package:shop_app/featurs/main_page/featurs/drawer/cubit/drawer_cubit.dart';
 
 import '../../injection.dart';
 import 'cubit/main_page_cubit.dart';
@@ -75,6 +76,9 @@ class _MainPageState extends State<MainPage>
           Builder(
             builder: (context) => IconButton(
                 onPressed: () async {
+                  context
+                      .read<DrawerCubit>()
+                      .changeSelectedItem(tabController.index);
                   Scaffold.of(context).openDrawer();
                 },
                 icon: Icon(

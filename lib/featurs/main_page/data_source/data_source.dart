@@ -189,6 +189,10 @@ class DataSource {
   }
 
 //! this section for deleting and updating data
+  Future<void> deleteAddress(String addressName) async {
+    return updateDeleteLocalDataSource.deleteAddress(addressName);
+  }
+
   Future<void> deleteFromPorderBroducts(int productId) async {
     return updateDeleteLocalDataSource.deleteProductFromBorder(productId);
   }
@@ -207,6 +211,11 @@ class DataSource {
 
   Future<void> deleteWordFormSearchHistory(String word) async {
     return updateDeleteLocalDataSource.deleteWordFormSearchHistory(word);
+  }
+
+  Future<void> updateAddress(
+      AddressModel address, String oldAddressName) async {
+    updateDeleteLocalDataSource.updateAddress(address, oldAddressName);
   }
 
 //! this section for searching

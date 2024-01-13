@@ -6,16 +6,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shop_app/featurs/main_page/featurs/profile/screen/shopping_address.dart';
+import 'package:shop_app/injection.dart';
 import 'package:toast/toast.dart';
 
 import 'featurs/main_page/cubit/main_page_cubit.dart';
+import 'featurs/main_page/data_source/data_source_paths.dart';
 import 'featurs/main_page/featurs/check_out/cubit/check_out_cubit.dart';
 import 'featurs/main_page/featurs/check_out/screens/add_another_address.dart';
 import 'featurs/main_page/featurs/check_out/screens/first_step.dart';
 
 class GoogleMapScreen extends StatefulWidget {
   final LatLng? currentLocation;
-  const GoogleMapScreen({Key? key, this.currentLocation}) : super(key: key);
+  final String fromPage;
+  const GoogleMapScreen(
+      {Key? key, this.currentLocation, required this.fromPage})
+      : super(key: key);
 
   @override
   State<GoogleMapScreen> createState() => GoogleMapScreenState();
@@ -67,13 +73,22 @@ class GoogleMapScreenState extends State<GoogleMapScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (value) {
-        context.read<CheckOutCubit>().getLocations().then((locations) {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => FirstStep(
-                    locations: locations,
-                  )));
-        });
+      onPopInvoked: (value) async {
+        if (widget.fromPage == 'Orders') {
+          context.read<CheckOutCubit>().getLocations().then((locations) {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => FirstStep(
+                      locations: locations,
+                    )));
+          });
+        } else {
+          List<Map<String, dynamic>> addressList =
+              await sl.get<DataSource>().getLocations();
+          if (context.mounted) {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (_) => ShoppingAddress(addressList: addressList)));
+          }
+        }
       },
       child: Scaffold(
         body: Center(
@@ -132,7 +147,11 @@ class GoogleMapScreenState extends State<GoogleMapScreen> {
                                       Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  AddNewAddress(data: data)));
+                                                  AddNewAddress(
+                                                    type: 'Add',
+                                                    data: data,
+                                                    fromPage: widget.fromPage,
+                                                  )));
                                     }
                                   } catch (err) {
                                     if (context.mounted) {

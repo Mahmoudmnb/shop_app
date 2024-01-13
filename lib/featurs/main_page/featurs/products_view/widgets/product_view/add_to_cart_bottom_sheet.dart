@@ -110,7 +110,6 @@ class AddToCartBottomSheet extends StatelessWidget {
                 ],
               ),
               onPressed: () {
-
                 if (Constant.currentUser == null) {
                   context.read<MainPageCubit>().showRegisterMessage(context);
                 } else {
@@ -137,14 +136,13 @@ class AddToCartBottomSheet extends StatelessWidget {
                             ),
                             SizedBox(height: 40.h),
                             Image.asset(
-                              'assets/images/icon.png',
+                              'assets/icons/bag.png',
                               width: 60,
                               height: 60,
                               fit: BoxFit.cover,
                             )
                           ],
                         ),
-
                       ),
                     ),
                   );

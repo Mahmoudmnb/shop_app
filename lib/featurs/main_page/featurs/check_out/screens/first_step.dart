@@ -114,7 +114,7 @@ class FirstStep extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const GoogleMapScreen(),
+                        builder: (context) => const GoogleMapScreen(fromPage: 'Orders',),
                       ));
                     },
                     child: Container(

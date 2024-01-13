@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -7,9 +8,9 @@ import 'package:shop_app/core/constant.dart';
 import 'package:shop_app/featurs/main_page/cubit/main_page_cubit.dart';
 import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
 import 'package:shop_app/featurs/main_page/featurs/setting.dart';
-import 'package:shop_app/featurs/main_page/featurs/shopping_bag/screens/shopping_bag_screen.dart';
 import 'package:shop_app/injection.dart';
 
+import '../../shopping_bag/screens/shopping_bag_screen.dart';
 import '../../wishlist/screens/wishlist_screen.dart';
 import '../cubit/drawer_cubit.dart';
 import 'custom_button.dart';
@@ -42,9 +43,12 @@ class HomeDrawer extends StatelessWidget {
                 SizedBox(height: 15.h),
                 BlocBuilder<DrawerCubit, DrawerState>(
                   builder: (context, state) {
+                    log(state.toString());
                     int selectedItem = 0;
                     if (state is SelectedItem) {
                       selectedItem = state.selectedItem;
+                    } else if (state is DrawerInitial) {
+                      selectedItem = tabController.index;
                     }
                     return Column(
                       children: [
