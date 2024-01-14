@@ -16,10 +16,11 @@ class SimilarProductsCard extends StatelessWidget {
   final SearchCubit searchCubit;
   final ProductCubit cubit;
   final String fromPage;
-
+  final String fromPageTitle;
   const SimilarProductsCard(
       {super.key,
       required this.fromPage,
+      required this.fromPageTitle,
       required this.cubit,
       required this.product,
       required this.searchCubit,
@@ -78,6 +79,7 @@ class SimilarProductsCard extends StatelessWidget {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) => SimilarItemsScreen(
+                                    fromPageTitle: fromPageTitle,
                                     fromPage: fromPage,
                                     categoryName: categoryName,
                                     searchCubit: searchCubit,

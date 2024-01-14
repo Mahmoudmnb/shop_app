@@ -1,6 +1,5 @@
-import 'dart:async';
-
 import 'package:appwrite/models.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../featurs/check_out/models/address_model.dart';
 import '../featurs/home/models/product_model.dart';
@@ -22,6 +21,10 @@ class DataSource {
     required this.insertDataLocalDataSource,
   });
   //! this section for inserting data
+  Future<void> uploadImage(XFile image) async {
+    return remoteDataSource.uploadImage(image);
+  }
+
   Future<void> getReviewsFromCloud() async {
     return remoteDataSource.getReviewsFromCloud();
   }
@@ -186,6 +189,10 @@ class DataSource {
   }
 
 //! this section for deleting and updating data
+  Future<void> deleteAddress(String addressName) async {
+    return updateDeleteLocalDataSource.deleteAddress(addressName);
+  }
+
   Future<void> deleteFromPorderBroducts(int productId) async {
     return updateDeleteLocalDataSource.deleteProductFromBorder(productId);
   }
@@ -204,6 +211,11 @@ class DataSource {
 
   Future<void> deleteWordFormSearchHistory(String word) async {
     return updateDeleteLocalDataSource.deleteWordFormSearchHistory(word);
+  }
+
+  Future<void> updateAddress(
+      AddressModel address, String oldAddressName) async {
+    updateDeleteLocalDataSource.updateAddress(address, oldAddressName);
   }
 
 //! this section for searching

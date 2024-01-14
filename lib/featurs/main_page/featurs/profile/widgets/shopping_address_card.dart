@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../../injection.dart';
+import '../../check_out/models/address_model.dart';
+import '../../check_out/screens/add_another_address.dart';
 import '../cubit/profile_cubit.dart';
 
 class ShoppingAddressCard extends StatelessWidget {
-  final String title;
-  final String description;
-  const ShoppingAddressCard(
-      {super.key, required this.title, required this.description});
+  final AddressModel addressModel;
+  const ShoppingAddressCard({super.key, required this.addressModel});
 
   @override
   Widget build(BuildContext context) {
+    String? defaultLocation =
+        sl.get<SharedPreferences>().getString('defaultLocation');
+    if (defaultLocation != null) {
+      context.read<ProfileCubit>().selectAddress = defaultLocation;
+    }
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
         ProfileCubit cubit = ProfileCubit.get(context);
@@ -26,7 +33,7 @@ class ShoppingAddressCard extends StatelessWidget {
             padding:
                 EdgeInsets.only(left: 8.w, top: 8.h, right: 16.w, bottom: 16.h),
             onPressed: () {
-              cubit.changeAddress(title);
+              cubit.changeAddress(addressModel.addressName);
             },
             child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +45,7 @@ class ShoppingAddressCard extends StatelessWidget {
                         padding: EdgeInsets.only(bottom: 16.h),
                         child: Radio(
                             activeColor: Colors.black,
-                            value: title,
+                            value: addressModel.addressName,
                             groupValue: cubit.selectAddress,
                             onChanged: (value) {
                               cubit.changeAddress(value!);
@@ -48,21 +55,17 @@ class ShoppingAddressCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            height: 8.h,
-                          ),
+                          SizedBox(height: 8.h),
                           Text(
-                            title,
+                            addressModel.addressName,
                             style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'DM Sans'),
                           ),
-                          SizedBox(
-                            height: 4.h,
-                          ),
+                          SizedBox(height: 4.h),
                           Text(
-                            description,
+                            addressModel.address,
                             style: const TextStyle(
                                 color: Color(0xFF828282),
                                 fontFamily: 'Tenor Sans'),
@@ -72,7 +75,13 @@ class ShoppingAddressCard extends StatelessWidget {
                     ],
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (_) => AddNewAddress(
+                              type: 'Edit',
+                              data: addressModel.toMap(),
+                              fromPage: 'Profile')));
+                    },
                     child: Container(
                       padding:
                           EdgeInsets.symmetric(horizontal: 8.w, vertical: 2),

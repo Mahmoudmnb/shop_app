@@ -9,10 +9,16 @@ class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit() : super(ProfileInitial());
   static ProfileCubit get(context) => BlocProvider.of(context);
   String selectAddress = '1';
+  String? profileImagePath = '';
   changeAddress(String address) {
     selectAddress = address;
     log(selectAddress);
     emit(ChangeAddressState());
+  }
+
+  void changeProfileImagePath(String path) {
+    profileImagePath = path;
+    emit(ChangeProfileImagePath());
   }
 
   updateProfileImageWidget() {
