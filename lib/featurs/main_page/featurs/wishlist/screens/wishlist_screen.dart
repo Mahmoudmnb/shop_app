@@ -36,27 +36,51 @@ class WishListScreen extends StatelessWidget {
               builder: (context, state) {
                 return Expanded(
                   child: context.read<WishListCubit>().kindOfOrder == "Borders"
-                      ? ListView.builder(
-                          padding: EdgeInsets.symmetric(horizontal: 15.w),
-                          itemCount: borders.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return index == 0
-                                ? SizedBox(height: 15.h)
-                                : FutureBuilder(
-                                    future: sl
-                                        .get<DataSource>()
-                                        .getProductsInBorder(
-                                            borders[index]['id']),
-                                    builder: (context, snapshot) {
-                                      return snapshot.hasData
-                                          ? BorderCard(
-                                              borderName: borders[index]
-                                                  ['borderName'],
-                                              borderProducts: snapshot.data!,
-                                            )
-                                          : const SizedBox.shrink();
-                                    });
-                          })
+                      ? borders.isNotEmpty
+                          ? Container(
+                              padding: EdgeInsets.symmetric(vertical: 50.h),
+                              width: double.infinity,
+                              child: Column(
+                                children: [
+                                  Image(
+                                    height: 200.h,
+                                    image: const AssetImage(
+                                        'assets/icons/saadHart.png'),
+                                  ),
+                                  SizedBox(
+                                    height: 25.h,
+                                  ),
+                                  Text(
+                                    "No reviews published",
+                                    style: TextStyle(
+                                        fontSize: 18.sp,
+                                        color: Colors.grey[600]),
+                                  )
+                                ],
+                              ),
+                            )
+                          : ListView.builder(
+                              padding: EdgeInsets.symmetric(horizontal: 15.w),
+                              itemCount: borders.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return index == 0
+                                    ? SizedBox(height: 15.h)
+                                    : FutureBuilder(
+                                        future: sl
+                                            .get<DataSource>()
+                                            .getProductsInBorder(
+                                                borders[index]['id']),
+                                        builder: (context, snapshot) {
+                                          return snapshot.hasData
+                                              ? BorderCard(
+                                                  borderName: borders[index]
+                                                      ['borderName'],
+                                                  borderProducts:
+                                                      snapshot.data!,
+                                                )
+                                              : const SizedBox.shrink();
+                                        });
+                              })
                       : FutureBuilder(
                           future: sl.get<DataSource>().getAllFavoritProducts(),
                           builder: (context, snapshot) {
