@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/core/constant.dart';
+import 'package:shop_app/featurs/auth/models/user_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../injection.dart';
@@ -11,6 +13,31 @@ import '../featurs/products_view/models/review_model.dart';
 import 'data_source.dart';
 
 class RemoteDataSource {
+  Future<void> changePassword(String newPassword) async {
+    final client = Client()
+        .setEndpoint('https://cloud.appwrite.io/v1')
+        .setProject(Constant.appWriteProjectId);
+    Databases db = Databases(client);
+    var data = await db.listDocuments(
+      databaseId: '655da767bc3f1651db70',
+      collectionId: '655da771422b6ac710aa',
+      queries: [Query.equal('email', Constant.currentUser!.email)],
+    );
+    final userData = data.documents;
+    var d = await db.updateDocument(
+        databaseId: '655da767bc3f1651db70',
+        collectionId: '655da771422b6ac710aa',
+        documentId: userData[0].$id,
+        data: {'password': newPassword});
+    UserModel user = UserModel(
+        email: Constant.currentUser!.email,
+        name: Constant.currentUser!.name,
+        password: newPassword);
+    Constant.currentUser = user;
+    sl.get<SharedPreferences>().setString('currentUser', user.toJson());
+    log(d.data.toString());
+  }
+
   Future<void> uploadImage(XFile image) async {
     final client = Client()
         .setEndpoint('https://cloud.appwrite.io/v1')

@@ -21,6 +21,10 @@ class DataSource {
     required this.insertDataLocalDataSource,
   });
   //! this section for inserting data
+  Future<void> changePassword(String newPassword) async {
+    remoteDataSource.changePassword(newPassword);
+  }
+
   Future<void> uploadImage(XFile image) async {
     return remoteDataSource.uploadImage(image);
   }
