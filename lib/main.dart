@@ -45,6 +45,7 @@ Future<void> main(List<String> args) async {
     db.setString('baseUrl', baseUrl);
     Constant.baseUrl = baseUrl;
   }
+
   runApp(MultiBlocProvider(providers: [
     BlocProvider(create: (context) => VisiblePsswordBloc()),
     BlocProvider(create: (context) => EmailTextBloc()),
