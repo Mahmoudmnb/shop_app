@@ -92,21 +92,15 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                                   child: Text(
                                     Constant.getLetterName(
                                         Constant.currentUser!.name),
-                                    style: const TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 3,
+                                        fontSize: 40.sp,
+                                        color: Colors.white),
                                   ),
                                 ),
                               )
-                            : null
-                        // : ClipRRect(
-                        //     borderRadius: BorderRadius.circular(12),
-                        //     child: Image(
-                        //         fit: BoxFit.cover,
-                        //         height: 130.h,
-                        //         width: 130.h,
-                        //         image: FileImage(
-                        //             File(Constant.currentUser!.imgUrl!))),
-                        //   ),
-                        ),
+                            : null),
                     GestureDetector(
                       onTap: () async {
                         ImagePicker imagePicker = ImagePicker();
@@ -183,6 +177,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 width: 393.w,
                 height: 50.h,
                 child: TextField(
+                  maxLength: 50,
                   cursorColor: Colors.black,
                   onTapOutside: (value) {
                     FocusScope.of(context).unfocus();
@@ -200,6 +195,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ),
             ),
             TextField(
+              maxLength: 50,
               cursorColor: Colors.black,
               onTapOutside: (value) {
                 FocusScope.of(context).unfocus();
@@ -221,6 +217,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 height: 50.h,
                 width: 393.w,
                 child: TextField(
+                  maxLength: 50,
                   cursorColor: Colors.black,
                   onTapOutside: (value) {
                     FocusScope.of(context).unfocus();
@@ -233,6 +230,101 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                           : ''),
                   controller: phoneNumberController,
                 )),
+            Row(children: [
+              const Spacer(),
+              TextButton(
+                  onPressed: () {
+                    GlobalKey<FormState> formKey = GlobalKey<FormState>();
+                    AutovalidateMode autovalidateMode =
+                        AutovalidateMode.disabled;
+                    showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                              backgroundColor: Colors.white,
+                              content: StatefulBuilder(
+                                  builder: (context, b) => Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            'Reset Password',
+                                            style: TextStyle(fontSize: 18.sp),
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Form(
+                                              key: formKey,
+                                              child: Column(
+                                                children: [
+                                                  TextFormField(
+                                                    maxLength: 50,
+                                                    autovalidateMode:
+                                                        autovalidateMode,
+                                                    validator: (value) {
+                                                      if (value != null &&
+                                                          value.trim() == '') {
+                                                        return "password should'n be empty";
+                                                      } else if (value !=
+                                                              null &&
+                                                          value.trim() !=
+                                                              Constant
+                                                                  .currentUser!
+                                                                  .password
+                                                                  .trim()) {
+                                                        return 'Old password is not correct ';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    decoration:
+                                                        const InputDecoration(
+                                                            hintText:
+                                                                'Old password'),
+                                                  ),
+                                                  SizedBox(height: 10.h),
+                                                  TextFormField(
+                                                    maxLength: 50,
+                                                    autovalidateMode:
+                                                        autovalidateMode,
+                                                    validator: (value) {
+                                                      if (value != null &&
+                                                              value.isEmpty ||
+                                                          value!.length <= 6) {
+                                                        return 'password should be mor than six characters';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    decoration:
+                                                        const InputDecoration(
+                                                            hintText:
+                                                                'New password'),
+                                                  ),
+                                                ],
+                                              )),
+                                          SizedBox(height: 15.h),
+                                          TextButton(
+                                              onPressed: () {
+                                                autovalidateMode =
+                                                    AutovalidateMode.always;
+                                                setState(() {});
+                                                if (formKey.currentState!
+                                                    .validate()) {
+                                                  Constant.currentUser!
+                                                      .password = '';
+                                                }
+                                              },
+                                              child: Text(
+                                                'Reset',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 20.sp),
+                                              ))
+                                        ],
+                                      )),
+                            ));
+                  },
+                  child: const Text(
+                    'Reset Password',
+                    style: TextStyle(fontSize: 18, color: Colors.black),
+                  ))
+            ]),
             SizedBox(height: 80.h),
             InkWell(
               borderRadius: BorderRadius.circular(10),

@@ -6,6 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/constant.dart';
 import 'package:shop_app/featurs/auth/pages/auth_page.dart';
 import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/featurs/main_page/featurs/orders/cubit/orders_cubit.dart';
+import 'package:shop_app/featurs/main_page/featurs/orders/screen/rate_order.dart';
 import 'package:shop_app/featurs/main_page/featurs/profile/cubit/profile_cubit.dart';
 import 'package:shop_app/featurs/main_page/featurs/profile/screen/profile_order_screen.dart';
 import 'package:shop_app/featurs/main_page/featurs/shopping_bag/screens/shopping_bag_screen.dart';
@@ -13,7 +15,6 @@ import 'package:shop_app/featurs/main_page/featurs/wishlist/screens/wishlist_scr
 import 'package:shop_app/injection.dart';
 
 import '../../../cubit/main_page_cubit.dart';
-import '../../orders/screen/orders_screen.dart';
 import 'personal_details_screen.dart';
 import 'shopping_address.dart';
 
@@ -69,7 +70,10 @@ class ProfileScreen extends StatelessWidget {
                                             child: Text(
                                           Constant.getLetterName(
                                               Constant.currentUser!.name),
-                                          style: const TextStyle(
+                                          style: TextStyle(
+                                              fontSize: 30.sp,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 2,
                                               color: Colors.white),
                                         )),
                                       )
@@ -177,9 +181,12 @@ class ProfileScreen extends StatelessWidget {
                             "assets/images/star.png",
                             "Rate this app",
                             () {
+                              context.read<OrdersCubit>().changeRating(0);
+                              context.read<OrdersCubit>().opinionController =
+                                  TextEditingController();
+                              context.read<OrdersCubit>().character = 50;
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const MyOrdersScreen(),
-                              ));
+                                  builder: (_) => const RatePage()));
                             },
                           ),
                         ]),

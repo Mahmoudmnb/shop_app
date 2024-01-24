@@ -37,6 +37,7 @@ class CustomTextField extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
+                        maxLength: 50,
                         onTapOutside: (event) {
                           FocusScope.of(context).unfocus();
                         },

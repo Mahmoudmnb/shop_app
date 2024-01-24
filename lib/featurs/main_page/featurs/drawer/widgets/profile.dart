@@ -21,7 +21,7 @@ class Profile extends StatelessWidget {
         children: [
           CircleAvatar(
               radius: 23,
-              backgroundColor: const Color(0xFFD9D9D9),
+              backgroundColor: Colors.black,
               backgroundImage: image,
               child: image == null
                   ? Text(Constant.getLetterName(Constant.currentUser!.name))

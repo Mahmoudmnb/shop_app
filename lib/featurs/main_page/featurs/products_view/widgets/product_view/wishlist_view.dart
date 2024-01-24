@@ -160,6 +160,7 @@ class WishListView extends StatelessWidget {
                                     content: Form(
                                       key: fromKey,
                                       child: TextFormField(
+                                        maxLength: 50,
                                         controller: borderNameCon,
                                         onEditingComplete: () async {
                                           List<Map<String, dynamic>> borders =
