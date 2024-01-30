@@ -108,7 +108,8 @@ class _MainPageState extends State<MainPage>
             }
           }, icon: BlocBuilder<AddToCartCubit, AddToCartState>(
             builder: (context, state) {
-              if (context.read<AddToCartCubit>().products.isNotEmpty) {
+              if (context.read<AddToCartCubit>().products.isNotEmpty &&
+                  Constant.currentUser != null) {
                 return SizedBox(
                   width: 37.w,
                   height: 35.h,

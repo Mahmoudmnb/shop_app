@@ -13,10 +13,56 @@ import '../featurs/products_view/models/review_model.dart';
 import 'data_source.dart';
 
 class RemoteDataSource {
+  final client = Client()
+      .setEndpoint('https://cloud.appwrite.io/v1')
+      .setProject(Constant.appWriteProjectId);
+
+  Future<void> uploadProfileSettings(
+      String borderProducts, String cartProducts, String borders) async {
+    Databases db = Databases(client);
+
+    var data = await db.listDocuments(
+      databaseId: '655da767bc3f1651db70',
+      collectionId: '655da771422b6ac710aa',
+      queries: [Query.equal('email', Constant.currentUser!.email)],
+    );
+    final userData = data.documents;
+    try {
+      db.updateDocument(
+          databaseId: '655da767bc3f1651db70',
+          collectionId: '655da771422b6ac710aa',
+          documentId: userData[0].$id,
+          data: {
+            'borderProducts': borderProducts,
+            'cartProducts': cartProducts,
+            'borders': borders
+          });
+    } catch (e) {
+      log(e.toString());
+    }
+    log('done');
+  }
+
+  Future<void> rateApp(String descrition, double rate) async {
+    Databases db = Databases(client);
+    log(rate.toString());
+    try {
+      await db.createDocument(
+          databaseId: '65585f55e896c3e87515',
+          collectionId: '65b8e5802cb873909d21',
+          documentId: ID.unique(),
+          data: {
+            'description': descrition,
+            'rate': rate,
+            'email': Constant.currentUser!.email
+          });
+    } catch (e) {
+      log(e.toString());
+    }
+    log('done');
+  }
+
   Future<void> changePassword(String newPassword) async {
-    final client = Client()
-        .setEndpoint('https://cloud.appwrite.io/v1')
-        .setProject(Constant.appWriteProjectId);
     Databases db = Databases(client);
     var data = await db.listDocuments(
       databaseId: '655da767bc3f1651db70',
@@ -39,10 +85,6 @@ class RemoteDataSource {
   }
 
   Future<void> uploadImage(XFile image) async {
-    final client = Client()
-        .setEndpoint('https://cloud.appwrite.io/v1')
-        .setProject(Constant.appWriteProjectId);
-
     final storage = Storage(client);
     String id = const Uuid().v1();
     if (Constant.currentUser!.imgUrl != null) {
@@ -65,9 +107,6 @@ class RemoteDataSource {
 
   Future<List<Document>> getProducts() async {
     List<Document> data = [];
-    final client = Client()
-        .setEndpoint('https://cloud.appwrite.io/v1')
-        .setProject(Constant.appWriteProjectId);
     Databases databases = Databases(client);
     try {
       var result = await databases.listDocuments(
@@ -107,12 +146,6 @@ class RemoteDataSource {
     colorsForLocal = colorsForLocal.substring(0, colorsForLocal.length - 1);
     sizesForLocal = sizesForLocal.substring(0, sizesForLocal.length - 1);
     amountsForLocal = amountsForLocal.substring(0, amountsForLocal.length - 1);
-    log(colorsForLocal);
-    log(sizesForLocal);
-    log(amountsForLocal);
-    Client client = Client()
-        .setEndpoint("https://cloud.appwrite.io/v1")
-        .setProject(Constant.appWriteProjectId);
     Databases db = Databases(client);
     int id = 0;
     List<Document> data = [];
@@ -175,9 +208,6 @@ class RemoteDataSource {
 
   Future<void> getOrdersFromCloud() async {
     List<Document> orders = [];
-    final client = Client()
-        .setEndpoint('https://cloud.appwrite.io/v1')
-        .setProject(Constant.appWriteProjectId);
     Databases databases = Databases(client);
     try {
       var result = await databases.listDocuments(
@@ -194,9 +224,6 @@ class RemoteDataSource {
 
   Future<void> getReviewsFromCloud() async {
     List<Document> orders = [];
-    final client = Client()
-        .setEndpoint('https://cloud.appwrite.io/v1')
-        .setProject(Constant.appWriteProjectId);
     Databases databases = Databases(client);
     try {
       var result = await databases.listDocuments(
@@ -211,9 +238,6 @@ class RemoteDataSource {
   }
 
   Future<void> addReviewToCloud(ReviewModel reviewModel) async {
-    Client client = Client()
-        .setEndpoint("https://cloud.appwrite.io/v1")
-        .setProject(Constant.appWriteProjectId);
     Databases db = Databases(client);
     Map<String, dynamic> data = {};
     if (reviewModel.userImage == null) {

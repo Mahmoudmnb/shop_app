@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -205,7 +207,20 @@ class RatePage extends StatelessWidget {
                                     .changeIsLoading(false);
                               }
                             } else {
-                              // ToDo: add code for rate app
+                              await sl.get<DataSource>().rateApp(
+                                    context
+                                        .read<OrdersCubit>()
+                                        .opinionController
+                                        .text
+                                        .trim(),
+                                    context.read<OrdersCubit>().rating,
+                                  );
+                              if (context.mounted) {
+                                context
+                                    .read<OrdersCubit>()
+                                    .changeIsLoading(false);
+                              }
+                              log('mnb');
                             }
 
                             if (context.mounted) {

@@ -28,7 +28,7 @@ class CustomTextField extends StatelessWidget {
                   isSignUP = signUpState.isSignUp;
                 }
                 return HideItem(
-                    maxHight: 60,
+                    maxHight: 70,
                     visabl: (!isSignUP &&
                             (hintText == 'Enter your name' ||
                                 hintText == 'Confirm Password'))

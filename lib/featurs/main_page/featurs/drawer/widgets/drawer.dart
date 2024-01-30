@@ -32,11 +32,16 @@ class HomeDrawer extends StatelessWidget {
             child: Column(
               children: [
                 Profile(
-                  image: Constant.currentUser!.imgUrl != null
+                  image: Constant.currentUser != null &&
+                          Constant.currentUser!.imgUrl != null
                       ? FileImage(File(Constant.currentUser!.imgUrl!))
                       : null,
-                  username: Constant.currentUser!.name,
-                  email: Constant.currentUser!.email,
+                  username: Constant.currentUser == null
+                      ? ''
+                      : Constant.currentUser!.name,
+                  email: Constant.currentUser == null
+                      ? ''
+                      : Constant.currentUser!.email,
                 ),
                 SizedBox(height: 15.h),
                 const Divider(color: Color(0xFFEAEAEA)),
