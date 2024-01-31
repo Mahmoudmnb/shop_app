@@ -38,7 +38,6 @@ class WishListScreen extends StatelessWidget {
                   child: context.read<WishListCubit>().kindOfOrder == "Borders"
                       ? borders.isNotEmpty
                           ? Container(
-                            
                               padding: EdgeInsets.symmetric(vertical: 50.h),
                               width: double.infinity,
                               child: Column(
