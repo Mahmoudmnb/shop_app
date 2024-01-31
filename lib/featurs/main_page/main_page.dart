@@ -15,7 +15,7 @@ import 'featurs/home/pages/home_page.dart';
 import 'featurs/home/widgets/main_page_tab_bar.dart';
 import 'featurs/orders/screen/orders_screen.dart';
 import 'featurs/profile/screen/profile_screen.dart';
-import 'featurs/search/pages/search_screen.dart';
+import 'featurs/search/screen/search_screen.dart';
 import 'featurs/shopping_bag/cubits/products_cubit/products_cubit.dart';
 import 'featurs/shopping_bag/screens/shopping_bag_screen.dart';
 import 'featurs/wishlist/screens/wishlist_screen.dart';

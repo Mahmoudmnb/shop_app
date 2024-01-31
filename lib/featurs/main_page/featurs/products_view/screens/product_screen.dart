@@ -13,8 +13,8 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../home/models/product_model.dart';
 import '../../home/pages/home_pages.dart';
 import '../../search/cubit/sreach_cubit.dart';
-import '../../search/pages/category_view_page.dart';
-import '../../search/pages/search_results_screen.dart';
+import '../../search/screen/category_view_page.dart';
+import '../../search/screen/search_results_screen.dart';
 import '../cubits/product_screen/cubit.dart';
 import '../widgets/product_view_widgets.dart';
 
