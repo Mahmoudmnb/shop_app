@@ -153,7 +153,7 @@ class ItemCard extends StatelessWidget {
             context.read<OrdersCubit>().character = 50;
             context.read<OrdersCubit>().rating = 0;
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => RateOrder(
+                builder: (context) => RatePage(
                       productId: productId,
                     )));
           },

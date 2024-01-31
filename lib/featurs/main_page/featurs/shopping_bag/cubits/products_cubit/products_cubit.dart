@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../data_source/data_source.dart';
 import '../../../../../../injection.dart';
+import '../../../../data_source/data_source.dart';
 
 part 'products_state.dart';
 
@@ -21,7 +21,10 @@ class AddToCartCubit extends Cubit<AddToCartState> {
   }
 
   void addElement(Map<String, dynamic> item) {
-    products.add(item);
+    var data = Map.of(item);
+    var p = List.of(products);
+    p.add(data);
+    products = p;
     emit(ProductsAddElement());
   }
 

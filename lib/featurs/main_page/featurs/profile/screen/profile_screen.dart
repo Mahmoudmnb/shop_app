@@ -6,20 +6,28 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/constant.dart';
 import 'package:shop_app/featurs/auth/pages/auth_page.dart';
 import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/featurs/main_page/featurs/orders/cubit/orders_cubit.dart';
+import 'package:shop_app/featurs/main_page/featurs/orders/screen/rate_order.dart';
 import 'package:shop_app/featurs/main_page/featurs/profile/cubit/profile_cubit.dart';
 import 'package:shop_app/featurs/main_page/featurs/profile/screen/profile_order_screen.dart';
 import 'package:shop_app/featurs/main_page/featurs/shopping_bag/screens/shopping_bag_screen.dart';
 import 'package:shop_app/featurs/main_page/featurs/wishlist/screens/wishlist_screen.dart';
 import 'package:shop_app/injection.dart';
+import 'package:toast/toast.dart';
 
+import '../../../../../core/internet_info.dart';
 import '../../../cubit/main_page_cubit.dart';
-import '../../orders/screen/orders_screen.dart';
 import 'personal_details_screen.dart';
 import 'shopping_address.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     context.read<MainPageCubit>().changePageIndex(3);
@@ -37,8 +45,12 @@ class ProfileScreen extends StatelessWidget {
                 const Text('You have to register'),
                 TextButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => const AuthPage()));
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                              builder: (_) => const AuthPage()))
+                          .then((value) {
+                        setState(() {});
+                      });
                     },
                     child: const Text('Register now'))
               ],
@@ -49,7 +61,7 @@ class ProfileScreen extends StatelessWidget {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: 80.h),
+                      SizedBox(height: 60.h),
                       BlocBuilder<ProfileCubit, ProfileState>(
                         builder: (context, state) {
                           return Column(
@@ -69,7 +81,10 @@ class ProfileScreen extends StatelessWidget {
                                             child: Text(
                                           Constant.getLetterName(
                                               Constant.currentUser!.name),
-                                          style: const TextStyle(
+                                          style: TextStyle(
+                                              fontSize: 30.sp,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 2,
                                               color: Colors.white),
                                         )),
                                       )
@@ -177,9 +192,12 @@ class ProfileScreen extends StatelessWidget {
                             "assets/images/star.png",
                             "Rate this app",
                             () {
+                              context.read<OrdersCubit>().changeRating(0);
+                              context.read<OrdersCubit>().opinionController =
+                                  TextEditingController();
+                              context.read<OrdersCubit>().character = 50;
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const MyOrdersScreen(),
-                              ));
+                                  builder: (_) => const RatePage()));
                             },
                           ),
                         ]),
@@ -189,25 +207,64 @@ class ProfileScreen extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 30.w),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(10),
-                          onTap: () {},
+                          onTap: () async {
+                            if (!context.read<ProfileCubit>().isLogOutLoading) {
+                              context
+                                  .read<ProfileCubit>()
+                                  .setIsLogOutLoading(true);
+                              InternetInfo.isconnected().then((value) async {
+                                if (value) {
+                                  await context.read<ProfileCubit>().logOut();
+                                  if (context.mounted) {
+                                    context
+                                        .read<ProfileCubit>()
+                                        .setIsLogOutLoading(false);
+                                    Constant.currentUser = null;
+                                    setState(() {});
+                                  }
+                                } else {
+                                  context
+                                      .read<ProfileCubit>()
+                                      .setIsLogOutLoading(false);
+                                  ToastContext().init(context);
+                                  Toast.show('Check your internet connection',
+                                      duration: Toast.lengthLong);
+                                }
+                              });
+                            }
+                          },
                           child: Ink(
+                            height: 65.h,
                             width: double.infinity,
                             padding: EdgeInsets.symmetric(vertical: 15.h),
                             decoration: BoxDecoration(
                                 color: Colors.black,
                                 borderRadius: BorderRadius.circular(10)),
-                            child: const Text(
-                              "Log Out",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "DM Sans"),
+                            child: BlocBuilder<ProfileCubit, ProfileState>(
+                              builder: (context, state) {
+                                return context
+                                        .read<ProfileCubit>()
+                                        .isLogOutLoading
+                                    ? const Center(
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Text(
+                                        "Log Out",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20.sp,
+                                            fontFamily: "DM Sans"),
+                                      );
+                              },
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 12.h),
+                      SizedBox(height: 10.h),
                     ]),
               ),
             ),

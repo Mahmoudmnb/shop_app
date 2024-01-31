@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,9 +14,9 @@ import '../../products_view/models/review_model.dart';
 import '../cubit/orders_cubit.dart';
 import '../widgets/build_back_arrow.dart';
 
-class RateOrder extends StatelessWidget {
-  final int productId;
-  const RateOrder({super.key, required this.productId});
+class RatePage extends StatelessWidget {
+  final int? productId;
+  const RatePage({super.key, this.productId});
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -43,7 +45,9 @@ class RateOrder extends StatelessWidget {
                 padding: EdgeInsets.only(left: 10.w),
                 width: double.infinity,
                 child: Text(
-                  "Share your opinion in the order",
+                  productId == null
+                      ? 'Share your opinion in this app'
+                      : "Share your opinion in this product",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontSize: 20.sp,
@@ -56,8 +60,11 @@ class RateOrder extends StatelessWidget {
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.only(left: 10.w),
-                child: const Text('How much do you rate order?',
-                    style: TextStyle(
+                child: Text(
+                    productId == null
+                        ? 'How much do you rate app?'
+                        : 'How much do you rate product?',
+                    style: const TextStyle(
                         color: Color(0xFF6D6D6D), fontFamily: 'Tenor Sans')),
               ),
               SizedBox(height: 10.h),
@@ -106,8 +113,9 @@ class RateOrder extends StatelessWidget {
                           maxLines: 5,
                           decoration: InputDecoration(
                               counter: Container(),
-                              hintText:
-                                  'Would you like to write anything about this order?',
+                              hintText: productId == null
+                                  ? 'Would you like to write anything about this app?'
+                                  : 'Would you like to write anything about this product?',
                               hintStyle: const TextStyle(
                                   color: Color(0XFF919191),
                                   fontFamily: 'Tenor Sans'),
@@ -174,28 +182,45 @@ class RateOrder extends StatelessWidget {
                         context.read<OrdersCubit>().changeIsLoading(true);
                         InternetInfo.isconnected().then((value) async {
                           if (value) {
-                            ReviewModel reiviewModel = ReviewModel(
-                                email: Constant.currentUser!.email,
-                                description: context
+                            if (productId != null) {
+                              ReviewModel reiviewModel = ReviewModel(
+                                  email: Constant.currentUser!.email,
+                                  description: context
+                                      .read<OrdersCubit>()
+                                      .opinionController
+                                      .text
+                                      .trim(),
+                                  stars: context.read<OrdersCubit>().rating,
+                                  date: Constant.dateToString(DateTime.now()),
+                                  userName: Constant.currentUser!.name,
+                                  userImage: Constant.currentUser!.cloudImgUrl,
+                                  productId: productId!);
+                              await sl
+                                  .get<DataSource>()
+                                  .addReviewToCloud(reiviewModel);
+                              await sl
+                                  .get<DataSource>()
+                                  .addReiviewToProduct(reiviewModel);
+                              if (context.mounted) {
+                                context
                                     .read<OrdersCubit>()
-                                    .opinionController
-                                    .text
-                                    .trim(),
-                                stars: context.read<OrdersCubit>().rating,
-                                date: Constant.dateToString(DateTime.now()),
-                                userName: Constant.currentUser!.name,
-                                userImage: Constant.currentUser!.cloudImgUrl,
-                                productId: productId);
-                            await sl
-                                .get<DataSource>()
-                                .addReviewToCloud(reiviewModel);
-                            await sl
-                                .get<DataSource>()
-                                .addReiviewToProduct(reiviewModel);
-                            if (context.mounted) {
-                              context
-                                  .read<OrdersCubit>()
-                                  .changeIsLoading(false);
+                                    .changeIsLoading(false);
+                              }
+                            } else {
+                              await sl.get<DataSource>().rateApp(
+                                    context
+                                        .read<OrdersCubit>()
+                                        .opinionController
+                                        .text
+                                        .trim(),
+                                    context.read<OrdersCubit>().rating,
+                                  );
+                              if (context.mounted) {
+                                context
+                                    .read<OrdersCubit>()
+                                    .changeIsLoading(false);
+                              }
+                              log('mnb');
                             }
 
                             if (context.mounted) {

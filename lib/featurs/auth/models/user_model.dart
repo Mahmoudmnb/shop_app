@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 class UserModel {
-  final String name;
-  final String email;
-  final String password;
+  String name;
+  String email;
+  String password;
   String? phoneNumber;
   String? imgUrl;
   String? cloudImgUrl;

@@ -133,6 +133,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                 borderRadius: BorderRadius.circular(5)),
                             clipBehavior: Clip.antiAlias,
                             child: TextField(
+                              maxLength: 50,
                               onSubmitted: (value) async {
                                 searchIn(cubit);
                               },

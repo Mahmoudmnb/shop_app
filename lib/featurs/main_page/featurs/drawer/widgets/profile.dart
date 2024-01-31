@@ -19,13 +19,15 @@ class Profile extends StatelessWidget {
       padding: EdgeInsets.only(left: 3.93.w),
       child: Row(
         children: [
-          CircleAvatar(
-              radius: 23,
-              backgroundColor: const Color(0xFFD9D9D9),
-              backgroundImage: image,
-              child: image == null
-                  ? Text(Constant.getLetterName(Constant.currentUser!.name))
-                  : null),
+          Constant.currentUser != null
+              ? CircleAvatar(
+                  radius: 23,
+                  backgroundColor: Colors.black,
+                  backgroundImage: image,
+                  child: image == null
+                      ? Text(Constant.getLetterName(Constant.currentUser!.name))
+                      : null)
+              : const SizedBox.shrink(),
           SizedBox(width: 15.w),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

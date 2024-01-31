@@ -28,7 +28,7 @@ class CustomTextField extends StatelessWidget {
                   isSignUP = signUpState.isSignUp;
                 }
                 return HideItem(
-                    maxHight: 60,
+                    maxHight: 70,
                     visabl: (!isSignUP &&
                             (hintText == 'Enter your name' ||
                                 hintText == 'Confirm Password'))
@@ -37,6 +37,7 @@ class CustomTextField extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
+                        maxLength: 50,
                         onTapOutside: (event) {
                           FocusScope.of(context).unfocus();
                         },

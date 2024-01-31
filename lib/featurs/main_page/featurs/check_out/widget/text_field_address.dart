@@ -30,6 +30,7 @@ class TextFieldAddress extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       // height: 50.h,
       child: TextFormField(
+        maxLength: 50,
         onChanged: (value) {
           if (title == 'Address Name') {
             context

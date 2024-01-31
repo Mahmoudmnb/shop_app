@@ -16,6 +16,7 @@ class _CodeTextFeildState extends State<CodeTextFeild> {
           color: const Color(0xFFF7F7F8),
           borderRadius: BorderRadius.circular(5)),
       child: TextField(
+          maxLength: 50,
           cursorColor: Colors.black,
           decoration: InputDecoration(
               border: InputBorder.none,
