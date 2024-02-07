@@ -45,6 +45,7 @@ Future<void> main(List<String> args) async {
     db.setString('baseUrl', baseUrl);
     Constant.baseUrl = baseUrl;
   }
+
   runApp(MultiBlocProvider(providers: [
     BlocProvider(create: (context) => VisiblePsswordBloc()),
     BlocProvider(create: (context) => EmailTextBloc()),
@@ -73,7 +74,22 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
         designSize: const Size(393, 852),
         builder: (context, child) => MaterialApp(
-              theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+              theme: ThemeData(
+                  primaryColor: Colors.black,
+                  colorScheme: ColorScheme(
+                    brightness: Brightness.light,
+                    primary: Colors.black,
+                    onPrimary: Theme.of(context).colorScheme.onPrimary,
+                    secondary: Theme.of(context).colorScheme.secondary,
+                    onSecondary: Theme.of(context).colorScheme.onSecondary,
+                    error: Theme.of(context).colorScheme.error,
+                    onError: Theme.of(context).colorScheme.onError,
+                    background: Theme.of(context).colorScheme.background,
+                    onBackground: Theme.of(context).colorScheme.onBackground,
+                    surface: Theme.of(context).colorScheme.surface,
+                    onSurface: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  scaffoldBackgroundColor: Colors.white),
               debugShowCheckedModeBanner: false,
               home: sl.get<SharedPreferences>().getBool('isFirstTime') == null
                   ? SplashScreen(deviceHeight: 852.h, deviceWidth: 393.w)

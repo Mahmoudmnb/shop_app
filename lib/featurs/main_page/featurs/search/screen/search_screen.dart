@@ -65,6 +65,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         builder: (context, state) {
                           bool isSearch = cubit.isSearch;
                           return TextField(
+                            maxLength: 50,
                             cursorColor: Colors.black,
                             onTapOutside: (event) {
                               FocusScope.of(context).unfocus();
@@ -161,6 +162,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               RecentSearch(
                                 selectHistorySearch: (String selected) {
                                   searchController.text = selected;
+                                  search(cubit);
                                 },
                                 cubit: cubit,
                               ),

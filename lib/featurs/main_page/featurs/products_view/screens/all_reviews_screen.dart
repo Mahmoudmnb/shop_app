@@ -61,13 +61,14 @@ class AllReviewsScreen extends StatelessWidget {
             ),
             SizedBox(height: 25.5.h),
             reviews.isEmpty
-                ? SizedBox(
+                ? Container(
+                    padding: EdgeInsets.symmetric(vertical: 50.h),
                     width: double.infinity,
                     child: Column(
                       children: [
-                        const Image(
-                          // height: 300.h,
-                          image: AssetImage('assets/icons/noReveiws.png'),
+                        Image(
+                          height: 200.h,
+                          image: const AssetImage('assets/icons/noReveiws.png'),
                         ),
                         SizedBox(
                           height: 25.h,

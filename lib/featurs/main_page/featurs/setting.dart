@@ -21,9 +21,7 @@ class SettingPage extends StatelessWidget {
                     width: 40.w,
                     image: const AssetImage("assets/images/backicon.png"),
                   )),
-              SizedBox(
-                width: 10.w,
-              ),
+              SizedBox(width: 10.w),
               Text(
                 "Setting",
                 style: TextStyle(fontSize: 18.sp, fontFamily: 'Tenor Sans'),

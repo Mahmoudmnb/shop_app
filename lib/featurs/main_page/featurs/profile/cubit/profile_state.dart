@@ -8,3 +8,5 @@ final class ProfileInitial extends ProfileState {}
 class ChangeAddressState extends ProfileState {}
 
 class ChangeProfileImagePath extends ProfileState {}
+
+class ChangeIsLogOutLoading extends ProfileState {}

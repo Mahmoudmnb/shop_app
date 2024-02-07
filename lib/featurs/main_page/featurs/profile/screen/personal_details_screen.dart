@@ -7,8 +7,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/core/constant.dart';
+import 'package:shop_app/core/internet_info.dart';
 import 'package:shop_app/featurs/auth/models/user_model.dart';
 import 'package:shop_app/injection.dart';
+import 'package:toast/toast.dart';
 
 import '../cubit/profile_cubit.dart';
 
@@ -92,21 +94,15 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                                   child: Text(
                                     Constant.getLetterName(
                                         Constant.currentUser!.name),
-                                    style: const TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 3,
+                                        fontSize: 40.sp,
+                                        color: Colors.white),
                                   ),
                                 ),
                               )
-                            : null
-                        // : ClipRRect(
-                        //     borderRadius: BorderRadius.circular(12),
-                        //     child: Image(
-                        //         fit: BoxFit.cover,
-                        //         height: 130.h,
-                        //         width: 130.h,
-                        //         image: FileImage(
-                        //             File(Constant.currentUser!.imgUrl!))),
-                        //   ),
-                        ),
+                            : null),
                     GestureDetector(
                       onTap: () async {
                         ImagePicker imagePicker = ImagePicker();
@@ -183,6 +179,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 width: 393.w,
                 height: 50.h,
                 child: TextField(
+                  maxLength: 50,
                   cursorColor: Colors.black,
                   onTapOutside: (value) {
                     FocusScope.of(context).unfocus();
@@ -200,6 +197,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ),
             ),
             TextField(
+              maxLength: 50,
               cursorColor: Colors.black,
               onTapOutside: (value) {
                 FocusScope.of(context).unfocus();
@@ -221,6 +219,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 height: 50.h,
                 width: 393.w,
                 child: TextField(
+                  maxLength: 50,
                   cursorColor: Colors.black,
                   onTapOutside: (value) {
                     FocusScope.of(context).unfocus();
@@ -233,6 +232,138 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                           : ''),
                   controller: phoneNumberController,
                 )),
+            Row(children: [
+              const Spacer(),
+              TextButton(
+                  onPressed: () {
+                    GlobalKey<FormState> formKey = GlobalKey<FormState>();
+                    AutovalidateMode autovalidateMode =
+                        AutovalidateMode.disabled;
+                    TextEditingController controller = TextEditingController();
+                    bool isLoading = false;
+                    showDialog(
+                        context: context,
+                        builder: (_) => StatefulBuilder(
+                              builder: (BuildContext context,
+                                  StateSetter setStatee) {
+                                return AlertDialog(
+                                    backgroundColor: Colors.white,
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'Reset Password',
+                                          style: TextStyle(fontSize: 18.sp),
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Form(
+                                            key: formKey,
+                                            child: Column(
+                                              children: [
+                                                TextFormField(
+                                                  maxLength: 50,
+                                                  autovalidateMode:
+                                                      autovalidateMode,
+                                                  validator: (value) {
+                                                    if (value != null &&
+                                                        value.trim() == '') {
+                                                      return "password should'n be empty";
+                                                    } else if (value != null &&
+                                                        value.trim() !=
+                                                            Constant
+                                                                .currentUser!
+                                                                .password
+                                                                .trim()) {
+                                                      return 'Old password is not correct ';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  decoration:
+                                                      const InputDecoration(
+                                                          hintText:
+                                                              'Old password'),
+                                                ),
+                                                SizedBox(height: 10.h),
+                                                TextFormField(
+                                                  controller: controller,
+                                                  maxLength: 50,
+                                                  autovalidateMode:
+                                                      autovalidateMode,
+                                                  validator: (value) {
+                                                    if (value != null &&
+                                                            value.isEmpty ||
+                                                        value!.length <= 6) {
+                                                      return 'password should be mor than six characters';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  decoration:
+                                                      const InputDecoration(
+                                                          hintText:
+                                                              'New password'),
+                                                ),
+                                              ],
+                                            )),
+                                        SizedBox(height: 15.h),
+                                        TextButton(
+                                            onPressed: () async {
+                                              if (!isLoading) {
+                                                autovalidateMode =
+                                                    AutovalidateMode.always;
+                                                setStatee(() {});
+                                                if (formKey.currentState!
+                                                    .validate()) {
+                                                  isLoading = true;
+                                                  setStatee(() {});
+                                                  bool isConnected =
+                                                      await InternetInfo
+                                                          .isconnected();
+                                                  if (context.mounted) {
+                                                    if (isConnected) {
+                                                      await context
+                                                          .read<ProfileCubit>()
+                                                          .changePassword(
+                                                              controller.text
+                                                                  .trim());
+                                                      isLoading = false;
+                                                      if (context.mounted) {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      }
+                                                    } else {
+                                                      isLoading = false;
+                                                      ToastContext()
+                                                          .init(context);
+                                                      Toast.show(
+                                                          'Check you internet');
+                                                      setStatee(() {});
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            child: isLoading
+                                                ? const Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                    color: Colors.black,
+                                                  ))
+                                                : Text(
+                                                    'Reset',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 20.sp),
+                                                  ))
+                                      ],
+                                    ));
+                              },
+                            ));
+                  },
+                  child: const Text(
+                    'Reset Password',
+                    style: TextStyle(fontSize: 18, color: Colors.black),
+                  ))
+            ]),
             SizedBox(height: 80.h),
             InkWell(
               borderRadius: BorderRadius.circular(10),

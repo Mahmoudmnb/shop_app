@@ -122,6 +122,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                                 borderRadius: BorderRadius.circular(5)),
                             clipBehavior: Clip.antiAlias,
                             child: TextField(
+                              maxLength: 50,
                               cursorColor: Colors.black,
                               onSubmitted: (value) async {
                                 searchInCategory(cubit);
@@ -282,6 +283,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                                     builder: (context) => ProductScreen(
                                       categoryName: categoryName,
                                       fromPage: 'CategoryProducts',
+                                      fromPageTitle: categoryName,
                                       searchCubit: cubit,
                                       searchWord: searchController.text,
                                       product: product,
@@ -301,8 +303,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                                         offset: const Offset(0, 4),
                                         color: Colors.black.withOpacity(.25),
                                         blurRadius: 2)
-                                  ],
-                                  borderRadius: BorderRadius.circular(10)),
+                                  ], borderRadius: BorderRadius.circular(10)),
                                   child: Stack(
                                     alignment: const Alignment(.80, -.89),
                                     children: [
@@ -317,29 +318,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                                         child: CircleAvatar(
                                             backgroundColor: Colors.white,
                                             child: GestureDetector(
-                                                onTap: () {
-                                                  // if (searchController.text ==
-                                                  //     '') {
-                                                  //   cubit
-                                                  //       .setFavorateProduct(
-                                                  //           product.id,
-                                                  //           !product.isFavorite)
-                                                  //       .then((value) {
-                                                  //     cubit.searchInCategory(
-                                                  //         null, categoryName);
-                                                  //   });
-                                                  // } else {
-                                                  //   cubit
-                                                  //       .setFavorateProduct(
-                                                  //           product.id,
-                                                  //           !product.isFavorite)
-                                                  //       .then((value) {
-                                                  //     cubit.searchInCategory(
-                                                  //         searchController.text,
-                                                  //         categoryName);
-                                                  //   });
-                                                  // }
-                                                },
+                                                onTap: () {},
                                                 child: Container(
                                                     height: 33.h,
                                                     width: 33.h,

@@ -160,22 +160,22 @@ class OrderDetails extends StatelessWidget {
                         colors: colors,
                         sizes: sizes,
                       ),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 30.w),
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(vertical: 15.h),
-                        decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: const Text(
-                          "Rate",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "DM Sans"),
-                        ),
-                      ),
+                      // Container(
+                      //   margin: EdgeInsets.symmetric(horizontal: 30.w),
+                      //   width: double.infinity,
+                      //   padding: EdgeInsets.symmetric(vertical: 15.h),
+                      //   decoration: BoxDecoration(
+                      //       color: Colors.black,
+                      //       borderRadius: BorderRadius.circular(10)),
+                      //   child: const Text(
+                      //     "Rate",
+                      //     textAlign: TextAlign.center,
+                      //     style: TextStyle(
+                      //         color: Colors.white,
+                      //         fontWeight: FontWeight.bold,
+                      //         fontFamily: "DM Sans"),
+                      //   ),
+                      // ),
                     ]),
                   ),
                 ),

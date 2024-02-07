@@ -1,15 +1,16 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/core/constant.dart';
-import 'package:shop_app/featurs/main_page/cubit/main_page_cubit.dart';
-import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
-import 'package:shop_app/featurs/main_page/featurs/setting.dart';
-import 'package:shop_app/featurs/main_page/featurs/shopping_bag/screens/shopping_bag_screen.dart';
-import 'package:shop_app/injection.dart';
 
+import '../../../../../core/constant.dart';
+import '../../../../../injection.dart';
+import '../../../cubit/main_page_cubit.dart';
+import '../../../data_source/data_source.dart';
+import '../../setting.dart';
+import '../../shopping_bag/screens/shopping_bag_screen.dart';
 import '../../wishlist/screens/wishlist_screen.dart';
 import '../cubit/drawer_cubit.dart';
 import 'custom_button.dart';
@@ -31,20 +32,28 @@ class HomeDrawer extends StatelessWidget {
             child: Column(
               children: [
                 Profile(
-                  image: Constant.currentUser!.imgUrl != null
+                  image: Constant.currentUser != null &&
+                          Constant.currentUser!.imgUrl != null
                       ? FileImage(File(Constant.currentUser!.imgUrl!))
                       : null,
-                  username: Constant.currentUser!.name,
-                  email: Constant.currentUser!.email,
+                  username: Constant.currentUser == null
+                      ? ''
+                      : Constant.currentUser!.name,
+                  email: Constant.currentUser == null
+                      ? ''
+                      : Constant.currentUser!.email,
                 ),
                 SizedBox(height: 15.h),
                 const Divider(color: Color(0xFFEAEAEA)),
                 SizedBox(height: 15.h),
                 BlocBuilder<DrawerCubit, DrawerState>(
                   builder: (context, state) {
+                    log(state.toString());
                     int selectedItem = 0;
                     if (state is SelectedItem) {
                       selectedItem = state.selectedItem;
+                    } else if (state is DrawerInitial) {
+                      selectedItem = tabController.index;
                     }
                     return Column(
                       children: [

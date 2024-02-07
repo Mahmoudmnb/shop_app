@@ -21,6 +21,20 @@ class DataSource {
     required this.insertDataLocalDataSource,
   });
   //! this section for inserting data
+  Future<void> uploadProfileSettings(
+      String borderProducts, String cartProducts, String borders) async {
+    return remoteDataSource.uploadProfileSettings(
+        borderProducts, cartProducts, borders);
+  }
+
+  Future<void> rateApp(String descrition, double rate) async {
+    return await remoteDataSource.rateApp(descrition, rate);
+  }
+
+  Future<void> changePassword(String newPassword) async {
+    remoteDataSource.changePassword(newPassword);
+  }
+
   Future<void> uploadImage(XFile image) async {
     return remoteDataSource.uploadImage(image);
   }
@@ -189,6 +203,10 @@ class DataSource {
   }
 
 //! this section for deleting and updating data
+  Future<void> deleteAddress(String addressName) async {
+    return updateDeleteLocalDataSource.deleteAddress(addressName);
+  }
+
   Future<void> deleteFromPorderBroducts(int productId) async {
     return updateDeleteLocalDataSource.deleteProductFromBorder(productId);
   }
@@ -207,6 +225,11 @@ class DataSource {
 
   Future<void> deleteWordFormSearchHistory(String word) async {
     return updateDeleteLocalDataSource.deleteWordFormSearchHistory(word);
+  }
+
+  Future<void> updateAddress(
+      AddressModel address, String oldAddressName) async {
+    updateDeleteLocalDataSource.updateAddress(address, oldAddressName);
   }
 
 //! this section for searching

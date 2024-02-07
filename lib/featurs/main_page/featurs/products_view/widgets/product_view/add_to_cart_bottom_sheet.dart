@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/constant.dart';
 import 'package:shop_app/featurs/main_page/cubit/main_page_cubit.dart';
+import 'package:shop_app/featurs/main_page/featurs/shopping_bag/cubits/products_cubit/products_cubit.dart';
 
 import '../../../home/models/product_model.dart';
 import '../../cubits/product_screen/cubit.dart';
@@ -109,45 +110,46 @@ class AddToCartBottomSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              onPressed: () {
-
+              onPressed: () async {
                 if (Constant.currentUser == null) {
                   context.read<MainPageCubit>().showRegisterMessage(context);
                 } else {
-                  context.read<ProductCubit>().addToCart(product);
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      shape: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      backgroundColor: Colors.black,
-                      content: Container(
-                        width: 262.w,
-                        height: 244.h,
-                        decoration: const BoxDecoration(color: Colors.black),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Item added to cart',
-                              style: TextStyle(
-                                  fontSize: 22.sp,
-                                  color: Colors.white,
-                                  fontFamily: 'DM Sans'),
-                            ),
-                            SizedBox(height: 40.h),
-                            Image.asset(
-                              'assets/images/icon.png',
-                              width: 60,
-                              height: 60,
-                              fit: BoxFit.cover,
-                            )
-                          ],
+                  await context.read<ProductCubit>().addToCart(product);
+                  if (context.mounted) {
+                    context.read<AddToCartCubit>().addElement(product.toMap());
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        shape: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                        backgroundColor: Colors.black,
+                        content: Container(
+                          width: 262.w,
+                          height: 244.h,
+                          decoration: const BoxDecoration(color: Colors.black),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Item added to cart',
+                                style: TextStyle(
+                                    fontSize: 22.sp,
+                                    color: Colors.white,
+                                    fontFamily: 'DM Sans'),
+                              ),
+                              SizedBox(height: 40.h),
+                              Image.asset(
+                                'assets/icons/bag.png',
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                              )
+                            ],
+                          ),
                         ),
-
                       ),
-                    ),
-                  );
+                    );
+                  }
                 }
               },
             ),

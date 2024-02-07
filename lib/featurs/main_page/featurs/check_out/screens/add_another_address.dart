@@ -6,6 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/featurs/main_page/featurs/profile/screen/shopping_address.dart';
 import 'package:shop_app/gogole_map.dart';
 import 'package:shop_app/injection.dart';
 import 'package:toast/toast.dart';
@@ -19,7 +21,13 @@ import 'first_step.dart';
 
 class AddNewAddress extends StatefulWidget {
   final Map<String, dynamic> data;
-  const AddNewAddress({super.key, required this.data});
+  final String fromPage;
+  final String type;
+  const AddNewAddress(
+      {super.key,
+      required this.data,
+      required this.fromPage,
+      required this.type});
 
   @override
   State<AddNewAddress> createState() => _AddNewAddressState();
@@ -56,27 +64,53 @@ class _AddNewAddressState extends State<AddNewAddress> {
 
   @override
   void initState() {
-    LatLng sourceLocation = widget.data['sourceLocation'];
-    Placemark placemark = widget.data['placeMark'];
-    latController.text = sourceLocation.latitude.toString();
-    longController.text = sourceLocation.longitude.toString();
-    cityController.text = placemark.locality.toString();
-    countryController.text = placemark.country.toString();
-    addressController.text =
-        '${placemark.locality}, ${placemark.subLocality == '' ? placemark.street : placemark.subLocality}';
-    countryCode = countryCodes
-        .where((element) =>
-            element['code'] == placemark.isoCountryCode!.toUpperCase() ||
-            element['name']!.toUpperCase() == placemark.country!.toUpperCase())
-        .toList();
-    context.read<CheckOutCubit>().selectedCountryCode =
-        countryCode[0]['dial_code'];
+    LatLng? sourceLocation;
+    Placemark? placemark;
+    if (widget.type == 'Edit') {
+      latController.text = widget.data['latitude_code'];
+      longController.text = widget.data['longitude_code'];
+      cityController.text = widget.data['city'];
+      countryController.text = widget.data['country'];
+      addressController.text = widget.data['address'];
+      int n = widget.data['phoneNumber'].toString().length - 9;
+      context.read<CheckOutCubit>().selectedCountryCode =
+          widget.data['phoneNumber'].toString().substring(0, n);
+      fullNameController.text = widget.data['firstName'];
+      phoneNumberController.text =
+          widget.data['phoneNumber'].toString().substring(n);
+      emailAddressController.text = widget.data['emailAddress'];
+      addressNameController.text = widget.data['addressName'];
+      var dl = sl.get<SharedPreferences>().getString('defaultLocation');
+      context
+          .read<CheckOutCubit>()
+          .changeIsDelfaultLocatoin(dl == widget.data['addressName']);
+      log(context.read<CheckOutCubit>().isDelfaultLocatoin.toString());
+    } else {
+      sourceLocation = widget.data['sourceLocation'];
+      placemark = widget.data['placeMark'];
+      latController.text = sourceLocation!.latitude.toString();
+      longController.text = sourceLocation.longitude.toString();
+      cityController.text = placemark!.locality.toString();
+      countryController.text = placemark.country.toString();
+      addressController.text =
+          '${placemark.locality}, ${placemark.subLocality == '' ? placemark.street : placemark.subLocality}';
+      countryCode = countryCodes
+          .where((element) =>
+              element['code'] == placemark!.isoCountryCode!.toUpperCase() ||
+              element['name']!.toUpperCase() ==
+                  placemark.country!.toUpperCase())
+          .toList();
+      context.read<CheckOutCubit>().selectedCountryCode =
+          countryCode[0]['dial_code'];
+    }
+
     super.initState();
   }
 
   backToGoogleMapScreen() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => GoogleMapScreen(
+        fromPage: widget.fromPage,
         currentLocation: widget.data['sourceLocation'],
       ),
     ));
@@ -86,12 +120,22 @@ class _AddNewAddressState extends State<AddNewAddress> {
   Widget build(BuildContext context) {
     String? defaultLocation =
         sl.get<SharedPreferences>().getString('defaultLocation');
-    context.read<CheckOutCubit>().isDelfaultLocatoin =
-        (defaultLocation == null);
+    if (widget.type != 'Edit') {
+      context.read<CheckOutCubit>().isDelfaultLocatoin =
+          (defaultLocation == null);
+    }
     return PopScope(
       canPop: false,
-      onPopInvoked: (value) {
-        backToGoogleMapScreen();
+      onPopInvoked: (value) async {
+        if (widget.type == 'Edit') {
+          var data = await sl.get<DataSource>().getLocations();
+          if (context.mounted) {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (_) => ShoppingAddress(addressList: data)));
+          }
+        } else {
+          backToGoogleMapScreen();
+        }
       },
       child: SafeArea(
         child: Scaffold(
@@ -101,8 +145,18 @@ class _AddNewAddressState extends State<AddNewAddress> {
               Row(
                 children: [
                   GestureDetector(
-                      onTap: () {
-                        backToGoogleMapScreen();
+                      onTap: () async {
+                        if (widget.type == 'Edit') {
+                          var data = await sl.get<DataSource>().getLocations();
+                          if (context.mounted) {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        ShoppingAddress(addressList: data)));
+                          }
+                        } else {
+                          backToGoogleMapScreen();
+                        }
                       },
                       child: Image(
                         height: 40.w,
@@ -127,29 +181,45 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   physics: const BouncingScrollPhysics(),
                   children: [
                     TextFieldAddress(
-                        title: 'Full Name', controller: fullNameController),
+                        type: widget.type,
+                        title: 'Full Name',
+                        controller: fullNameController),
                     TextFieldAddress(
+                        type: widget.type,
                         countryCode: countryCode,
                         title: 'Phone Number',
                         controller: phoneNumberController,
                         keyboardType: TextInputType.number),
                     TextFieldAddress(
+                        type: widget.type,
                         title: 'Email Address',
                         controller: emailAddressController,
                         keyboardType: TextInputType.emailAddress),
                     TextFieldAddress(
+                        type: widget.type,
                         title: 'Address Name',
                         controller: addressNameController,
                         keyboardType: TextInputType.streetAddress),
                     TextFieldAddress(
-                        title: 'latitude code', controller: latController),
+                        type: widget.type,
+                        title: 'latitude code',
+                        controller: latController),
                     TextFieldAddress(
-                        title: 'longitude code', controller: longController),
-                    TextFieldAddress(title: 'City', controller: cityController),
+                        type: widget.type,
+                        title: 'longitude code',
+                        controller: longController),
                     TextFieldAddress(
-                        title: 'Country', controller: countryController),
+                        type: widget.type,
+                        title: 'City',
+                        controller: cityController),
                     TextFieldAddress(
-                        title: 'Address', controller: addressController),
+                        type: widget.type,
+                        title: 'Country',
+                        controller: countryController),
+                    TextFieldAddress(
+                        type: widget.type,
+                        title: 'Address',
+                        controller: addressController),
                     SizedBox(
                       width: 393.w,
                       child: Row(
@@ -179,9 +249,13 @@ class _AddNewAddressState extends State<AddNewAddress> {
                                   value: isDefaultLocation,
                                   onChanged: (value) {
                                     if (defaultLocation != null) {
-                                      context
-                                          .read<CheckOutCubit>()
-                                          .changeIsDelfaultLocatoin(value!);
+                                      if (widget.type == 'Edit' &&
+                                          value == false) {
+                                      } else {
+                                        context
+                                            .read<CheckOutCubit>()
+                                            .changeIsDelfaultLocatoin(value!);
+                                      }
                                     }
                                   },
                                 );
@@ -197,7 +271,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       borderRadius: BorderRadius.circular(10),
                       onTap: () {
                         //todo i have to replace last name and first name with full name
-                        InternetInfo.isconnected().then((value) {
+                        InternetInfo.isconnected().then((value) async {
                           if (value) {
                             context
                                 .read<CheckOutCubit>()
@@ -230,29 +304,50 @@ class _AddNewAddressState extends State<AddNewAddress> {
                               if (context
                                   .read<CheckOutCubit>()
                                   .isAddressNameIsAvailable) {
-                                context
-                                    .read<CheckOutCubit>()
-                                    .addNewAdress(address)
-                                    .then((value) {
+                                if (widget.fromPage == 'Orders') {
                                   context
                                       .read<CheckOutCubit>()
-                                      .getLocations()
+                                      .addNewAdress(address)
                                       .then((value) {
-                                    Navigator.of(context)
-                                        .pushReplacement(MaterialPageRoute(
-                                      builder: (context) =>
-                                          FirstStep(locations: value),
-                                    ));
+                                    context
+                                        .read<CheckOutCubit>()
+                                        .getLocations()
+                                        .then((value) {
+                                      Navigator.of(context)
+                                          .pushReplacement(MaterialPageRoute(
+                                        builder: (context) =>
+                                            FirstStep(locations: value),
+                                      ));
+                                    });
                                   });
-                                });
+                                } else {
+                                  if (widget.type == 'Edit') {
+                                    await sl.get<DataSource>().updateAddress(
+                                        address, widget.data['addressName']);
+                                  } else {
+                                    await context
+                                        .read<CheckOutCubit>()
+                                        .addNewAdress(address);
+                                  }
+                                  var addressList =
+                                      await sl.get<DataSource>().getLocations();
+                                  if (context.mounted) {
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                            builder: (_) => ShoppingAddress(
+                                                addressList: addressList)));
+                                  }
+                                }
                               }
-                              if (defaultLocation == null ||
-                                  context
-                                      .read<CheckOutCubit>()
-                                      .isDelfaultLocatoin) {
-                                sl.get<SharedPreferences>().setString(
-                                    'defaultLocation',
-                                    addressNameController.text.trim());
+                              if (context.mounted) {
+                                if (defaultLocation == null ||
+                                    context
+                                        .read<CheckOutCubit>()
+                                        .isDelfaultLocatoin) {
+                                  sl.get<SharedPreferences>().setString(
+                                      'defaultLocation',
+                                      addressNameController.text.trim());
+                                }
                               }
                             }
                             setState(() {
@@ -271,7 +366,9 @@ class _AddNewAddressState extends State<AddNewAddress> {
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(10)),
                         child: Text(
-                          "Add new address",
+                          widget.type == 'Edit'
+                              ? 'Edit address'
+                              : "Add new address",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 15.sp,

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../cubit/sreach_cubit.dart';
-import '../pages/category_view_page.dart';
+import '../screen/category_view_page.dart';
 
 class CategoryCard extends StatelessWidget {
   final String categroyName;
