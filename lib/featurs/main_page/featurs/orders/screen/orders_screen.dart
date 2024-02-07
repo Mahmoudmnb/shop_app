@@ -211,7 +211,7 @@ class MyOrdersScreen extends StatelessWidget {
                       ),
                     )
       
-                    )
+                    
                   : const Center(
                       child: CircularProgressIndicator(color: Colors.black));
 
