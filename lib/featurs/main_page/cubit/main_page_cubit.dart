@@ -26,33 +26,48 @@ class MainPageCubit extends Cubit<MainPageState> {
   void showRegisterMessage(BuildContext context) {
     showDialog(
         context: context,
-        builder: (_) => AlertDialog(
-              actions: [
-                MaterialButton(
-                  child: Text(
-                    'Register now',
-                    style: TextStyle(fontSize: 18.sp),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const AuthPage()));
-                  },
-                ),
-                MaterialButton(
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(fontSize: 18.sp),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-              title: Text(
-                'You have to register before you can get here !',
-                style: TextStyle(fontSize: 20.sp),
-              ),
+        builder: (context) => AlertDialog(
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+              content: SizedBox(
+                  height: 230.h,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 10.h),
+                      Text(
+                        "You have to resigister",
+                        style: TextStyle(
+                            fontSize: 18.sp,
+                            fontFamily: 'DM Sans',
+                            color: Colors.grey[1000]),
+                      ),
+                      SizedBox(height: 30.h),
+                      Image(
+                          height: 100.h,
+                          color: Colors.grey[600],
+                          image: const AssetImage(
+                            'assets/icons/needsign.png',
+                          )),
+                      Row(
+                        children: [
+                          const Spacer(),
+                          MaterialButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => const AuthPage()));
+                              },
+                              child: Text(
+                                "Register now",
+                                style: TextStyle(
+                                    fontSize: 18.sp,
+                                    fontFamily: 'DM Sans',
+                                    color: Colors.grey[1000]),
+                              ))
+                        ],
+                      )
+                    ],
+                  )),
             ));
   }
 }

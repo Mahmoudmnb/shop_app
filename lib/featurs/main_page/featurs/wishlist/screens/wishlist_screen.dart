@@ -17,8 +17,6 @@ import '../widgets/wishlist_switcher.dart';
 class WishListScreen extends StatelessWidget {
   final List<Map<String, dynamic>> borders;
   const WishListScreen({super.key, required this.borders});
-  //  nothing
-  //  nothing
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,7 +35,7 @@ class WishListScreen extends StatelessWidget {
               builder: (context, state) {
                 return Expanded(
                   child: context.read<WishListCubit>().kindOfOrder == "Borders"
-                      ? borders.isNotEmpty
+                      ? borders.isEmpty
                           ? Container(
                               padding: EdgeInsets.symmetric(vertical: 50.h),
                               width: double.infinity,
@@ -48,11 +46,9 @@ class WishListScreen extends StatelessWidget {
                                     image: const AssetImage(
                                         'assets/icons/saadHart.png'),
                                   ),
-                                  SizedBox(
-                                    height: 25.h,
-                                  ),
+                                  SizedBox(height: 25.h),
                                   Text(
-                                    "No reviews published",
+                                    "You don't have borders",
                                     style: TextStyle(
                                         fontSize: 18.sp,
                                         color: Colors.grey[600]),

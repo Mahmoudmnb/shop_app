@@ -30,6 +30,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
+  late PageController pageController;
   testRealTime() {
     try {
       final client = Client()
@@ -58,6 +59,7 @@ class _MainPageState extends State<MainPage>
       setState(() {});
     });
     tabController = TabController(length: 4, vsync: this);
+    pageController = PageController();
     super.initState();
   }
 
@@ -224,8 +226,13 @@ class _MainPageState extends State<MainPage>
             return false;
           }
         },
-        child: TabBarView(
-          controller: tabController,
+        child: PageView(
+          controller: pageController,
+          onPageChanged: (index) {
+            context.read<MainPageCubit>().changePageIndex(index);
+
+            tabController.animateTo(index);
+          },
           children: [
             FutureBuilder(
               future: sl.get<DataSource>().getDiscountsProducts(),
@@ -250,6 +257,7 @@ class _MainPageState extends State<MainPage>
       ),
       bottomNavigationBar: MainPageTabBar(
         tabController: tabController,
+        pageController: pageController,
       ),
     );
   }
