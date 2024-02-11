@@ -93,9 +93,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
               SizedBox(width: 10.w),
               BlocBuilder<SearchCubit, SearchState>(
                 builder: (context, state) {
-                  if (state is SaveState) {
-                    categoryName = cubit.selectedCategory;
-                  }
+                  categoryName = cubit.selectedCategory;
                   return SizedBox(
                     width: 320.w,
                     child: Row(
@@ -236,29 +234,31 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
             ],
           ),
           SizedBox(height: 15.h),
-          categoryProducts.isEmpty
-              ? Column(
-                  children: [
-                    const Image(
-                      image: AssetImage('assets/icons/notFound.jpeg'),
-                    ),
-                    Text(
-                      "No products founded",
-                      style:TextStyle(fontSize: 18.sp, color: Colors.grey[600]),
+          BlocBuilder<SearchCubit, SearchState>(
+            builder: (context, state) {
+              log(state.toString());
+              if (state is GetCategoryProducts) {
+                categoryProducts = state.categoryProducts;
+              } else if (state is SaveState) {
+                log(state.categoryProducts.toString());
+                categoryProducts = state.categoryProducts;
+              } else if (state is SearchResults) {
+                categoryProducts = state.searchResult;
+              }
+              return categoryProducts.isEmpty
+                  ? Column(
+                      children: [
+                        const Image(
+                          image: AssetImage('assets/icons/notFound.jpeg'),
+                        ),
+                        Text(
+                          "No products founded",
+                          style: TextStyle(
+                              fontSize: 18.sp, color: Colors.grey[600]),
+                        )
+                      ],
                     )
-                  ],
-                )
-              : BlocBuilder<SearchCubit, SearchState>(
-                  builder: (context, state) {
-                    log(state.toString());
-                    if (state is GetCategoryProducts) {
-                      categoryProducts = state.categoryProducts;
-                    } else if (state is SaveState) {
-                      categoryProducts = state.categoryProducts;
-                    } else if (state is SearchResults) {
-                      categoryProducts = state.searchResult;
-                    }
-                    return Expanded(
+                  : Expanded(
                       //* this widget have to be exit for (AnimationConfiguration)
                       child: AnimationLimiter(
                         child: GridView.builder(
@@ -297,6 +297,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                                         Navigator.of(context)
                                             .pushReplacement(MaterialPageRoute(
                                           builder: (context) => ProductScreen(
+                                            fromPageTitle: '',
                                             categoryName: categoryName,
                                             fromPage: 'CategoryProducts',
                                             searchCubit: cubit,
@@ -438,8 +439,8 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                         ),
                       ),
                     );
-                  },
-                ),
+            },
+          ),
         ]),
       ),
     ));

@@ -16,7 +16,6 @@ import 'package:shop_app/injection.dart';
 import 'package:toast/toast.dart';
 
 import '../../../../../core/internet_info.dart';
-import '../../../cubit/main_page_cubit.dart';
 import 'personal_details_screen.dart';
 import 'shopping_address.dart';
 
@@ -30,7 +29,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    context.read<MainPageCubit>().changePageIndex(3);
     if (Constant.currentUser != null) {
       context.read<ProfileCubit>().profileImagePath =
           Constant.currentUser!.imgUrl;
@@ -40,9 +38,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Constant.currentUser == null
           ? Center(
               child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Text('You have to register'),
+                const Image(image: AssetImage('assets/images/lock.png')),
                 TextButton(
                     onPressed: () {
                       Navigator.of(context)
@@ -52,7 +50,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         setState(() {});
                       });
                     },
-                    child: const Text('Register now'))
+                    child: Text(
+                      'Register now',
+                      style: TextStyle(fontSize: 20.sp),
+                    ))
               ],
             ))
           : SingleChildScrollView(

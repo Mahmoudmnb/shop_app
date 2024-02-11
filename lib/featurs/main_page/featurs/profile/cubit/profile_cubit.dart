@@ -55,9 +55,10 @@ class ProfileCubit extends Cubit<ProfileState> {
     for (var element in cartProducts) {
       cartPro += '${jsonEncode(element)}|';
     }
-    cartPro = cartPro.substring(0, cartPro.length - 1);
-    bor = bor.substring(0, bor.length - 1);
-    proBor = proBor.substring(0, proBor.length - 1);
+    
+    cartPro = cartPro.isEmpty?'': cartPro.substring(0, cartPro.length - 1);
+    bor = bor.isEmpty?'': bor.substring(0, bor.length - 1);
+    proBor = proBor.isEmpty?'': proBor.substring(0, proBor.length - 1);
     await sl.get<DataSource>().uploadProfileSettings(proBor, cartPro, bor);
     await sl.get<SharedPreferences>().remove('currentUser');
   }

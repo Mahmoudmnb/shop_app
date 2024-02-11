@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
 import 'package:shop_app/injection.dart';
 
-import '../../../cubit/main_page_cubit.dart';
 import '../../search/cubit/sreach_cubit.dart';
 import '../blocs/discount/discount_products_bloc.dart';
 import '../models/product_model.dart';
@@ -24,7 +23,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<MainPageCubit>().changePageIndex(0);
     context
         .read<DiscountProductsBloc>()
         .add(GetDiscountProducts(discountProducts: disCountProducts));

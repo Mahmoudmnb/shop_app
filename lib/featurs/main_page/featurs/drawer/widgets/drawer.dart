@@ -114,10 +114,16 @@ class HomeDrawer extends StatelessWidget {
                 CustomListTile(
                   icon: Icons.shopping_cart_outlined,
                   title: 'Shopping Bag',
-                  onTap: () {
+                  onTap: () { 
                     Scaffold.of(context).closeDrawer();
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const ShoppingBagScreen()));
+                    if (Constant.currentUser != null) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const ShoppingBagScreen()));
+                    } else {
+                      context
+                          .read<MainPageCubit>()
+                          .showRegisterMessage(context);
+                    }
                   },
                 ),
                 SizedBox(height: 10.h),

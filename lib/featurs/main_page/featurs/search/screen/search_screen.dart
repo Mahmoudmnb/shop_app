@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../injection.dart';
-import '../../../cubit/main_page_cubit.dart';
 import '../../../data_source/data_source.dart';
 import '../cubit/sreach_cubit.dart';
 import '../widgets/category_card.dart';
@@ -35,7 +34,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<MainPageCubit>().changePageIndex(1);
     var cubit = SearchCubit.get(context);
     return Scaffold(
       backgroundColor: Colors.white,

@@ -87,6 +87,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log(widget.fromPage);
     return PopScope(
       canPop: false,
       onPopInvoked: (value) {

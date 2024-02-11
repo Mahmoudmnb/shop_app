@@ -5,17 +5,21 @@ import 'package:shop_app/featurs/auth/pages/auth_page.dart';
 import 'package:shop_app/injection.dart';
 
 import '../../../../../core/constant.dart';
-import '../../../cubit/main_page_cubit.dart';
 import '../../../data_source/data_source.dart';
 import '../cubit/orders_cubit.dart';
 import '../model/order_model.dart';
 import '../widgets/order_card.dart';
 
-class MyOrdersScreen extends StatelessWidget {
+class MyOrdersScreen extends StatefulWidget {
   const MyOrdersScreen({super.key});
+
+  @override
+  State<MyOrdersScreen> createState() => _MyOrdersScreenState();
+}
+
+class _MyOrdersScreenState extends State<MyOrdersScreen> {
   @override
   Widget build(BuildContext context) {
-    context.read<MainPageCubit>().changePageIndex(2);
     List<OrderModel> pendingOrders = [];
     List<OrderModel> deliverdOrders = [];
     return BlocBuilder<OrdersCubit, OrdersState>(
@@ -47,21 +51,26 @@ class MyOrdersScreen extends StatelessWidget {
                       body: Constant.currentUser == null
                           ? Center(
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                      'Your have to register to make orders'),
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (_) =>
-                                                    const AuthPage()));
-                                      },
-                                      child: const Text('Register now'))
-                                ],
-                              ),
-                            )
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const Image(
+                                    image:
+                                        AssetImage('assets/images/lock.png')),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                              builder: (_) => const AuthPage()))
+                                          .then((value) {
+                                        setState(() {});
+                                      });
+                                    },
+                                    child: Text(
+                                      'Register now',
+                                      style: TextStyle(fontSize: 20.sp),
+                                    ))
+                              ],
+                            ))
                           : Column(
                               children: [
                                 Container(
