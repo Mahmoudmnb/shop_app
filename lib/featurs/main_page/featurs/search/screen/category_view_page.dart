@@ -101,7 +101,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 500),
                           width: cubit.isCategoryViewSearch ? 0.w : 250.w,
-                          height: cubit.isCategoryViewSearch ? 0 : 27.h,
+                          height: cubit.isCategoryViewSearch ? 0 : 40.h,
                           margin: EdgeInsets.symmetric(horizontal: 5.w),
                           child: Text(
                             categoryName,
@@ -197,7 +197,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
           SizedBox(height: 15.h),
           Row(
             children: [
-              SizedBox(width: 40.w),
+              SizedBox(width: 55.w),
               BlocBuilder<SearchCubit, SearchState>(
                 builder: (context, state) {
                   int length = categoryProducts.length;
@@ -399,13 +399,18 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                                         width: 141.w,
                                         child: Row(
                                           children: [
-                                            Text(
-                                              product.makerCompany,
-                                              style: TextStyle(
-                                                  fontSize: 14.sp,
-                                                  fontFamily: 'Tenor Sans',
-                                                  color:
-                                                      const Color(0xff393939)),
+                                            //! this sizedBox for ellipis
+                                            SizedBox(
+                                              width: 100.w,
+                                              child: Text(
+                                                product.name,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize: 14.sp,
+                                                    fontFamily: 'Tenor Sans',
+                                                    color: const Color(
+                                                        0xff393939)),
+                                              ),
                                             ),
                                             const Spacer(),
                                             Text(
@@ -423,7 +428,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                                         height: 17.h,
                                         width: 141.w,
                                         child: Text(
-                                          product.name,
+                                          product.makerCompany,
                                           style: TextStyle(
                                               fontSize: 11.sp,
                                               color: const Color(0xFF828282),

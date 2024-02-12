@@ -201,7 +201,16 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            Image(image: AssetImage(context.read<OrdersCubit>().kindOfOrder=="Pending"?"assets/images/pending-cart1.png": "assets/images/delivered-cart.png"),),
+                                            Image(
+                                              image: AssetImage(context
+                                                          .read<OrdersCubit>()
+                                                          .kindOfOrder ==
+                                                      "Pending"
+                                                  ? "assets/images/pending-cart1.png"
+                                                  : "assets/images/delivered-cart.png"),
+                                              width: 150.w,
+                                              height: 150.w,
+                                            ),
                                             SizedBox(height: 20.h),
                                             Text(
                                                 "There is nothing to be ${context.read<OrdersCubit>().kindOfOrder}.",
