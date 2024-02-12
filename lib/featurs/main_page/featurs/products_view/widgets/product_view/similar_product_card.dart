@@ -146,35 +146,37 @@ class SimilarProductsCard extends StatelessWidget {
                         itemBuilder: (_, int index) {
                           ProductModel product = ProductModel.fromMap(
                               cubit.similarProducts[index]);
-                              //! I make this bug to be similar_card can click on it to his product_view
+                              //! I make edit this widget
+                              //! to can similar_card click on it and go to his product_view
+                              //! and you have to fix it
+                              //! vvvvvvvvvvvvvvvvvv Here vvvvvvvvvvvvvvvvvvvvvvvv
                           return GestureDetector(
                             onTap: () {
                               log(product.name);
-                              onTap: () {
-                              ProductCubit productCubit =
-                                  BlocProvider.of<ProductCubit>(context);
-                              productCubit.widthOfPrice = 145;
-                              productCubit.hidden = false;
-                              productCubit.getReviws(product.id).then((value) {
-                                productCubit
-                                    .getSimilarProducts(product)
-                                    .then((value) {
-                                  Navigator.of(context)
-                                      .pushReplacement(MaterialPageRoute(
-                                    builder: (context) => ProductScreen(
-                                      categoryName: categoryName,
-                                      fromPage: 'seeAll',
-                                      searchCubit: cubit,
-                                      searchWord: searchController.text,
-                                      product: product,
-                                      fromPageTitle: categoryName,
-                                      cubit: BlocProvider.of<ProductCubit>(
-                                          context),
-                                    ),
-                                  ));
-                                });
-                              });
-                            },
+                              // ProductCubit productCubit =
+                              //     BlocProvider.of<ProductCubit>(context);
+                              // productCubit.widthOfPrice = 145;
+                              // productCubit.hidden = false;
+                              // productCubit.getReviws(product.id).then((value) {
+                              //   productCubit
+                              //       .getSimilarProducts(product)
+                              //       .then((value) {
+                              //     Navigator.of(context)
+                              //         .pushReplacement(MaterialPageRoute(
+                              //       builder: (context) => ProductScreen(
+                              //         categoryName: categoryName,
+                              //         fromPage: 'seeAll',
+                              //         searchCubit: cubit,
+                              //         searchWord: searchController.text,
+                              //         product: product,
+                              //         fromPageTitle: categoryName,
+                              //         cubit: BlocProvider.of<ProductCubit>(
+                              //             context),
+                              //       ),
+                              //     ));
+                              //   });
+                              // });
+                            
                             },
                             child: CustomCard(
                               width: 136.5.w,
