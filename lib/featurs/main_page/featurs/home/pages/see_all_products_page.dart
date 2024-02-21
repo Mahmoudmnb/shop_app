@@ -114,7 +114,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 500),
                           width: isSearch ? 0.w : 270.w,
-                          height: isSearch ? 0 : 40.h,
+                          height: isSearch ? 0 : 30.h,
                           child: Text(
                             categoryName,
                             softWrap: true,
@@ -411,7 +411,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                 ),
                                 SizedBox(height: 15.h),
                                 SizedBox(
-                                  height: 18.h,
+                                  height: 17.h,
                                   width: 141.w,
                                   child: Row(
                                     children: [

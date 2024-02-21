@@ -101,7 +101,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 500),
                           width: cubit.isCategoryViewSearch ? 0.w : 250.w,
-                          height: cubit.isCategoryViewSearch ? 0 : 40.h,
+                          height: cubit.isCategoryViewSearch ? 0 : 27.h,
                           margin: EdgeInsets.symmetric(horizontal: 5.w),
                           child: Text(
                             categoryName,
@@ -197,7 +197,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
           SizedBox(height: 15.h),
           Row(
             children: [
-              SizedBox(width: 55.w),
+              SizedBox(width: 40.w),
               BlocBuilder<SearchCubit, SearchState>(
                 builder: (context, state) {
                   int length = categoryProducts.length;
