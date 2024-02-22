@@ -57,6 +57,8 @@ class WishListScreen extends StatelessWidget {
                               ),
                             )
                           : ListView.builder(
+                              keyboardDismissBehavior:
+                                  ScrollViewKeyboardDismissBehavior.onDrag,
                               padding: EdgeInsets.symmetric(horizontal: 15.w),
                               itemCount: borders.length,
                               itemBuilder: (BuildContext context, int index) {
@@ -86,6 +88,7 @@ class WishListScreen extends StatelessWidget {
                             } else {
                               return AnimationLimiter(
                                 child: GridView.builder(
+                                            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                                   physics: const BouncingScrollPhysics(),
                                   itemCount: snapshot.data!.length,
                                   gridDelegate:

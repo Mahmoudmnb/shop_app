@@ -262,6 +262,8 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                       //* this widget have to be exit for (AnimationConfiguration)
                       child: AnimationLimiter(
                         child: GridView.builder(
+                          keyboardDismissBehavior:
+                              ScrollViewKeyboardDismissBehavior.onDrag,
                           physics: const BouncingScrollPhysics(),
                           itemCount: categoryProducts.length,
                           gridDelegate:

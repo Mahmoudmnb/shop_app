@@ -91,6 +91,8 @@ class BorderProductView extends StatelessWidget {
               Expanded(
                 child: AnimationLimiter(
                   child: GridView.builder(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
                     physics: const BouncingScrollPhysics(),
                     itemCount: borderProducts.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

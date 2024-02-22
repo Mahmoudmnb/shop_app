@@ -30,7 +30,7 @@ class MainPageCubit extends Cubit<MainPageState> {
               contentPadding:
                   EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
               content: SizedBox(
-                  height: 230.h,
+                  height: 250.h,
                   child: Column(
                     children: [
                       SizedBox(height: 10.h),
@@ -48,6 +48,7 @@ class MainPageCubit extends Cubit<MainPageState> {
                           image: const AssetImage(
                             'assets/icons/needsign.png',
                           )),
+                      SizedBox(height: 20.h),
                       Row(
                         children: [
                           const Spacer(),

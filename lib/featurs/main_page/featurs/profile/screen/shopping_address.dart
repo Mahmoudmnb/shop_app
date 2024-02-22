@@ -41,6 +41,8 @@ class ShoppingAddress extends StatelessWidget {
                 SizedBox(height: 40.h),
                 Expanded(
                   child: ListView.separated(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
                     physics: const BouncingScrollPhysics(),
                     separatorBuilder: (context, index) => SizedBox(height: 2.h),
                     itemCount: addressList.length,

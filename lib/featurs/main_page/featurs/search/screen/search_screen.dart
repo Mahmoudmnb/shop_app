@@ -186,6 +186,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                                 SizedBox(height: 20.h),
                                 GridView(
+                                  keyboardDismissBehavior:
+                                      ScrollViewKeyboardDismissBehavior.onDrag,
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   gridDelegate:

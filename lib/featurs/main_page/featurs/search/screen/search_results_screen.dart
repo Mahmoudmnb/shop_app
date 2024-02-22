@@ -178,6 +178,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                     )
                   : Expanded(
                       child: GridView.builder(
+                        keyboardDismissBehavior:
+                            ScrollViewKeyboardDismissBehavior.onDrag,
                         physics: const BouncingScrollPhysics(),
                         itemCount: searchProducts.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

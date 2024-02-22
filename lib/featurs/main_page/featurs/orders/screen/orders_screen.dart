@@ -49,13 +49,17 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                   ? Scaffold(
                       backgroundColor: Colors.white,
                       body: Constant.currentUser == null
-                          ? Center(
+                          ? Padding(
+                            padding:  EdgeInsets.only(bottom: 30.h),
+                            child: Center(
                               child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Image(
+                                Image(
+                                  width: 300.w,
+                                  height: 300.w,
                                     image:
-                                        AssetImage('assets/images/lock.png')),
+                                        const AssetImage('assets/images/lock.png')),
                                 TextButton(
                                     onPressed: () {
                                       Navigator.of(context)
@@ -70,7 +74,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                       style: TextStyle(fontSize: 20.sp),
                                     ))
                               ],
-                            ))
+                                                            ),
+                            ),
+                          )
                           : Column(
                               children: [
                                 Container(
@@ -222,6 +228,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 25.w),
                                           child: ListView.separated(
+                                            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                                             physics:
                                                 const BouncingScrollPhysics(),
                                             separatorBuilder:

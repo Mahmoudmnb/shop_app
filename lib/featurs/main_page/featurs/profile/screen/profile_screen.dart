@@ -36,26 +36,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Constant.currentUser == null
-          ? Center(
-              child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Image(image: AssetImage('assets/images/lock.png')),
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(
-                              builder: (_) => const AuthPage()))
-                          .then((value) {
-                        setState(() {});
-                      });
-                    },
-                    child: Text(
-                      'Register now',
-                      style: TextStyle(fontSize: 20.sp),
-                    ))
-              ],
-            ))
+          ? Padding(
+              padding: EdgeInsets.only(bottom: 30.h),
+              child: Center(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image(
+                      image: const AssetImage('assets/images/lock.png'),
+                      width: 300.w,
+                      height: 300.w),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(
+                                builder: (_) => const AuthPage()))
+                            .then((value) {
+                          setState(() {});
+                        });
+                      },
+                      child: Text(
+                        'Register now',
+                        style: TextStyle(fontSize: 20.sp),
+                      ))
+                ],
+              )),
+            )
           : SingleChildScrollView(
               child: SizedBox(
                 width: double.infinity,
