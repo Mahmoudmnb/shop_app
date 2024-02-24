@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
             height: 160.h,
             width: 353.w,
             child: Image.asset(
-              'assets/images/Capture.PNG',
+              'assets/images/capture.jpg',
               fit: BoxFit.fill,
             ),
           ),
