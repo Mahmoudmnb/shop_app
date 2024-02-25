@@ -49,6 +49,7 @@ class AuthPage extends StatelessWidget {
                                 .get<DataSource>()
                                 .getReviewsFromCloud()
                                 .then((value) {
+                              // Todo: get data from log in
                               Navigator.of(context)
                                   .pushReplacement(MaterialPageRoute(
                                 builder: (context) => const MainPage(),

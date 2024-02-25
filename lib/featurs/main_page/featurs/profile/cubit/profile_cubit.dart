@@ -43,23 +43,23 @@ class ProfileCubit extends Cubit<ProfileState> {
     var cartProducts = await sl.get<DataSource>().getAddToCartProducts();
     var borders = await sl.get<DataSource>().getBorders();
     var borderProducts = await sl.get<DataSource>().getAllBorderProducts();
-    String bor = '';
-    String proBor = '';
-    String cartPro = '';
-    for (var element in borders) {
-      bor += '${jsonEncode(element)}|';
-    }
-    for (var element in borderProducts) {
-      proBor += '${jsonEncode(element)}|';
-    }
-    for (var element in cartProducts) {
-      cartPro += '${jsonEncode(element)}|';
-    }
-    
-    cartPro = cartPro.isEmpty?'': cartPro.substring(0, cartPro.length - 1);
-    bor = bor.isEmpty?'': bor.substring(0, bor.length - 1);
-    proBor = proBor.isEmpty?'': proBor.substring(0, proBor.length - 1);
-    await sl.get<DataSource>().uploadProfileSettings(proBor, cartPro, bor);
-    await sl.get<SharedPreferences>().remove('currentUser');
+      String bor = '';
+      String proBor = '';
+      String cartPro = '';
+      for (var element in borders) {
+        bor += '${jsonEncode(element)}|';
+      }
+      for (var element in borderProducts) {
+        proBor += '${jsonEncode(element)}|';
+      }
+      for (var element in cartProducts) {
+        cartPro += '${jsonEncode(element)}|';
+      }
+
+      cartPro = cartPro.isEmpty ? '' : cartPro.substring(0, cartPro.length - 1);
+      bor = bor.isEmpty ? '' : bor.substring(0, bor.length - 1);
+      proBor = proBor.isEmpty ? '' : proBor.substring(0, proBor.length - 1);
+      await sl.get<DataSource>().uploadProfileSettings(proBor, cartPro, bor);
+      await sl.get<SharedPreferences>().remove('currentUser');
   }
 }
