@@ -38,7 +38,7 @@ class _SteperScreenState extends State<SteperScreen> {
               decoration: const BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage(
-                        'assets/images/splash1.png',
+                        'assets/images/splash1.jpg',
                       ),
                       fit: BoxFit.cover)),
               child: Column(
@@ -112,7 +112,7 @@ class _SteperScreenState extends State<SteperScreen> {
               decoration: const BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage(
-                        'assets/images/splash2.png',
+                        'assets/images/splash2.jpg',
                       ),
                       fit: BoxFit.cover)),
               child: Column(

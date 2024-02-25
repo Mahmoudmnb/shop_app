@@ -194,9 +194,7 @@ class _MainPageState extends State<MainPage>
                 bottomRight: Radius.circular(15),
               ),
             ),
-            child: HomeDrawer(
-              tabController: tabController,
-            )),
+            child: HomeDrawer(tabController: tabController)),
       ),
       body: WillPopScope(
         onWillPop: () async {

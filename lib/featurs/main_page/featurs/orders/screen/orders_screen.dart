@@ -49,13 +49,17 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                   ? Scaffold(
                       backgroundColor: Colors.white,
                       body: Constant.currentUser == null
-                          ? Center(
+                          ? Padding(
+                            padding:  EdgeInsets.only(bottom: 30.h),
+                            child: Center(
                               child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Image(
+                                Image(
+                                  width: 300.w,
+                                  height: 300.w,
                                     image:
-                                        AssetImage('assets/images/lock.png')),
+                                        const AssetImage('assets/images/lock.png')),
                                 TextButton(
                                     onPressed: () {
                                       Navigator.of(context)
@@ -70,7 +74,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                       style: TextStyle(fontSize: 20.sp),
                                     ))
                               ],
-                            ))
+                                                            ),
+                            ),
+                          )
                           : Column(
                               children: [
                                 Container(
@@ -187,36 +193,70 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                   ),
                                 ),
                                 Expanded(
-                                  child: Container(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 25.w),
-                                    child: ListView.separated(
-                                      physics: const BouncingScrollPhysics(),
-                                      separatorBuilder: (context, index) =>
-                                          SizedBox(height: 15.h),
-                                      // shrinkWrap: true,
-                                      itemCount: context
-                                                  .read<OrdersCubit>()
-                                                  .kindOfOrder ==
-                                              "Pending"
-                                          ? pendingOrders.length
-                                          : deliverdOrders.length,
-                                      itemBuilder: (context, index) {
-                                        return BuildOrderCard(
-                                          order: context
+                                  child: (context
                                                       .read<OrdersCubit>()
                                                       .kindOfOrder ==
-                                                  "Pending"
-                                              ? pendingOrders[index]
-                                              : deliverdOrders[index],
-                                          isDeliverd: context
-                                                  .read<OrdersCubit>()
-                                                  .kindOfOrder ==
-                                              "Delivered",
-                                        );
-                                      },
-                                    ),
-                                  ),
+                                                  "Pending" &&
+                                              pendingOrders.isEmpty) ||
+                                          (context
+                                                      .read<OrdersCubit>()
+                                                      .kindOfOrder !=
+                                                  "Pending" &&
+                                              deliverdOrders.isEmpty)
+                                      ? Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image(
+                                              image: AssetImage(context
+                                                          .read<OrdersCubit>()
+                                                          .kindOfOrder ==
+                                                      "Pending"
+                                                  ? "assets/images/pending-cart1.png"
+                                                  : "assets/images/delivered-cart.png"),
+                                              width: 150.w,
+                                              height: 150.w,
+                                            ),
+                                            SizedBox(height: 20.h),
+                                            Text(
+                                                "There is nothing to be ${context.read<OrdersCubit>().kindOfOrder}.",
+                                                style: const TextStyle(
+                                                    fontSize: 20)),
+                                          ],
+                                        )
+                                      : Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 25.w),
+                                          child: ListView.separated(
+                                            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                                            physics:
+                                                const BouncingScrollPhysics(),
+                                            separatorBuilder:
+                                                (context, index) =>
+                                                    SizedBox(height: 15.h),
+                                            // shrinkWrap: true,
+                                            itemCount: context
+                                                        .read<OrdersCubit>()
+                                                        .kindOfOrder ==
+                                                    "Pending"
+                                                ? pendingOrders.length
+                                                : deliverdOrders.length,
+                                            itemBuilder: (context, index) {
+                                              return BuildOrderCard(
+                                                order: context
+                                                            .read<OrdersCubit>()
+                                                            .kindOfOrder ==
+                                                        "Pending"
+                                                    ? pendingOrders[index]
+                                                    : deliverdOrders[index],
+                                                isDeliverd: context
+                                                        .read<OrdersCubit>()
+                                                        .kindOfOrder ==
+                                                    "Delivered",
+                                              );
+                                            },
+                                          ),
+                                        ),
                                 )
                               ],
                             ),

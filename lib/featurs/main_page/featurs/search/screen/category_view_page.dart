@@ -262,6 +262,8 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                       //* this widget have to be exit for (AnimationConfiguration)
                       child: AnimationLimiter(
                         child: GridView.builder(
+                          keyboardDismissBehavior:
+                              ScrollViewKeyboardDismissBehavior.onDrag,
                           physics: const BouncingScrollPhysics(),
                           itemCount: categoryProducts.length,
                           gridDelegate:
@@ -399,13 +401,18 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                                         width: 141.w,
                                         child: Row(
                                           children: [
-                                            Text(
-                                              product.makerCompany,
-                                              style: TextStyle(
-                                                  fontSize: 14.sp,
-                                                  fontFamily: 'Tenor Sans',
-                                                  color:
-                                                      const Color(0xff393939)),
+                                            //! this sizedBox for ellipis
+                                            SizedBox(
+                                              width: 100.w,
+                                              child: Text(
+                                                product.name,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize: 14.sp,
+                                                    fontFamily: 'Tenor Sans',
+                                                    color: const Color(
+                                                        0xff393939)),
+                                              ),
                                             ),
                                             const Spacer(),
                                             Text(
@@ -423,7 +430,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                                         height: 17.h,
                                         width: 141.w,
                                         child: Text(
-                                          product.name,
+                                          product.makerCompany,
                                           style: TextStyle(
                                               fontSize: 11.sp,
                                               color: const Color(0xFF828282),

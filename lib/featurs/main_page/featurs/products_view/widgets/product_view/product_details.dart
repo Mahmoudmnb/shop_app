@@ -86,7 +86,7 @@ class ProductDetails extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 25.5.h),
+                              SizedBox(height: 10.5.h),
                               Center(
                                 child: Container(
                                   decoration: BoxDecoration(

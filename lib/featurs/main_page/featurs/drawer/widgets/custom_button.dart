@@ -53,9 +53,12 @@ class CustomButton extends StatelessWidget {
         child: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
             return context.read<ProfileCubit>().isLogOutLoading
-                ? const CircularProgressIndicator(
-                    color: Colors.black,
-                  )
+                ? SizedBox(
+                  height: 30.h,
+                  child: const CircularProgressIndicator(
+                      color: Colors.black,
+                    ),
+                )
                 : Text(
                     Constant.currentUser == null ? 'Log in' : 'Log out',
                     style: TextStyle(

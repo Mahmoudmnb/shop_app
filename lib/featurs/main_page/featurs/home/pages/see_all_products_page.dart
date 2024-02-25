@@ -415,11 +415,16 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                   width: 141.w,
                                   child: Row(
                                     children: [
-                                      Text(
-                                        product.makerCompany,
-                                        style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontFamily: 'Tenor Sans'),
+                                      //! this sizedBox for ellipis
+                                      SizedBox(
+                                        width: 100.w,
+                                        child: Text(
+                                          product.name,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 14.sp,
+                                              fontFamily: 'Tenor Sans'),
+                                        ),
                                       ),
                                       const Spacer(),
                                       Text(
@@ -435,7 +440,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                   height: 15.h,
                                   width: 141.w,
                                   child: Text(
-                                    product.name,
+                                    product.makerCompany,
                                     maxLines: 1,
                                     style: TextStyle(
                                         color: const Color(0xFF828282),

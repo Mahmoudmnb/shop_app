@@ -113,6 +113,9 @@ class OrderDetails extends StatelessWidget {
                       ListView.builder(
                         //! I change it form Bouncing to Never
                         //! I reqair Mahmoud bugs'
+                                            keyboardDismissBehavior:
+                            ScrollViewKeyboardDismissBehavior.onDrag,
+
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemBuilder: (context, index) {

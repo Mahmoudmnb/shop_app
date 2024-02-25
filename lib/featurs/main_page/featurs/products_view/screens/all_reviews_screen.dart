@@ -83,6 +83,8 @@ class AllReviewsScreen extends StatelessWidget {
                   )
                 : Expanded(
                     child: ListView.builder(
+                                            keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
                       physics: const BouncingScrollPhysics(),
                       itemCount: reviews.length,
                       itemBuilder: (context, index) {

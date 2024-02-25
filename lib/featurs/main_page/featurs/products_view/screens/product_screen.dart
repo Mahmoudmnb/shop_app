@@ -111,9 +111,12 @@ class _ProductScreenState extends State<ProductScreen> {
                       child: PageView.builder(
                         controller: pageController,
                         itemCount: imagesUrl.length,
-                        itemBuilder: (_, int index) => Image(
-                          image: AssetImage(imagesUrl[index].trim()),
-                          fit: BoxFit.cover,
+                        //! <3 <3 <3 This widget enables the user to zoom the image <3 <3 <3
+                        itemBuilder: (_, int index) => InteractiveViewer(
+                          child: Image(
+                            image: AssetImage(imagesUrl[index].trim()),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),

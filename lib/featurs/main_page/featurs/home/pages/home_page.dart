@@ -29,13 +29,14 @@ class HomePage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: ListView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: [
           SizedBox(height: 10.h),
           SizedBox(
             height: 160.h,
             width: 353.w,
             child: Image.asset(
-              'assets/images/Capture.PNG',
+              'assets/images/capture.jpg',
               fit: BoxFit.fill,
             ),
           ),
@@ -62,6 +63,8 @@ class HomePage extends StatelessWidget {
               width: double.infinity,
               height: 182.h,
               child: ListView.builder(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
                   scrollDirection: Axis.horizontal,
                   itemCount:
                       disCountProducts.length < 6 ? disCountProducts.length : 6,
@@ -82,6 +85,7 @@ class HomePage extends StatelessWidget {
           SizedBox(
             height: 78.h,
             child: ListView.builder(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               itemCount: 3,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) => const RecommendedImage(
@@ -116,6 +120,7 @@ class HomePage extends StatelessWidget {
             width: 123.w,
             height: 180.h,
             child: ListView.builder(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               scrollDirection: Axis.horizontal,
               itemCount: trindyProducts.length,
               itemBuilder: (_, index) => TrendyImage(
