@@ -15,9 +15,14 @@ class AuthPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> goToHomePage() async {
+    Future<void> goToHomePage(String fromButton) async {
       if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
+        if (fromButton != 'Skip') {
+          await sl.get<DataSource>().getOrdersFromCloud();
+        }
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
       } else {
         sl.get<SharedPreferences>().setBool('isFirstTime', false);
         MyDataBase myDataBase = MyDataBase();
@@ -36,20 +41,18 @@ class AuthPage extends StatelessWidget {
                           sl
                               .get<DataSource>()
                               .getProductsFormCloudDataBase()
-                              .then((value) {
+                              .then((value) async {
+                            if (fromButton != 'Skip') {
+                              await sl.get<DataSource>().getOrdersFromCloud();
+                            }
                             sl
                                 .get<DataSource>()
-                                .getOrdersFromCloud()
+                                .getReviewsFromCloud()
                                 .then((value) {
-                              sl
-                                  .get<DataSource>()
-                                  .getReviewsFromCloud()
-                                  .then((value) {
-                                Navigator.of(context)
-                                    .pushReplacement(MaterialPageRoute(
-                                  builder: (context) => const MainPage(),
-                                ));
-                              });
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                builder: (context) => const MainPage(),
+                              ));
                             });
                           });
                         });
@@ -88,7 +91,7 @@ class AuthPage extends StatelessWidget {
                               style: TextStyle(
                                   fontFamily: 'DM Sans', fontSize: 22.sp)),
                           onPressed: () {
-                            goToHomePage();
+                            goToHomePage('Skip');
                           },
                         ),
                       ],
@@ -117,7 +120,9 @@ class AuthPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    AuthForm(goToHomePage: goToHomePage),
+                    AuthForm(goToHomePage: () async {
+                      await goToHomePage('Register');
+                    }),
                     SizedBox(height: 8.5.h),
                     const AlternativeSignIn(),
                     const Expanded(child: SizedBox.shrink()),

@@ -84,6 +84,7 @@ class InsertDataLocalDataSource {
 
     Database db = await openDatabase(Constant.ordersDataBasePath);
     try {
+      db.rawDelete('DELETE FROM orders');
       await db.rawInsert(
           '''INSERT INTO orders(email, ordersIds, createdAt, totalPrice, deliveryAddress, shoppingMethod, orderId, trackingNumber, latitude, longitude,colors,sizes,quntities) VALUES
         ("${Constant.currentUser!.email}", "$ids", "$orderDate",$totalPrice,"$deliveryAddress","$shoppingMethod",$orderId,"$trakingNumber","$latitude","$longitude","$colors","$sizes","$amounts")''');
