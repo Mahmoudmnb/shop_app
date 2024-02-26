@@ -29,50 +29,6 @@ class MainPageTabBar extends StatelessWidget {
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeIn);
             context.read<MainPageCubit>().changePageIndex(value);
-            // if (tabController.index == 3) {
-            //   tabController.index = 0;
-            //   showDialog(
-            //       context: context,
-            //       builder: (context) => AlertDialog(
-            //             contentPadding: EdgeInsets.symmetric(
-            //                 horizontal: 10.w, vertical: 10.h),
-            //             content: SizedBox(
-            //                 height: 230.h,
-            //                 child: Column(
-            //                   children: [
-            //                     SizedBox(height: 10.h),
-            //                     Text(
-            //                       "You have to resign",
-            //                       style: TextStyle(
-            //                           fontSize: 18.sp,
-            //                           fontFamily: 'DM Sans',
-            //                           color: Colors.grey[1000]),
-            //                     ),
-            //                     SizedBox(height: 30.h),
-            //                     Image(
-            //                         height: 100.h,
-            //                         color: Colors.grey[600],
-            //                         image: const AssetImage(
-            //                           'assets/icons/needsign.png',
-            //                         )),
-            //                     Row(
-            //                       children: [
-            //                         const Spacer(),
-            //                         MaterialButton(
-            //                             onPressed: () {},
-            //                             child: Text(
-            //                               "Sign Up",
-            //                               style: TextStyle(
-            //                                   fontSize: 18.sp,
-            //                                   fontFamily: 'DM Sans',
-            //                                   color: Colors.grey[1000]),
-            //                             ))
-            //                       ],
-            //                     )
-            //                   ],
-            //                 )),
-            //           ));
-            // }
           },
           padding: const EdgeInsets.all(5),
           unselectedLabelColor: const Color(0xffC5C5C5),

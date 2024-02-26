@@ -123,6 +123,14 @@ class DataSource {
   }
 
   //! this section for getting data
+  Future<void> insertPersonalData() async {
+    return await insertDataLocalDataSource.insertPersonalDataInDataBase();
+  }
+
+  Future<Map<String, dynamic>> getPersonalDataFromCloud() async {
+    return remoteDataSource.getPersonalData();
+  }
+
   Future<List<Map<String, dynamic>>> getAllFavoritProducts() async {
     return getDataLocalDataSource.getAllFavoritProducts();
   }
@@ -203,6 +211,7 @@ class DataSource {
   }
 
 //! this section for deleting and updating data
+
   Future<void> deleteAddress(String addressName) async {
     return updateDeleteLocalDataSource.deleteAddress(addressName);
   }
@@ -212,7 +221,15 @@ class DataSource {
   }
 
   Future<void> clearAddToCartTable() async {
-    return updateDeleteLocalDataSource.cleareAddToCartTable();
+    return updateDeleteLocalDataSource.clearAddToCartTable();
+  }
+
+  Future<void> clearBordersTable() async {
+    return updateDeleteLocalDataSource.clearBordersTable();
+  }
+
+  Future<void> clearBorderProductsTable() async {
+    return updateDeleteLocalDataSource.clearBorderPoducts();
   }
 
   Future<void> removeItemFromAddToCartProducts(int id) async {

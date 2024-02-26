@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/data_base.dart';
 import '../../../injection.dart';
 import '../../main_page/data_source/data_source.dart';
+import '../../main_page/featurs/profile/cubit/profile_cubit.dart';
+import '../../main_page/featurs/shopping_bag/cubits/products_cubit/products_cubit.dart';
 import '../../main_page/main_page.dart';
 import '../blocs/auth_blocs.dart';
 import '../widgets/auth_widgets.dart';
@@ -15,56 +17,48 @@ class AuthPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<VisiblePsswordBloc>().add(ShowPassword());
     Future<void> goToHomePage(String fromButton) async {
       if (Navigator.of(context).canPop()) {
         if (fromButton != 'Skip') {
           await sl.get<DataSource>().getOrdersFromCloud();
+          await sl.get<DataSource>().insertPersonalData();
         }
+
         if (context.mounted) {
-          Navigator.of(context).pop();
+          await context.read<AddToCartCubit>().getAddToCartProducts();
+          if (context.mounted) {
+            context.read<AddToCartCubit>().fetchData();
+            context.read<ProfileCubit>().updateProfileImageWidget();
+            Navigator.of(context).pop();
+          }
         }
       } else {
-        sl.get<SharedPreferences>().setBool('isFirstTime', false);
         MyDataBase myDataBase = MyDataBase();
-        myDataBase.createProductTable().then((value) {
-          myDataBase.createReviewTable().then((value) {
-            myDataBase.createSearchHistoryTable().then((value) {
-              myDataBase.createAddToCartTable().then((value) {
-                myDataBase.createLoactionsTable().then((value) {
-                  myDataBase.createOrdersTable().then((value) {
-                    myDataBase.createBorderTable().then((value) {
-                      myDataBase.createBorderProductsTable().then((value) {
-                        sl
-                            .get<DataSource>()
-                            .addBorder('All items')
-                            .then((value) {
-                          sl
-                              .get<DataSource>()
-                              .getProductsFormCloudDataBase()
-                              .then((value) async {
-                            if (fromButton != 'Skip') {
-                              await sl.get<DataSource>().getOrdersFromCloud();
-                            }
-                            sl
-                                .get<DataSource>()
-                                .getReviewsFromCloud()
-                                .then((value) {
-                              // Todo: get data from log in
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                builder: (context) => const MainPage(),
-                              ));
-                            });
-                          });
-                        });
-                      });
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
+        await sl.get<SharedPreferences>().setBool('isFirstTime', false);
+        await myDataBase.createProductTable();
+        await myDataBase.createReviewTable();
+        await myDataBase.createSearchHistoryTable();
+        await myDataBase.createAddToCartTable();
+        await myDataBase.createLoactionsTable();
+        await myDataBase.createOrdersTable();
+        await myDataBase.createBorderTable();
+        await myDataBase.createBorderProductsTable();
+        await sl.get<DataSource>().addBorder('All items');
+        await sl.get<DataSource>().getProductsFormCloudDataBase();
+        await sl.get<DataSource>().getReviewsFromCloud();
+        if (fromButton != 'Skip') {
+          await sl.get<DataSource>().getOrdersFromCloud();
+        }
+        await sl.get<DataSource>().insertPersonalData();
+        if (context.mounted) {
+          await context.read<AddToCartCubit>().getAddToCartProducts();
+          if (context.mounted) {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => const MainPage(),
+            ));
+          }
+        }
       }
     }
 

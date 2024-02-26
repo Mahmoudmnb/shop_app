@@ -40,7 +40,7 @@ class AddToCartCubit extends Cubit<AddToCartState> {
     return total;
   }
 
-  void getAddToCartProducts() async {
+  Future<void> getAddToCartProducts() async {
     products = await sl.get<DataSource>().getAddToCartProducts();
   }
 }

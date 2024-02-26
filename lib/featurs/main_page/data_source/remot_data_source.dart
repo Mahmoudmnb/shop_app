@@ -16,6 +16,22 @@ class RemoteDataSource {
   final client = Client()
       .setEndpoint('https://cloud.appwrite.io/v1')
       .setProject(Constant.appWriteProjectId);
+  Future<Map<String, dynamic>> getPersonalData() async {
+    Map<String, dynamic> data = {};
+    Databases databases = Databases(client);
+    try {
+      var result = await databases.listDocuments(
+        databaseId: '655da767bc3f1651db70',
+        collectionId: "655da771422b6ac710aa",
+        queries: [Query.equal('email', Constant.currentUser!.email)],
+      );
+      var temp = result.documents;
+      data = temp[0].data;
+    } on AppwriteException catch (e) {
+      log(e.message.toString());
+    }
+    return data;
+  }
 
   Future<void> uploadProfileSettings(
       String borderProducts, String cartProducts, String borders) async {

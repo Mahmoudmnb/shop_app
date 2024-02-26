@@ -33,7 +33,7 @@ class GetDataLocalDataSource {
   }
 
   Future<List<Map<String, dynamic>>> getBorderByName(String borderName) async {
-    Database db = await openDatabase(Constant.projectDataBasePath);
+    Database db = await openDatabase(Constant.borderDataBasePath);
     List<Map<String, dynamic>> borders = await db
         .rawQuery("SELECT * FROM borders WHERE borderName='$borderName'");
 
@@ -41,7 +41,7 @@ class GetDataLocalDataSource {
   }
 
   Future<List<Map<String, dynamic>>> getBorders() async {
-    Database db = await openDatabase(Constant.projectDataBasePath);
+    Database db = await openDatabase(Constant.borderDataBasePath);
     return db.rawQuery('SELECT * FROM borders');
   }
 

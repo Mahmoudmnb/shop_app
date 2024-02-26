@@ -32,7 +32,7 @@ class Constant {
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1amF1eGpsdHlla2VxeW9ob2R6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODg2NDM3MzYsImV4cCI6MjAwNDIxOTczNn0.IsX_pZLfNmrYPYGhqH8yZ31Zz5mt9XSztN4Mv1MPlZw';
   static String appWriteProjectId = '655083f2b78dc8c2d628';
   static Duration duration = const Duration(milliseconds: 300);
-  static String projectDataBasePath = '$baseUrl/elegance.db';
+  static String borderDataBasePath = '$baseUrl/elegance.db';
 
   static String baseUrl = '/data/user/0/com.example.shop_app/databases/';
   static String productDataBasePath = '$baseUrl/prducts.db';

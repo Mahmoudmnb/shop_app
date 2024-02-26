@@ -221,6 +221,9 @@ class _MainPageState extends State<MainPage>
             return key;
           } else {
             tabController.animateTo(0);
+            pageController.animateToPage(0,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.linear);
             return false;
           }
         },
@@ -228,7 +231,6 @@ class _MainPageState extends State<MainPage>
           controller: pageController,
           onPageChanged: (index) {
             context.read<MainPageCubit>().changePageIndex(index);
-
             tabController.animateTo(index);
           },
           children: [

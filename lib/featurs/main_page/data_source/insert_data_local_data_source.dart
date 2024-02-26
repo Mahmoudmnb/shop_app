@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:appwrite/models.dart';
 import 'package:flutter/services.dart';
+import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/injection.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../core/constant.dart';
@@ -10,6 +13,36 @@ import '../featurs/products_view/models/add_to_cart_product_model.dart';
 import '../featurs/products_view/models/review_model.dart';
 
 class InsertDataLocalDataSource {
+  Future<void> insertPersonalDataInDataBase() async {
+    Map<String, dynamic> personalData =
+        await sl.get<DataSource>().getPersonalDataFromCloud();
+    if (personalData['cartProducts'] != null &&
+        personalData['cartProducts'] != '') {
+      var temp = personalData['cartProducts'].toString().split('|');
+      for (var element in temp) {
+        var data = jsonDecode(element);
+        sl.get<DataSource>().addToCart(AddToCartProductModel.fromMap(data));
+      }
+    }
+    if (personalData['borders'] != null && personalData['borders'] != '') {
+      var temp = personalData['borders'].toString().split('|');
+      for (var element in temp) {
+        var data = jsonDecode(element);
+        sl.get<DataSource>().addBorder(data['borderName']);
+      }
+    }
+    if (personalData['borderProducts'] != null &&
+        personalData['borderProducts'] != '') {
+      var temp = personalData['borderProducts'].toString().split('|');
+      for (var element in temp) {
+        var data = jsonDecode(element);
+        sl
+            .get<DataSource>()
+            .addProductToBorder(data['productId'], data['borderId']);
+      }
+    }
+  }
+
   Future<void> addDataToReviewTableFromCloue(List<Document> reviews) async {
     try {
       Database db = await openDatabase(Constant.reviewsDataBasePath);
@@ -48,7 +81,7 @@ class InsertDataLocalDataSource {
   }
 
   Future<void> addBorder(String borderName) async {
-    Database db = await openDatabase(Constant.projectDataBasePath);
+    Database db = await openDatabase(Constant.borderDataBasePath);
     db.rawInsert('INSERT INTO borders(borderName) VALUES("$borderName")');
   }
 

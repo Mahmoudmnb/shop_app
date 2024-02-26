@@ -34,10 +34,22 @@ class UpdateDeleteLocalDataSource {
     db.rawUpdate('UPDATE AddToCartTable SET quantity=$quantity WHERE id==$id');
   }
 
-  Future<void> cleareAddToCartTable() async {
+  Future<void> clearAddToCartTable() async {
     Database db = await openDatabase(Constant.addToCartTable);
     db.rawDelete('delete from AddToCartTable');
     log('add to cart table cleared');
+  }
+
+  Future<void> clearBordersTable() async {
+    Database db = await openDatabase(Constant.borderDataBasePath);
+    db.rawDelete("delete from borders WHERE borderName != 'All items'");
+    log('border table cleared');
+  }
+
+  Future<void> clearBorderPoducts() async {
+    Database db = await openDatabase(Constant.broderProductsDataBasePath);
+    db.rawDelete('delete from borderProducts');
+    log(' borderProducts table cleared');
   }
 
   Future<void> deleteProductFromBorder(int productId) async {

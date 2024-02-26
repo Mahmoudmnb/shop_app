@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/main_page/featurs/wishlist/screens/border_products_view.dart';
 
 import '../../../../../injection.dart';
 import '../../../data_source/data_source_paths.dart';
 import '../../home/models/product_model.dart';
+import '../screens/border_products_view.dart';
 
 class BorderCard extends StatelessWidget {
   final String borderName;

@@ -88,7 +88,8 @@ class WishListScreen extends StatelessWidget {
                             } else {
                               return AnimationLimiter(
                                 child: GridView.builder(
-                                            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                                  keyboardDismissBehavior:
+                                      ScrollViewKeyboardDismissBehavior.onDrag,
                                   physics: const BouncingScrollPhysics(),
                                   itemCount: snapshot.data!.length,
                                   gridDelegate:
