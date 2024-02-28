@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/core/internet_info.dart';
+import 'package:toast/toast.dart';
 
 import '../../../core/data_base.dart';
 import '../../../injection.dart';
@@ -23,15 +25,16 @@ class AuthPage extends StatelessWidget {
         if (fromButton != 'Skip') {
           await sl.get<DataSource>().getOrdersFromCloud();
           await sl.get<DataSource>().insertPersonalData();
-        }
-
-        if (context.mounted) {
-          await context.read<AddToCartCubit>().getAddToCartProducts();
           if (context.mounted) {
-            context.read<AddToCartCubit>().fetchData();
-            context.read<ProfileCubit>().updateProfileImageWidget();
-            Navigator.of(context).pop();
+            await context.read<AddToCartCubit>().getAddToCartProducts();
+            if (context.mounted) {
+              context.read<AddToCartCubit>().fetchData();
+              context.read<ProfileCubit>().updateProfileImageWidget();
+            }
           }
+        }
+        if (context.mounted) {
+          Navigator.of(context).pop();
         }
       } else {
         MyDataBase myDataBase = MyDataBase();
@@ -44,13 +47,14 @@ class AuthPage extends StatelessWidget {
         await myDataBase.createOrdersTable();
         await myDataBase.createBorderTable();
         await myDataBase.createBorderProductsTable();
+
         await sl.get<DataSource>().addBorder('All items');
         await sl.get<DataSource>().getProductsFormCloudDataBase();
         await sl.get<DataSource>().getReviewsFromCloud();
         if (fromButton != 'Skip') {
           await sl.get<DataSource>().getOrdersFromCloud();
+          await sl.get<DataSource>().insertPersonalData();
         }
-        await sl.get<DataSource>().insertPersonalData();
         if (context.mounted) {
           await context.read<AddToCartCubit>().getAddToCartProducts();
           if (context.mounted) {
@@ -85,8 +89,17 @@ class AuthPage extends StatelessWidget {
                           child: Text('Skip',
                               style: TextStyle(
                                   fontFamily: 'DM Sans', fontSize: 22.sp)),
-                          onPressed: () {
-                            goToHomePage('Skip');
+                          onPressed: () async {
+                            bool isConnected = await InternetInfo.isconnected();
+                            if (isConnected) {
+                              goToHomePage('Skip');
+                            } else {
+                              if (context.mounted) {
+                                ToastContext().init(context);
+                                Toast.show('Check you internet connection',
+                                    duration: Toast.lengthLong);
+                              }
+                            }
                           },
                         ),
                       ],

@@ -123,8 +123,12 @@ class DataSource {
   }
 
   //! this section for getting data
+  Future<bool> isAllBordersIsEmpty() async {
+    return getDataLocalDataSource.isAllBordersIsEmpty();
+  }
+
   Future<void> insertPersonalData() async {
-    return await insertDataLocalDataSource.insertPersonalDataInDataBase();
+    return insertDataLocalDataSource.insertPersonalDataInDataBase();
   }
 
   Future<Map<String, dynamic>> getPersonalDataFromCloud() async {
@@ -222,6 +226,10 @@ class DataSource {
 
   Future<void> clearAddToCartTable() async {
     return updateDeleteLocalDataSource.clearAddToCartTable();
+  }
+
+  Future<void> clearProductsTable() async {
+    return updateDeleteLocalDataSource.clearProductsTable();
   }
 
   Future<void> clearBordersTable() async {

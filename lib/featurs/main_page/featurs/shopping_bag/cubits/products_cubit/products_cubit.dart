@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,5 +44,6 @@ class AddToCartCubit extends Cubit<AddToCartState> {
 
   Future<void> getAddToCartProducts() async {
     products = await sl.get<DataSource>().getAddToCartProducts();
+    log(products.toString());
   }
 }

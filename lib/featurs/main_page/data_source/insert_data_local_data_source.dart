@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:appwrite/models.dart';
 import 'package:flutter/services.dart';
-import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
 import 'package:shop_app/injection.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -11,6 +10,7 @@ import '../../../core/constant.dart';
 import '../featurs/check_out/models/address_model.dart';
 import '../featurs/products_view/models/add_to_cart_product_model.dart';
 import '../featurs/products_view/models/review_model.dart';
+import 'data_source.dart';
 
 class InsertDataLocalDataSource {
   Future<void> insertPersonalDataInDataBase() async {
@@ -21,14 +21,16 @@ class InsertDataLocalDataSource {
       var temp = personalData['cartProducts'].toString().split('|');
       for (var element in temp) {
         var data = jsonDecode(element);
-        sl.get<DataSource>().addToCart(AddToCartProductModel.fromMap(data));
+        await sl
+            .get<DataSource>()
+            .addToCart(AddToCartProductModel.fromMap(data));
       }
     }
     if (personalData['borders'] != null && personalData['borders'] != '') {
       var temp = personalData['borders'].toString().split('|');
       for (var element in temp) {
         var data = jsonDecode(element);
-        sl.get<DataSource>().addBorder(data['borderName']);
+        await sl.get<DataSource>().addBorder(data['borderName']);
       }
     }
     if (personalData['borderProducts'] != null &&
@@ -36,11 +38,14 @@ class InsertDataLocalDataSource {
       var temp = personalData['borderProducts'].toString().split('|');
       for (var element in temp) {
         var data = jsonDecode(element);
-        sl
+        await sl
             .get<DataSource>()
             .addProductToBorder(data['productId'], data['borderId']);
       }
     }
+    await sl.get<DataSource>().getBorders();
+    await sl.get<DataSource>().getAllFavoritProducts();
+    await sl.get<DataSource>().getAddToCartProducts();
   }
 
   Future<void> addDataToReviewTableFromCloue(List<Document> reviews) async {

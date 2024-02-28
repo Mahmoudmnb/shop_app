@@ -1,6 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+
 import '../../../core/constant.dart';
-import 'dart:math' as math;
 
 class SwitchBetweenTwoTextWithRotation extends StatelessWidget {
   final String firstText;
@@ -23,7 +25,7 @@ class SwitchBetweenTwoTextWithRotation extends StatelessWidget {
         opacity: isFirestText ? 0 : 1,
         child: Center(
           child: AnimatedRotation(
-            turns: !isFirestText ? 360 : -360 * math.pi,
+            turns: !isFirestText ? 360 : -360 * pi,
             duration: Constant.duration,
             child: Text(
               firstText,

@@ -251,6 +251,7 @@ class RemoteDataSource {
       log(e.message.toString());
     }
     sl.get<DataSource>().insertDataInReviewTableFromCloud(orders);
+    log('done getting reviews');
   }
 
   Future<void> addReviewToCloud(ReviewModel reviewModel) async {

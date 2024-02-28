@@ -40,9 +40,15 @@ class UpdateDeleteLocalDataSource {
     log('add to cart table cleared');
   }
 
+  Future<void> clearProductsTable() async {
+    Database db = await openDatabase(Constant.addToCartTable);
+    db.rawDelete('delete from products');
+    log('add to cart table cleared');
+  }
+
   Future<void> clearBordersTable() async {
     Database db = await openDatabase(Constant.borderDataBasePath);
-    db.rawDelete("delete from borders WHERE borderName != 'All items'");
+    db.rawDelete("delete from borders");
     log('border table cleared');
   }
 

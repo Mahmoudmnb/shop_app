@@ -35,51 +35,64 @@ class WishListScreen extends StatelessWidget {
               builder: (context, state) {
                 return Expanded(
                   child: context.read<WishListCubit>().kindOfOrder == "Borders"
-                      ? borders.isEmpty
-                          ? Container(
-                              padding: EdgeInsets.symmetric(vertical: 50.h),
-                              width: double.infinity,
-                              child: Column(
-                                children: [
-                                  Image(
-                                    height: 200.h,
-                                    image: const AssetImage(
-                                        'assets/icons/saadHart.png'),
-                                  ),
-                                  SizedBox(height: 25.h),
-                                  Text(
-                                    "You don't have borders",
-                                    style: TextStyle(
-                                        fontSize: 18.sp,
-                                        color: Colors.grey[600]),
-                                  )
-                                ],
-                              ),
-                            )
-                          : ListView.builder(
-                              keyboardDismissBehavior:
-                                  ScrollViewKeyboardDismissBehavior.onDrag,
-                              padding: EdgeInsets.symmetric(horizontal: 15.w),
-                              itemCount: borders.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return index == 0
-                                    ? SizedBox(height: 15.h)
-                                    : FutureBuilder(
-                                        future: sl
-                                            .get<DataSource>()
-                                            .getProductsInBorder(
-                                                borders[index]['id']),
-                                        builder: (context, snapshot) {
-                                          return snapshot.hasData
-                                              ? BorderCard(
-                                                  borderName: borders[index]
-                                                      ['borderName'],
-                                                  borderProducts:
-                                                      snapshot.data!,
-                                                )
-                                              : const SizedBox.shrink();
-                                        });
-                              })
+                      ? FutureBuilder(
+                          future: sl.get<DataSource>().isAllBordersIsEmpty(),
+                          builder: (_, snapshoot) {
+                            if (snapshoot.hasData) {
+                              return borders.isEmpty || snapshoot.data!
+                                  ? Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 50.h),
+                                      width: double.infinity,
+                                      child: Column(
+                                        children: [
+                                          Image(
+                                            height: 200.h,
+                                            image: const AssetImage(
+                                                'assets/icons/saadHart.png'),
+                                          ),
+                                          SizedBox(height: 25.h),
+                                          Text(
+                                            "You don't have borders",
+                                            style: TextStyle(
+                                                fontSize: 18.sp,
+                                                color: Colors.grey[600]),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  : ListView.builder(
+                                      keyboardDismissBehavior:
+                                          ScrollViewKeyboardDismissBehavior
+                                              .onDrag,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15.w),
+                                      itemCount: borders.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return index == 0
+                                            ? SizedBox(height: 15.h)
+                                            : FutureBuilder(
+                                                future: sl
+                                                    .get<DataSource>()
+                                                    .getProductsInBorder(
+                                                        borders[index]['id']),
+                                                builder: (context, snapshot) {
+                                                  return snapshot.hasData
+                                                      ? BorderCard(
+                                                          borderName: borders[
+                                                                  index]
+                                                              ['borderName'],
+                                                          borderProducts:
+                                                              snapshot.data!,
+                                                        )
+                                                      : const SizedBox.shrink();
+                                                });
+                                      });
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          })
                       : FutureBuilder(
                           future: sl.get<DataSource>().getAllFavoritProducts(),
                           builder: (context, snapshot) {

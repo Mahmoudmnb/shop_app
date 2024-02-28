@@ -8,6 +8,13 @@ import '../featurs/home/models/product_model.dart';
 import 'data_source_paths.dart';
 
 class GetDataLocalDataSource {
+  Future<bool> isAllBordersIsEmpty() async {
+    Database db = await openDatabase(Constant.broderProductsDataBasePath);
+    var data =
+        await db.rawQuery('SELECT * FROM borderProducts where borderId != 1 ');
+    return data.isEmpty;
+  }
+
   Future<List<Map<String, dynamic>>> getAllFavoritProducts() async {
     Database db = await openDatabase(Constant.productDataBasePath);
     var data =
