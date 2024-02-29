@@ -1,11 +1,30 @@
 import 'dart:developer';
 
+import 'package:appwrite/models.dart';
+import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/injection.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../core/constant.dart';
 import '../featurs/check_out/models/address_model.dart';
 
 class UpdateDeleteLocalDataSource {
+  Future<void> updatePrices(
+      List<String> productsNames, List<double> oldPrices) async {
+    List<Document> data =
+        await sl.get<DataSource>().getPricesFromCloud(productsNames);
+    for (var i = 0; i < data.length; i++) {
+      if (data[i].data['price'] != oldPrices[i]) {
+        updatePrice(data[i].data['price'] * 1.0, data[i].data['name']);
+      }
+    }
+  }
+
+  updatePrice(double price, String productName) async {
+    Database db = await openDatabase(Constant.productDataBasePath);
+    db.rawUpdate("UPDATE products set price=$price WHERE name='$productName'");
+  }
+
   Future<void> deleteAddress(String addressName) async {
     Database db = await openDatabase(Constant.locationsDataBasePath);
     db.rawDelete('DELETE FROM locations WHERE addressName="$addressName"');
@@ -53,13 +72,13 @@ class UpdateDeleteLocalDataSource {
   }
 
   Future<void> clearBorderPoducts() async {
-    Database db = await openDatabase(Constant.broderProductsDataBasePath);
+    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
     db.rawDelete('delete from borderProducts');
     log(' borderProducts table cleared');
   }
 
   Future<void> deleteProductFromBorder(int productId) async {
-    Database db = await openDatabase(Constant.broderProductsDataBasePath);
+    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
     await db
         .rawDelete('DELETE FROM borderProducts WHERE productId = $productId');
   }

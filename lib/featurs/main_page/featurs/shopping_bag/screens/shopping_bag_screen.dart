@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/core/internet_info.dart';
+import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/injection.dart';
+import 'package:toast/toast.dart';
 
 import '../../check_out/cubit/check_out_cubit.dart';
 import '../../check_out/screens/first_step.dart';
@@ -60,18 +64,72 @@ class ShoppingBagScreen extends StatelessWidget {
                           Positioned(
                             bottom: 0,
                             child: CustomButton(
-                              title: 'Proceed to checkout',
-                              onPressed: () {
-                                context
-                                    .read<CheckOutCubit>()
-                                    .getLocations()
-                                    .then((value) {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => FirstStep(
-                                      locations: value,
-                                    ),
-                                  ));
-                                });
+                              title:
+                                  BlocBuilder<AddToCartCubit, AddToCartState>(
+                                builder: (context, state) {
+                                  return context
+                                          .read<AddToCartCubit>()
+                                          .getIsProceedButtonLoading
+                                      ? const CircularProgressIndicator(
+                                          color: Colors.white,
+                                        )
+                                      : const Text(
+                                          'Proceed to checkout',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        );
+                                },
+                              ),
+                              onPressed: () async {
+                                if (!context
+                                    .read<AddToCartCubit>()
+                                    .getIsProceedButtonLoading) {
+                                  context
+                                      .read<AddToCartCubit>()
+                                      .setIsProceedButtonLoading = true;
+                                  bool isConnected =
+                                      await InternetInfo.isconnected();
+                                  if (context.mounted) {
+                                    if (isConnected) {
+                                      List<String> productsNames = [];
+                                      List<double> oldPrices = [];
+                                      var products = context
+                                          .read<AddToCartCubit>()
+                                          .products;
+                                      for (var element in products) {
+                                        productsNames
+                                            .add(element['productName']);
+                                        oldPrices.add(element['price']);
+                                      }
+                                      sl.get<DataSource>().updatePrices(
+                                          productsNames, oldPrices);
+                                      context
+                                          .read<CheckOutCubit>()
+                                          .getLocations()
+                                          .then((value) {
+                                        context
+                                            .read<AddToCartCubit>()
+                                            .setIsProceedButtonLoading = false;
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                          builder: (context) => FirstStep(
+                                            locations: value,
+                                          ),
+                                        ));
+                                      });
+                                    } else {
+                                      context
+                                          .read<AddToCartCubit>()
+                                          .setIsProceedButtonLoading = false;
+                                      ToastContext().init(context);
+                                      Toast.show(
+                                          'Check you internet connection');
+                                    }
+                                  }
+                                }
                               },
                             ),
                           ),

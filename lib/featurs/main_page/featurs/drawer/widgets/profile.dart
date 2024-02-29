@@ -17,20 +17,27 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 3.93.w),
-      child: Row(
+      child: Column(
         children: [
           Constant.currentUser != null
-              ? CircleAvatar(
-                  radius: 23,
-                  backgroundColor: Colors.black,
-                  backgroundImage: image,
+              ? Container(
+                  padding: const EdgeInsets.all(35),
+                  decoration: const BoxDecoration(
+                      color: Colors.black, shape: BoxShape.circle),
                   child: image == null
-                      ? Text(Constant.getLetterName(Constant.currentUser!.name))
+                      ? Text(
+                          Constant.getLetterName(Constant.currentUser!.name),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25.sp,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2),
+                        )
                       : null)
               : const SizedBox.shrink(),
-          SizedBox(width: 15.w),
+          SizedBox(width: 10.w),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 username,

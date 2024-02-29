@@ -123,6 +123,22 @@ class DataSource {
   }
 
   //! this section for getting data
+  Future<List<Map<String, dynamic>>> getRecommendedProducts() async {
+    return getDataLocalDataSource.getRecommendedProducts();
+  }
+
+  Future<List<Document>> getRecommendedproductsFromCloud() async {
+    return remoteDataSource.getRecommendedproductsFromCloud();
+  }
+
+  Future<void> setRecommendedProducts() {
+    return insertDataLocalDataSource.setRecommendedProducts();
+  }
+
+  Future<List<Document>> getPricesFromCloud(List<String> productsIds) async {
+    return remoteDataSource.getPricesFromCloud(productsIds);
+  }
+
   Future<bool> isAllBordersIsEmpty() async {
     return getDataLocalDataSource.isAllBordersIsEmpty();
   }
@@ -215,6 +231,10 @@ class DataSource {
   }
 
 //! this section for deleting and updating data
+  Future<void> updatePrices(
+      List<String> productsNames, List<double> oldPrices) async {
+    updateDeleteLocalDataSource.updatePrices(productsNames, oldPrices);
+  }
 
   Future<void> deleteAddress(String addressName) async {
     return updateDeleteLocalDataSource.deleteAddress(addressName);
@@ -328,7 +348,7 @@ class DataSource {
   }) async {
     return searchDataSource.searchProducts(
       discountfilter: discountFilter,
-      search: searchWord,
+      searchWord: searchWord,
       minPrice: minPrice,
       maxPrice: maxPrice,
       selectedCategory: selectedCategory,

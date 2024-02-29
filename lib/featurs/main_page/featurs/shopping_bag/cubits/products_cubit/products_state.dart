@@ -10,3 +10,5 @@ class ProductsRemoveElement extends AddToCartState {}
 class ProductsAddElement extends AddToCartState {}
 
 class ProductsFetchData extends AddToCartState {}
+
+class IsProceedButtinLoading extends AddToCartState {}

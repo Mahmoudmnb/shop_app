@@ -135,6 +135,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                             child: TextField(
                               maxLength: 50,
                               onSubmitted: (value) async {
+                                FocusScope.of(context).unfocus();
                                 searchIn(cubit);
                               },
                               cursorColor: Colors.black,
@@ -178,6 +179,13 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                                 .get<DataSource>()
                                                 .getTrendyProducts();
                                         categoryProducts = trendyProducts;
+                                      } else if (categoryName ==
+                                          'Recommended') {
+                                        List<Map<String, dynamic>>
+                                            recommendedProducts = await sl
+                                                .get<DataSource>()
+                                                .getRecommendedProducts();
+                                        categoryProducts = recommendedProducts;
                                       }
                                       cubit
                                           .searchInSeeAllProducts(null,
@@ -466,7 +474,11 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
 
   searchIn(SearchCubit cubit) async {
     if (searchController.text != '') {
-      categoryProducts = await sl.get<DataSource>().getTrendyProducts();
+      if (categoryName == 'Recommended') {
+        categoryProducts = await sl.get<DataSource>().getRecommendedProducts();
+      } else if (categoryName == 'Trendy') {
+        categoryProducts = await sl.get<DataSource>().getTrendyProducts();
+      }
       cubit
           .searchInSeeAllProducts(
               searchController.text, categoryName, categoryProducts)

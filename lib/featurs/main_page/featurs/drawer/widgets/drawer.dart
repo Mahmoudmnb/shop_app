@@ -19,7 +19,9 @@ import 'profile.dart';
 
 class HomeDrawer extends StatelessWidget {
   final TabController tabController;
-  const HomeDrawer({super.key, required this.tabController});
+  final PageController pageController;
+  const HomeDrawer(
+      {super.key, required this.tabController, required this.pageController});
 
   @override
   Widget build(BuildContext context) {
@@ -27,25 +29,28 @@ class HomeDrawer extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 30.w),
       child: Column(
         children: [
-          SizedBox(height: 62.9.h),
+          SizedBox(height: 20.h),
           SingleChildScrollView(
             child: Column(
               children: [
-                Profile(
-                  image: Constant.currentUser != null &&
-                          Constant.currentUser!.imgUrl != null
-                      ? FileImage(File(Constant.currentUser!.imgUrl!))
-                      : null,
-                  username: Constant.currentUser == null
-                      ? ''
-                      : Constant.currentUser!.name,
-                  email: Constant.currentUser == null
-                      ? ''
-                      : Constant.currentUser!.email,
+                BlocBuilder<DrawerCubit, DrawerState>(
+                  builder: (context, state) {
+                    return Profile(
+                      image: Constant.currentUser != null &&
+                              Constant.currentUser!.imgUrl != null
+                          ? FileImage(File(Constant.currentUser!.imgUrl!))
+                          : null,
+                      username: Constant.currentUser == null
+                          ? ''
+                          : Constant.currentUser!.name,
+                      email: Constant.currentUser == null
+                          ? ''
+                          : Constant.currentUser!.email,
+                    );
+                  },
                 ),
-                SizedBox(height: 15.h),
                 const Divider(color: Color(0xFFEAEAEA)),
-                SizedBox(height: 15.h),
+                SizedBox(height: 5.h),
                 BlocBuilder<DrawerCubit, DrawerState>(
                   builder: (context, state) {
                     log(state.toString());
@@ -74,6 +79,9 @@ class HomeDrawer extends StatelessWidget {
                             tabController.animateTo(1);
                             context.read<MainPageCubit>().changePageIndex(1);
                             context.read<DrawerCubit>().changeSelectedItem(1);
+                            pageController.animateToPage(1,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeIn);
                             Scaffold.of(context).closeDrawer();
                           },
                           icon: Icons.search_rounded,
@@ -108,13 +116,13 @@ class HomeDrawer extends StatelessWidget {
                     );
                   },
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 5.h),
                 const Divider(color: Color(0xFFEAEAEA)),
-                SizedBox(height: 10.h),
+                SizedBox(height: 5.h),
                 CustomListTile(
                   icon: Icons.shopping_cart_outlined,
                   title: 'Shopping Bag',
-                  onTap: () { 
+                  onTap: () {
                     Scaffold.of(context).closeDrawer();
                     if (Constant.currentUser != null) {
                       Navigator.of(context).push(MaterialPageRoute(
@@ -126,7 +134,7 @@ class HomeDrawer extends StatelessWidget {
                     }
                   },
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 5.h),
                 CustomListTile(
                   icon: Icons.favorite_outline_rounded,
                   title: 'Wishlist',
@@ -142,9 +150,9 @@ class HomeDrawer extends StatelessWidget {
                     }
                   },
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 5.h),
                 const Divider(color: Color(0xFFEAEAEA)),
-                SizedBox(height: 10.h),
+                SizedBox(height: 5.h),
                 CustomListTile(
                   icon: Icons.settings_outlined,
                   title: 'Settings',
@@ -153,17 +161,22 @@ class HomeDrawer extends StatelessWidget {
                         MaterialPageRoute(builder: (_) => const SettingPage()));
                   },
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 5.h),
                 const CustomListTile(
                   icon: Icons.info_outline_rounded,
                   title: 'About Us',
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 5.h),
                 const CustomListTile(
                   icon: Icons.email_outlined,
                   title: 'Support',
                 ),
-                SizedBox(height: 10.h),
+                BlocBuilder<DrawerCubit, DrawerState>(
+                  builder: (context, state) {
+                    return SizedBox(
+                        height: Constant.currentUser == null ? 80.h : 10.h);
+                  },
+                ),
                 const CustomButton(),
               ],
             ),

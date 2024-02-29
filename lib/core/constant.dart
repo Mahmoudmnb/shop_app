@@ -42,6 +42,7 @@ class Constant {
   static String ordersDataBasePath = '$baseUrl/orders.db';
   static String locationsDataBasePath = '$baseUrl/locations.db';
   static String broderProductsDataBasePath = '$baseUrl/borderProducts.db';
+  static String recommendedProductsDataBasePath = '$baseUrl/recommended.db';
 
   static List<Map<String, dynamic>> data = [
     {

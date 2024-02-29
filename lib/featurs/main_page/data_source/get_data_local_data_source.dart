@@ -8,8 +8,21 @@ import '../featurs/home/models/product_model.dart';
 import 'data_source_paths.dart';
 
 class GetDataLocalDataSource {
+  Future<List<Map<String, dynamic>>> getRecommendedProducts() async {
+    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
+    var recommendedProducts =
+        await db.rawQuery('SELECT * FROM recommended ORDER BY freq DESC');
+    String ids = '';
+    for (var element in recommendedProducts) {
+      ids += '${element['productId']}|';
+    }
+    var temp = ids.substring(0, ids.length - 1);
+    var finalProducts = await getProductsByIds(temp);
+    return finalProducts;
+  }
+
   Future<bool> isAllBordersIsEmpty() async {
-    Database db = await openDatabase(Constant.broderProductsDataBasePath);
+    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
     var data =
         await db.rawQuery('SELECT * FROM borderProducts where borderId != 1 ');
     return data.isEmpty;
@@ -23,7 +36,7 @@ class GetDataLocalDataSource {
   }
 
   Future<List<Map<String, dynamic>>> getProductsInBorder(int borderId) async {
-    Database db = await openDatabase(Constant.broderProductsDataBasePath);
+    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
     List<Map<String, dynamic>> data = [];
     try {
       data = await db
@@ -35,7 +48,7 @@ class GetDataLocalDataSource {
   }
 
   Future<List<Map<String, dynamic>>> getBorderProducts() async {
-    Database db = await openDatabase(Constant.broderProductsDataBasePath);
+    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
     return db.rawQuery('SELECT * FROM borderProducts');
   }
 

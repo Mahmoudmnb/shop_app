@@ -79,25 +79,49 @@ class HomePage extends StatelessWidget {
                         discount: product.disCount.toString());
                   })),
           SizedBox(height: 15.h),
-          CollectionsSpacer(onTap: () {}, collectoinTitle: 'Recommended'),
+          CollectionsSpacer(
+              onTap: () async {
+                context.read<SearchCubit>().reset('', false);
+                List<Map<String, dynamic>> recommendedProducts =
+                    await sl.get<DataSource>().getRecommendedProducts();
+                if (context.mounted) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SeeAllProductsPage(
+                        searchWord: '',
+                        categoryName: 'Recommended',
+                        categoryProducts: recommendedProducts),
+                  ));
+                }
+              },
+              collectoinTitle: 'Recommended'),
           //! Recommended products
           SizedBox(height: 15.h),
-          SizedBox(
-            height: 78.h,
-            child: ListView.builder(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              itemCount: 3,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) => const RecommendedImage(
-                companyMaker: 'elegance',
-                imageUrl: 'assets/images/1.png',
-                productPrice: '10 \$',
-                productNamge: 'Coffee polo shirt',
-              ),
-            ),
-          ),
+          FutureBuilder(
+              future: sl.get<DataSource>().getRecommendedProducts(),
+              builder: (context, snpashoot) {
+                return snpashoot.hasData
+                    ? SizedBox(
+                        height: 78.h,
+                        child: ListView.builder(
+                          keyboardDismissBehavior:
+                              ScrollViewKeyboardDismissBehavior.onDrag,
+                          itemCount: 3,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            ProductModel product =
+                                ProductModel.fromMap(snpashoot.data![index]);
+                            return RecommendedImage(
+                              companyMaker: product.makerCompany,
+                              imageUrl: product.imgUrl.split('|')[0],
+                              productPrice: '${product.price} \$',
+                              productNamge: product.name,
+                            );
+                          },
+                        ),
+                      )
+                    : const SizedBox.shrink();
+              }),
           SizedBox(height: 15.h),
-
           //! Trendy products
           CollectionsSpacer(
               onTap: () async {

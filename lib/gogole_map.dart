@@ -74,6 +74,7 @@ class GoogleMapScreenState extends State<GoogleMapScreen> {
     return PopScope(
       canPop: false,
       onPopInvoked: (value) async {
+        context.read<MainPageCubit>().isAddLocationLoading = false;
         if (widget.fromPage == 'Orders') {
           context.read<CheckOutCubit>().getLocations().then((locations) {
             Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -156,9 +157,21 @@ class GoogleMapScreenState extends State<GoogleMapScreen> {
                                   } catch (err) {
                                     if (context.mounted) {
                                       ToastContext().init(context);
-                                      Toast.show(
-                                          'You have to turn on VPN to add new location',
-                                          duration: 3);
+                                      if (err.toString().contains(
+                                          'No address information found for supplied coordinates')) {
+                                        Toast.show(
+                                            'You have to pick a valid location please try again',
+                                            duration: Toast.lengthLong);
+                                      } else if (err.toString().contains(
+                                          'java.util.UnknownFormatConversionException')) {
+                                        Toast.show(
+                                            'You have to turn on VPN to add new location',
+                                            duration: Toast.lengthLong);
+                                      } else {
+                                        Toast.show(
+                                            'Unknown error please try again',
+                                            duration: Toast.lengthLong);
+                                      }
                                       context
                                           .read<MainPageCubit>()
                                           .changeIsAddLocationLoading(false);

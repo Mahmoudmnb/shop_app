@@ -132,7 +132,6 @@ class WishListView extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
-                                // Navigator.of(context).pop(true);
                                 showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
@@ -185,6 +184,10 @@ class WishListView extends StatelessWidget {
                                                 .get<DataSource>()
                                                 .getBorders();
                                             if (context.mounted) {
+                                              context
+                                                      .read<ProductCubit>()
+                                                      .selectedBorder =
+                                                  borderNameCon.text.trim();
                                               Navigator.of(context).pop();
                                               context
                                                   .read<ProductCubit>()

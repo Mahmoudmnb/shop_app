@@ -7,4 +7,8 @@ class DrawerCubit extends Cubit<DrawerState> {
   changeSelectedItem(int item) {
     emit(SelectedItem(selectedItem: item));
   }
+
+  void refreshDrawer() {
+    emit(RefreshDrawer());
+  }
 }

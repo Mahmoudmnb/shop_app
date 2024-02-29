@@ -101,7 +101,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 500),
                           width: cubit.isCategoryViewSearch ? 0.w : 250.w,
-                          height: cubit.isCategoryViewSearch ? 0 : 27.h,
+                          height: cubit.isCategoryViewSearch ? 0 : 34.h,
                           margin: EdgeInsets.symmetric(horizontal: 5.w),
                           child: Text(
                             categoryName,

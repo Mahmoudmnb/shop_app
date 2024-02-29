@@ -4,6 +4,24 @@ import 'package:shop_app/core/constant.dart';
 import 'package:sqflite/sqflite.dart';
 
 class MyDataBase {
+  Future<void> createRecommendedProductTable() async {
+    String path = await getDatabasesPath();
+    String dataBasePath = '$path/recommended.db';
+    try {
+      await openDatabase(
+        dataBasePath,
+        version: 2,
+        onCreate: (db, version) async {
+          db.execute(
+              'CREATE TABLE recommended (id INTEGER PRIMARY KEY , productId INT NOT NULL, freq INT NOT NULL)');
+        },
+      );
+      log('recommended table created');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   Future<void> createBorderTable() async {
     String path = await getDatabasesPath();
     String dataBasePath = '$path/elegance.db';

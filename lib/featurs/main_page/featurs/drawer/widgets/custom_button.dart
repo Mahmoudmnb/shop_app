@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/featurs/auth/pages/auth_page.dart';
+import 'package:shop_app/featurs/main_page/featurs/drawer/cubit/drawer_cubit.dart';
 import 'package:toast/toast.dart';
 
 import '../../../../../core/constant.dart';
@@ -35,6 +36,7 @@ class CustomButton extends StatelessWidget {
                   if (context.mounted) {
                     context.read<ProfileCubit>().setIsLogOutLoading(false);
                     Constant.currentUser = null;
+                    context.read<DrawerCubit>().refreshDrawer();
                   }
                 } else {
                   context.read<ProfileCubit>().setIsLogOutLoading(false);
@@ -54,11 +56,11 @@ class CustomButton extends StatelessWidget {
           builder: (context, state) {
             return context.read<ProfileCubit>().isLogOutLoading
                 ? SizedBox(
-                  height: 30.h,
-                  child: const CircularProgressIndicator(
+                    height: 30.h,
+                    child: const CircularProgressIndicator(
                       color: Colors.black,
                     ),
-                )
+                  )
                 : Text(
                     Constant.currentUser == null ? 'Log in' : 'Log out',
                     style: TextStyle(

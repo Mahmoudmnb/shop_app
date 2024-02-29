@@ -13,6 +13,38 @@ import '../featurs/products_view/models/review_model.dart';
 import 'data_source.dart';
 
 class InsertDataLocalDataSource {
+  Future<void> setRecommendedProducts() async {
+    var data = await sl.get<DataSource>().getRecommendedproductsFromCloud();
+    List<int> productsIds = [];
+    for (var element in data) {
+      var temp = element.data['orders_ids'];
+      for (var element in temp) {
+        productsIds.add(element);
+      }
+    }
+    productsIds.sort();
+    var finalProductIds = [];
+    finalProductIds.add(productsIds[0]);
+    List<int> freq = [0];
+    int index = 0;
+    for (var i = 0; i < productsIds.length; i++) {
+      freq[index]++;
+      if (i < productsIds.length - 1) {
+        if (productsIds[i + 1] != productsIds[i]) {
+          freq.add(0);
+          finalProductIds.add(productsIds[i + 1]);
+          index++;
+        }
+      }
+    }
+    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
+    for (var i = 0; i < finalProductIds.length; i++) {
+      db.rawInsert(
+          'INSERT INTO recommended(productId,freq) VALUES (${finalProductIds[i]},${freq[i]})');
+    }
+    log('done inserting recommended products');
+  }
+
   Future<void> insertPersonalDataInDataBase() async {
     Map<String, dynamic> personalData =
         await sl.get<DataSource>().getPersonalDataFromCloud();
@@ -91,7 +123,7 @@ class InsertDataLocalDataSource {
   }
 
   Future<void> addProductToBorder(int productId, int borderId) async {
-    Database db = await openDatabase(Constant.broderProductsDataBasePath);
+    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
     db.insert('borderProducts', {'productId': productId, 'borderId': borderId});
     // await db.rawInsert(
     //     'INSERT INTO borderProducts(productId,borderId) VALUES($productId,$borderId)');

@@ -5,8 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
-import 'package:shop_app/featurs/main_page/featurs/wishlist/screens/border_products_view.dart';
-import 'package:shop_app/featurs/main_page/featurs/wishlist/screens/wishlist_screen.dart';
 import 'package:shop_app/injection.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -15,6 +13,8 @@ import '../../home/pages/home_pages.dart';
 import '../../search/cubit/sreach_cubit.dart';
 import '../../search/screen/category_view_page.dart';
 import '../../search/screen/search_results_screen.dart';
+import '../../wishlist/screens/border_products_view.dart';
+import '../../wishlist/screens/wishlist_screen.dart';
 import '../cubits/product_screen/cubit.dart';
 import '../widgets/product_view_widgets.dart';
 
@@ -87,7 +87,6 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    log(widget.fromPage);
     return PopScope(
       canPop: false,
       onPopInvoked: (value) {
@@ -149,9 +148,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             ),
                             onPressed: () async {
                               if (isFavorate) {
-                                cubit
-                                    .changeFavorite(product.id)
-                                    .then((value) {});
+                                await cubit.changeFavorite(product.id);
                                 sl
                                     .get<DataSource>()
                                     .deleteFromPorderBroducts(product.id);
@@ -302,6 +299,8 @@ class _ProductScreenState extends State<ProductScreen> {
     } else if (widget.fromPage == 'seeAll') {
       List<Map<String, dynamic>> trendyProducts = [];
       if (widget.fromPageTitle == 'Trendy') {
+        trendyProducts = await sl.get<DataSource>().getTrendyProducts();
+      } else if (widget.fromPageTitle == 'Recommended') {
         trendyProducts = await sl.get<DataSource>().getTrendyProducts();
       }
       if (widget.searchWord != '') {

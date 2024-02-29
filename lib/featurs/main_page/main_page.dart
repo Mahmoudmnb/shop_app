@@ -77,7 +77,6 @@ class _MainPageState extends State<MainPage>
       foregroundColor: Colors.black,
       elevation: 0,
       leadingWidth: 100.w,
-      // toolbarHeight: 80,
       leading: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -194,7 +193,10 @@ class _MainPageState extends State<MainPage>
                 bottomRight: Radius.circular(15),
               ),
             ),
-            child: HomeDrawer(tabController: tabController)),
+            child: HomeDrawer(
+              tabController: tabController,
+              pageController: pageController,
+            )),
       ),
       body: WillPopScope(
         onWillPop: () async {

@@ -47,7 +47,9 @@ class AuthPage extends StatelessWidget {
         await myDataBase.createOrdersTable();
         await myDataBase.createBorderTable();
         await myDataBase.createBorderProductsTable();
+        await myDataBase.createRecommendedProductTable();
 
+        await sl.get<DataSource>().setRecommendedProducts();
         await sl.get<DataSource>().addBorder('All items');
         await sl.get<DataSource>().getProductsFormCloudDataBase();
         await sl.get<DataSource>().getReviewsFromCloud();

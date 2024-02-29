@@ -46,4 +46,12 @@ class AddToCartCubit extends Cubit<AddToCartState> {
     products = await sl.get<DataSource>().getAddToCartProducts();
     log(products.toString());
   }
+
+  bool _isProceedButtonLoading = false;
+  set setIsProceedButtonLoading(value) {
+    _isProceedButtonLoading = value;
+    emit(IsProceedButtinLoading());
+  }
+
+  get getIsProceedButtonLoading => _isProceedButtonLoading;
 }

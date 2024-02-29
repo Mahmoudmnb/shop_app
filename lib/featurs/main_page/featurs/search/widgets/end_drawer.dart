@@ -398,6 +398,10 @@ class EndDrawer extends StatelessWidget {
                                   products = await sl
                                       .get<DataSource>()
                                       .getTrendyProducts();
+                                } else if (fromPageTitle == 'Recommended') {
+                                  products = await sl
+                                      .get<DataSource>()
+                                      .getRecommendedProducts();
                                 } else {
                                   products = await sl
                                       .get<DataSource>()
@@ -433,8 +437,11 @@ class EndDrawer extends StatelessWidget {
                                   trendyProducts = await sl
                                       .get<DataSource>()
                                       .getTrendyProducts();
+                                } else if (fromPageTitle == 'Recommended') {
+                                  trendyProducts = await sl
+                                      .get<DataSource>()
+                                      .getRecommendedProducts();
                                 }
-
                                 if (searchWord == '') {
                                   await cubit
                                       .searchInSeeAllProducts(null,
