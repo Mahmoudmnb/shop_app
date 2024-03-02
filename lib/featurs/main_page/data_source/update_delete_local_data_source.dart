@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:appwrite/models.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/featurs/main_page/featurs/home/models/product_model.dart';
 import 'package:shop_app/injection.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -9,6 +11,37 @@ import '../../../core/constant.dart';
 import '../featurs/check_out/models/address_model.dart';
 
 class UpdateDeleteLocalDataSource {
+  Future<void> updateDataBase() async {
+    var data = sl.get<SharedPreferences>().getString('lastUpdate');
+    if (data != null) {
+      var p = await sl.get<DataSource>().getUpdatedProducts(data);
+      List<Document> newProducts = p['newProducts'] ?? [];
+      List<Document> updatedProducts = p['updatedProducts'] ?? [];
+      if (newProducts.isNotEmpty) {
+        await sl.get<DataSource>().insertProductsIntoLocalDataBase(newProducts);
+      }
+      if (updatedProducts.isNotEmpty) {
+        await updateProducts(updatedProducts);
+      }
+      log(p.toString());
+      await sl.get<SharedPreferences>().setString(
+          'lastUpdate', DateTime.now().millisecondsSinceEpoch.toString());
+    }
+  }
+
+  Future<void> updateProducts(List<Document> products) async {
+    Database db = await openDatabase(Constant.productDataBasePath);
+    for (var element in products) {
+      ProductModel product = ProductModel.fromMap(element.data);
+      db.rawUpdate(
+          """ UPDATE products SET name ='${product.name}', price=${product.price}, makerCompany= '${product.makerCompany}',
+      sizes= '${product.sizes}', colors= '${product.colors}', discription='${product.discription}', imgUrl='${product.imgUrl}',
+       discount=${product.disCount},date='${product.date}', category='${product.category}', rating=${element.data['rating']}
+      WHERE name='${product.name}'""");
+    }
+    log('done updating products');
+  }
+
   Future<void> updatePrices(
       List<String> productsNames, List<double> oldPrices) async {
     List<Document> data =
@@ -20,7 +53,7 @@ class UpdateDeleteLocalDataSource {
     }
   }
 
-  updatePrice(double price, String productName) async {
+  Future<void> updatePrice(double price, String productName) async {
     Database db = await openDatabase(Constant.productDataBasePath);
     db.rawUpdate("UPDATE products set price=$price WHERE name='$productName'");
   }

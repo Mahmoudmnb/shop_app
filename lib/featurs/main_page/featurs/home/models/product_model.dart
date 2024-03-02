@@ -51,7 +51,7 @@ class ProductModel {
       date: map['date'] as String,
       disCount: map['discount'] * 1.0 ?? 0.0,
       imgUrl: map['imgUrl'] as String,
-      id: map['id'] as int,
+      id: map['id'] ?? 0,
       price: double.parse(map['price'].toString()),
       name: map['name'] as String,
       makerCompany: map['makerCompany'] as String,

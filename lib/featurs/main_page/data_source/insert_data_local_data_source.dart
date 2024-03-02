@@ -195,7 +195,7 @@ class InsertDataLocalDataSource {
     }
   }
 
-  Future<void> insertDataIntoLocalDataBase(List<Document> products) async {
+  Future<void> insertProductsIntoLocalDataBase(List<Document> products) async {
     try {
       Database db = await openDatabase(Constant.productDataBasePath);
       for (var element in products) {

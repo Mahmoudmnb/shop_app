@@ -21,6 +21,10 @@ class DataSource {
     required this.insertDataLocalDataSource,
   });
   //! this section for inserting data
+  Future<void> insertProductsIntoLocalDataBase(List<Document> products) async {
+    return insertDataLocalDataSource.insertProductsIntoLocalDataBase(products);
+  }
+
   Future<void> uploadProfileSettings(
       String borderProducts, String cartProducts, String borders) async {
     return remoteDataSource.uploadProfileSettings(
@@ -123,6 +127,11 @@ class DataSource {
   }
 
   //! this section for getting data
+  Future<Map<String, List<Document>>> getUpdatedProducts(
+      String lastDate) async {
+    return remoteDataSource.getUpdatedProducts(lastDate);
+  }
+
   Future<List<Map<String, dynamic>>> getRecommendedProducts() async {
     return getDataLocalDataSource.getRecommendedProducts();
   }
@@ -194,7 +203,7 @@ class DataSource {
 
   Future<void> getProductsFormCloudDataBase() async {
     await insertDataLocalDataSource
-        .insertDataIntoLocalDataBase(await remoteDataSource.getProducts());
+        .insertProductsIntoLocalDataBase(await remoteDataSource.getProducts());
   }
 
   Future<List<Map<String, dynamic>>> getLocations() async {
@@ -231,6 +240,10 @@ class DataSource {
   }
 
 //! this section for deleting and updating data
+  Future<void> updateDataBase() async {
+    return updateDeleteLocalDataSource.updateDataBase();
+  }
+
   Future<void> updatePrices(
       List<String> productsNames, List<double> oldPrices) async {
     updateDeleteLocalDataSource.updatePrices(productsNames, oldPrices);

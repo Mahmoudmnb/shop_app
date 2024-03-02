@@ -59,6 +59,8 @@ class AuthPage extends StatelessWidget {
         }
         if (context.mounted) {
           await context.read<AddToCartCubit>().getAddToCartProducts();
+          sl.get<SharedPreferences>().setString(
+              'lastUpdate', DateTime.now().millisecondsSinceEpoch.toString());
           if (context.mounted) {
             Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => const MainPage(),

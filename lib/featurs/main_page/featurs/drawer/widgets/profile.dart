@@ -25,8 +25,10 @@ class Profile extends StatelessWidget {
               ? Container(
                   padding: const EdgeInsets.all(35),
                   decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: FileImage(File(image!.file.path))),
+                      image: image != null
+                          ? DecorationImage(
+                              image: FileImage(File(image!.file.path)))
+                          : null,
                       color: Constant.currentUser == null
                           ? Colors.black
                           : Colors.transparent,

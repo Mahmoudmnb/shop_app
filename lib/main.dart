@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/core/internet_info.dart';
+import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
 import 'package:shop_app/featurs/main_page/featurs/drawer/cubit/drawer_cubit.dart';
 import 'package:shop_app/featurs/main_page/featurs/wishlist/bloc/wishlist_cubit.dart';
 import 'package:sqflite/sqflite.dart';
@@ -34,6 +38,12 @@ Future<void> main(List<String> args) async {
   //   anonKey: Constant.supabaseAnonkey,
   // );
   init();
+  InternetInfo.isconnected().then((value) async {
+    if (value) {
+      await sl.get<DataSource>().updateDataBase();
+      log('mahmoud');
+    }
+  });
   SharedPreferences db = await SharedPreferences.getInstance();
   String? user = db.getString('currentUser');
   if (user != null) {
@@ -70,8 +80,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // // debugInvertOversizedImages = true;
-
+    // debugInvertOversizedImages = true;
     return ScreenUtilInit(
         designSize: const Size(393, 852),
         builder: (context, child) => MaterialApp(
