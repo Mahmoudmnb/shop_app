@@ -47,7 +47,7 @@ class TrendyImage extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                price,
+                '$price\$',
                 style: TextStyle(
                     fontFamily: 'DM Sans',
                     color: const Color(0xffD57676),

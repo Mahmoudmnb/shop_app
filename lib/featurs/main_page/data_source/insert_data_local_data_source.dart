@@ -123,7 +123,7 @@ class InsertDataLocalDataSource {
   }
 
   Future<void> addProductToBorder(int productId, int borderId) async {
-    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
+    Database db = await openDatabase(Constant.broderProductsDataBasePath);
     db.insert('borderProducts', {'productId': productId, 'borderId': borderId});
     // await db.rawInsert(
     //     'INSERT INTO borderProducts(productId,borderId) VALUES($productId,$borderId)');

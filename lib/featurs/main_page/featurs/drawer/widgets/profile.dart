@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/constant.dart';
@@ -22,8 +24,13 @@ class Profile extends StatelessWidget {
           Constant.currentUser != null
               ? Container(
                   padding: const EdgeInsets.all(35),
-                  decoration: const BoxDecoration(
-                      color: Colors.black, shape: BoxShape.circle),
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: FileImage(File(image!.file.path))),
+                      color: Constant.currentUser == null
+                          ? Colors.black
+                          : Colors.transparent,
+                      shape: BoxShape.circle),
                   child: image == null
                       ? Text(
                           Constant.getLetterName(Constant.currentUser!.name),
@@ -41,6 +48,7 @@ class Profile extends StatelessWidget {
             children: [
               Text(
                 username,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 15.sp,
@@ -52,6 +60,7 @@ class Profile extends StatelessWidget {
               Text(
                 email,
                 style: TextStyle(
+                  overflow: TextOverflow.ellipsis,
                   color: Colors.black,
                   fontSize: 11.sp,
                   fontFamily: 'DM Sans',

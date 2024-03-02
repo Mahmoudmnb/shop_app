@@ -188,6 +188,10 @@ class WishListView extends StatelessWidget {
                                                       .read<ProductCubit>()
                                                       .selectedBorder =
                                                   borderNameCon.text.trim();
+                                              context
+                                                      .read<ProductCubit>()
+                                                      .selectedBorderIndex =
+                                                  borders.length - 1;
                                               Navigator.of(context).pop();
                                               context
                                                   .read<ProductCubit>()

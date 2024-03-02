@@ -65,6 +65,9 @@ class HomeDrawer extends StatelessWidget {
                         CustomListTile(
                           onTap: () {
                             tabController.animateTo(0);
+                            pageController.animateToPage(0,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.ease);
                             context.read<MainPageCubit>().changePageIndex(0);
                             context.read<DrawerCubit>().changeSelectedItem(0);
                             Scaffold.of(context).closeDrawer();
@@ -94,6 +97,9 @@ class HomeDrawer extends StatelessWidget {
                             tabController.animateTo(2);
                             context.read<MainPageCubit>().changePageIndex(2);
                             context.read<DrawerCubit>().changeSelectedItem(2);
+                            pageController.animateToPage(2,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeIn);
                             Scaffold.of(context).closeDrawer();
                           },
                           icon: Icons.shopping_bag_outlined,
@@ -106,6 +112,9 @@ class HomeDrawer extends StatelessWidget {
                             tabController.animateTo(3);
                             context.read<MainPageCubit>().changePageIndex(3);
                             context.read<DrawerCubit>().changeSelectedItem(3);
+                            pageController.animateToPage(3,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeIn);
                             Scaffold.of(context).closeDrawer();
                           },
                           icon: Icons.person_outline_rounded,

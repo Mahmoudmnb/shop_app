@@ -72,13 +72,13 @@ class UpdateDeleteLocalDataSource {
   }
 
   Future<void> clearBorderPoducts() async {
-    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
+    Database db = await openDatabase(Constant.broderProductsDataBasePath);
     db.rawDelete('delete from borderProducts');
     log(' borderProducts table cleared');
   }
 
   Future<void> deleteProductFromBorder(int productId) async {
-    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
+    Database db = await openDatabase(Constant.broderProductsDataBasePath);
     await db
         .rawDelete('DELETE FROM borderProducts WHERE productId = $productId');
   }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,6 +41,7 @@ class WishListScreen extends StatelessWidget {
                           future: sl.get<DataSource>().isAllBordersIsEmpty(),
                           builder: (_, snapshoot) {
                             if (snapshoot.hasData) {
+                              log(snapshoot.toString());
                               return borders.isEmpty || snapshoot.data!
                                   ? Container(
                                       padding:

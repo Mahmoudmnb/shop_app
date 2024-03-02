@@ -22,9 +22,10 @@ class GetDataLocalDataSource {
   }
 
   Future<bool> isAllBordersIsEmpty() async {
-    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
+    Database db = await openDatabase(Constant.broderProductsDataBasePath);
     var data =
         await db.rawQuery('SELECT * FROM borderProducts where borderId != 1 ');
+    log(data.toString());
     return data.isEmpty;
   }
 
@@ -36,7 +37,7 @@ class GetDataLocalDataSource {
   }
 
   Future<List<Map<String, dynamic>>> getProductsInBorder(int borderId) async {
-    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
+    Database db = await openDatabase(Constant.broderProductsDataBasePath);
     List<Map<String, dynamic>> data = [];
     try {
       data = await db
@@ -48,7 +49,7 @@ class GetDataLocalDataSource {
   }
 
   Future<List<Map<String, dynamic>>> getBorderProducts() async {
-    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
+    Database db = await openDatabase(Constant.broderProductsDataBasePath);
     return db.rawQuery('SELECT * FROM borderProducts');
   }
 
