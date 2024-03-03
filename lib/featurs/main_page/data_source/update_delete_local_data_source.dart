@@ -4,6 +4,7 @@ import 'package:appwrite/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
 import 'package:shop_app/featurs/main_page/featurs/home/models/product_model.dart';
+import 'package:shop_app/featurs/main_page/featurs/products_view/models/review_model.dart';
 import 'package:shop_app/injection.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -11,6 +12,18 @@ import '../../../core/constant.dart';
 import '../featurs/check_out/models/address_model.dart';
 
 class UpdateDeleteLocalDataSource {
+  Future<void> updateReviews() async {
+    var data = sl.get<SharedPreferences>().getString('lastUpdate');
+    if (data != null) {
+      var newReviews = await sl.get<DataSource>().getUpdatedReviews(data);
+      for (var element in newReviews) {
+        ReviewModel reviewModel = ReviewModel.fromMap(element.data);
+        sl.get<DataSource>().addReiviewToProduct(reviewModel);
+      }
+    }
+    log('done');
+  }
+
   Future<void> updateDataBase() async {
     var data = sl.get<SharedPreferences>().getString('lastUpdate');
     if (data != null) {
@@ -24,8 +37,6 @@ class UpdateDeleteLocalDataSource {
         await updateProducts(updatedProducts);
       }
       log(p.toString());
-      await sl.get<SharedPreferences>().setString(
-          'lastUpdate', DateTime.now().millisecondsSinceEpoch.toString());
     }
   }
 

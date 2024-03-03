@@ -36,7 +36,7 @@ class ReviewModel {
   factory ReviewModel.fromMap(Map<String, dynamic> map) {
     return ReviewModel(
       email: map['email'] as String,
-      id: map['id'] as int,
+      id: map['id'],
       description: map['description'] as String,
       stars: map['stars'] * 1.0,
       date: map['date'] as String,

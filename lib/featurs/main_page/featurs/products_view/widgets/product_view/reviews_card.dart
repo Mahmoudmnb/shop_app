@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/core/constant.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../cubits/product_screen/cubit.dart';
@@ -112,50 +111,51 @@ class ReviewsCard extends StatelessWidget {
         //* this widget was a SizedBox Widget and I convert it to Contianer
         //* add a margin property instead of Padding(child: SizedBox(...))
         Container(
-                //* I use margin to put the button in the center of page
-                //* to make the button so beautiful
-                margin: EdgeInsets.only(right: 10.w),
-                width: 393.w,
-                height: 50.h,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => AllReviewsScreen(reviews: cubit.reviws),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      shape: const RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 1,
-                          color: Color(0xFF0C1A30),
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      foregroundColor: const Color(0xFF0C1A30),
-                      backgroundColor: const Color(0xFFFFFFFF)),
-                  child: Text(
-                    'See All Review',
-                    style: TextStyle(
-                      color: const Color(0xFF0C1A30),
-                      fontSize: 16.sp,
-                      fontFamily: 'DM Sans',
-                      fontWeight: FontWeight.w500,
-                      height: 1.43,
-                    ),
+          //* I use margin to put the button in the center of page
+          //* to make the button so beautiful
+          margin: EdgeInsets.only(right: 10.w),
+          width: 393.w,
+          height: 50.h,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => AllReviewsScreen(reviews: cubit.reviws),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+                elevation: 0,
+                shape: const RoundedRectangleBorder(
+                  side: BorderSide(
+                    width: 1,
+                    color: Color(0xFF0C1A30),
+                  ),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
                   ),
                 ),
+                foregroundColor: const Color(0xFF0C1A30),
+                backgroundColor: const Color(0xFFFFFFFF)),
+            child: Text(
+              'See All Review',
+              style: TextStyle(
+                color: const Color(0xFF0C1A30),
+                fontSize: 16.sp,
+                fontFamily: 'DM Sans',
+                fontWeight: FontWeight.w500,
+                height: 1.43,
               ),
+            ),
+          ),
+        ),
       ],
     );
   }
 
   String getOffsetDate(String date) {
-    DateTime dateTime = Constant.stringToDate(date);
+    // DateTime dateTime = Constant.stringToDate(date);
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(date));
     DateTime currentDatetime = DateTime.now();
     if (dateTime.year != currentDatetime.year) {
       return '${currentDatetime.year - dateTime.year} year ago';

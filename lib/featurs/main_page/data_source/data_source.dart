@@ -127,6 +127,10 @@ class DataSource {
   }
 
   //! this section for getting data
+  Future<List<Document>> getUpdatedReviews(String lastDate) async {
+    return remoteDataSource.getUpdatedReviews(lastDate);
+  }
+
   Future<Map<String, List<Document>>> getUpdatedProducts(
       String lastDate) async {
     return remoteDataSource.getUpdatedProducts(lastDate);
@@ -240,6 +244,10 @@ class DataSource {
   }
 
 //! this section for deleting and updating data
+  Future<void> updateReviews() async {
+    return updateDeleteLocalDataSource.updateReviews();
+  }
+
   Future<void> updateDataBase() async {
     return updateDeleteLocalDataSource.updateDataBase();
   }

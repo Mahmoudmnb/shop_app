@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/core/constant.dart';
 
 import '../models/review_model.dart';
 import '../widgets/product_view_widgets.dart';
@@ -83,7 +82,7 @@ class AllReviewsScreen extends StatelessWidget {
                   )
                 : Expanded(
                     child: ListView.builder(
-                                            keyboardDismissBehavior:
+                      keyboardDismissBehavior:
                           ScrollViewKeyboardDismissBehavior.onDrag,
                       physics: const BouncingScrollPhysics(),
                       itemCount: reviews.length,
@@ -112,7 +111,8 @@ class AllReviewsScreen extends StatelessWidget {
   }
 
   String getOffsetDate(String date) {
-    DateTime dateTime = Constant.stringToDate(date);
+    // DateTime dateTime = Constant.stringToDate(date);
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(date));
     DateTime currentDatetime = DateTime.now();
     if (dateTime.year != currentDatetime.year) {
       return '${currentDatetime.year - dateTime.year} year ago';

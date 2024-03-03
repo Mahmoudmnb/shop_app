@@ -16,6 +16,21 @@ class RemoteDataSource {
   final client = Client()
       .setEndpoint('https://cloud.appwrite.io/v1')
       .setProject(Constant.appWriteProjectId);
+  Future<List<Document>> getUpdatedReviews(String lastDate) async {
+    Databases databases = Databases(client);
+    var newReviews = await databases.listDocuments(
+      databaseId: '65585f55e896c3e87515',
+      collectionId: "65966b22308a7832fddc",
+      queries: [
+        Query.greaterThan('date', lastDate),
+        Query.notEqual('email',
+            Constant.currentUser != null ? Constant.currentUser!.email : ''),
+      ],
+    );
+    log(newReviews.documents.toString());
+    return newReviews.documents;
+  }
+
   Future<Map<String, List<Document>>> getUpdatedProducts(
       String lastDate) async {
     List<Document> finalNewProducts = [];

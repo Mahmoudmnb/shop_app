@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/core/internet_info.dart';
-import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
 import 'package:shop_app/featurs/main_page/featurs/drawer/cubit/drawer_cubit.dart';
 import 'package:shop_app/featurs/main_page/featurs/wishlist/bloc/wishlist_cubit.dart';
 import 'package:sqflite/sqflite.dart';
@@ -19,6 +18,7 @@ import 'featurs/auth/blocs/visible_password_bloc/visible_password_bloc.dart';
 import 'featurs/auth/models/user_model.dart';
 import 'featurs/auth/pages/splash_screen.dart';
 import 'featurs/main_page/cubit/main_page_cubit.dart';
+import 'featurs/main_page/data_source/data_source_paths.dart';
 import 'featurs/main_page/featurs/check_out/cubit/check_out_cubit.dart';
 import 'featurs/main_page/featurs/home/blocs/discount/discount_products_bloc.dart';
 import 'featurs/main_page/featurs/orders/cubit/orders_cubit.dart';
@@ -41,6 +41,9 @@ Future<void> main(List<String> args) async {
   InternetInfo.isconnected().then((value) async {
     if (value) {
       await sl.get<DataSource>().updateDataBase();
+      await sl.get<DataSource>().updateReviews();
+      await sl.get<SharedPreferences>().setString(
+          'lastUpdate', DateTime.now().millisecondsSinceEpoch.toString());
       log('mahmoud');
     }
   });

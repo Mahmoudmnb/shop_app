@@ -191,7 +191,9 @@ class RatePage extends StatelessWidget {
                                       .text
                                       .trim(),
                                   stars: context.read<OrdersCubit>().rating,
-                                  date: Constant.dateToString(DateTime.now()),
+                                  date: DateTime.now()
+                                      .millisecondsSinceEpoch
+                                      .toString(),
                                   userName: Constant.currentUser!.name,
                                   userImage: Constant.currentUser!.cloudImgUrl,
                                   productId: productId!);
