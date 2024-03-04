@@ -8,6 +8,15 @@ import '../featurs/home/models/product_model.dart';
 import 'data_source_paths.dart';
 
 class GetDataLocalDataSource {
+  Future<List<Map<String, dynamic>>> getNewestProducts() async {
+    Database db = await openDatabase(Constant.productDataBasePath);
+    var newestProducts =
+        await db.rawQuery('SELECT * FROM products ORDER BY date DESC');
+    return newestProducts.length >= 5
+        ? newestProducts.sublist(0, 5)
+        : newestProducts;
+  }
+
   Future<List<Map<String, dynamic>>> getRecommendedProducts() async {
     Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
     var recommendedProducts =

@@ -156,8 +156,8 @@ class MyDataBase {
           db.execute(
               '''CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT NOT NULL , price DECIMAL NOT NULL , 
               makerCompany TEXT NOT NULL , sizes TEXT NOT NULL , colors TEXT NOT NULL , discription TEXT NOT NULL , 
-              imgUrl TEXT NOT NULL ,discount DECIMAL NOT NULL , date TEXT NOT NULL , category TEXT , rating INTEGER , 
-              isFavorate BOOLEAN)
+              imgUrl TEXT NOT NULL ,discount DECIMAL NOT NULL , date TEXT NOT NULL , category TEXT , rating INTEGER ,
+              isFavorate BOOLEAN,isNew BOOLEAN)
               ''');
         },
       );

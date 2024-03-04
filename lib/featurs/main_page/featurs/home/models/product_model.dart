@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 class ProductModel {
   int id;
@@ -13,6 +14,7 @@ class ProductModel {
   String date;
   bool isFavorite;
   String? category;
+  bool? isNew;
   ProductModel(
       {required this.imgUrl,
       required this.name,
@@ -25,10 +27,12 @@ class ProductModel {
       required this.date,
       required this.disCount,
       required this.isFavorite,
+      required this.isNew,
       this.category});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'isNew': isNew ?? false,
       'category': category,
       'isFavorate': isFavorite,
       'date': date,
@@ -45,7 +49,9 @@ class ProductModel {
   }
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
+    log(map['isNew'].toString());
     return ProductModel(
+      isNew: map['isNew'] == 1 && map['isNew'] != null ? true : false,
       category: map['category'],
       isFavorite: map['isFavorate'] == 'true' ? true : false,
       date: map['date'] as String,

@@ -172,7 +172,6 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                       FocusScope.of(context).unfocus();
                                       context.read<DiscountProductsBloc>().add(
                                           ChangeIsSearchEvent(isSearch: false));
-
                                       if (categoryName == 'Trendy') {
                                         List<Map<String, dynamic>>
                                             trendyProducts = await sl
@@ -185,6 +184,12 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                             recommendedProducts = await sl
                                                 .get<DataSource>()
                                                 .getRecommendedProducts();
+                                        categoryProducts = recommendedProducts;
+                                      } else if (categoryName == 'New') {
+                                        List<Map<String, dynamic>>
+                                            recommendedProducts = await sl
+                                                .get<DataSource>()
+                                                .getNewestProducts();
                                         categoryProducts = recommendedProducts;
                                       }
                                       cubit
@@ -478,6 +483,8 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
         categoryProducts = await sl.get<DataSource>().getRecommendedProducts();
       } else if (categoryName == 'Trendy') {
         categoryProducts = await sl.get<DataSource>().getTrendyProducts();
+      } else if (categoryName == 'New') {
+        categoryProducts = await sl.get<DataSource>().getNewestProducts();
       }
       cubit
           .searchInSeeAllProducts(

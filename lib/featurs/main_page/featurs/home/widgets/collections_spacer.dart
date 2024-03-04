@@ -4,8 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CollectionsSpacer extends StatelessWidget {
   final String collectoinTitle;
   final Function() onTap;
+  final bool isNew;
   const CollectionsSpacer({
     super.key,
+    required this.isNew,
     required this.onTap,
     required this.collectoinTitle,
   });
@@ -27,12 +29,20 @@ class CollectionsSpacer extends StatelessWidget {
             onTap: onTap,
             child: Row(
               children: [
-                Text('See All',
-                    style: TextStyle(
-                      fontFamily: 'DM Sans',
-                      fontSize: 16.sp,
-                      color: const Color(0xff6D6D6D),
-                    )),
+                Stack(children: [
+                  Text('See All',
+                      style: TextStyle(
+                        fontFamily: 'DM Sans',
+                        fontSize: 16.sp,
+                        color: const Color(0xff6D6D6D),
+                      )),
+                  isNew
+                      ? const Text(
+                          'New',
+                          style: TextStyle(color: Colors.red, fontSize: 20),
+                        )
+                      : const SizedBox.shrink()
+                ]),
                 const SizedBox(width: 5),
                 Icon(
                   Icons.arrow_forward,

@@ -24,3 +24,8 @@ final class AllDiscountProductState extends DiscountProductsState {
   final List<Map<String, dynamic>> allDiscountProducts;
   AllDiscountProductState({required this.allDiscountProducts});
 }
+
+final class IsNewProductsFounded extends DiscountProductsState {
+  final bool isFounded;
+  IsNewProductsFounded({required this.isFounded});
+}

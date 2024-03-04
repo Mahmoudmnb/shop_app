@@ -22,3 +22,8 @@ class GetAllDiscountEvent extends DiscountProductsEvent {
   final List<Map<String, dynamic>> allDiscountProducts;
   GetAllDiscountEvent({required this.allDiscountProducts});
 }
+
+class ChangeIsNewProductsFounded extends DiscountProductsEvent {
+  final bool isFounded;
+  ChangeIsNewProductsFounded({required this.isFounded});
+}

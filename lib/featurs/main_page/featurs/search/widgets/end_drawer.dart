@@ -402,6 +402,10 @@ class EndDrawer extends StatelessWidget {
                                   products = await sl
                                       .get<DataSource>()
                                       .getRecommendedProducts();
+                                } else if (fromPageTitle == 'New') {
+                                  products = await sl
+                                      .get<DataSource>()
+                                      .getNewestProducts();
                                 } else {
                                   products = await sl
                                       .get<DataSource>()
@@ -432,20 +436,24 @@ class EndDrawer extends StatelessWidget {
                                 }
                               }
                               if (fromPage == 'seeAll') {
-                                List<Map<String, dynamic>> trendyProducts = [];
+                                List<Map<String, dynamic>> products = [];
                                 if (fromPageTitle == 'Trendy') {
-                                  trendyProducts = await sl
+                                  products = await sl
                                       .get<DataSource>()
                                       .getTrendyProducts();
                                 } else if (fromPageTitle == 'Recommended') {
-                                  trendyProducts = await sl
+                                  products = await sl
                                       .get<DataSource>()
                                       .getRecommendedProducts();
+                                } else if (fromPageTitle == 'New') {
+                                  products = await sl
+                                      .get<DataSource>()
+                                      .getNewestProducts();
                                 }
                                 if (searchWord == '') {
                                   await cubit
-                                      .searchInSeeAllProducts(null,
-                                          oldCategoryName!, trendyProducts)
+                                      .searchInSeeAllProducts(
+                                          null, oldCategoryName!, products)
                                       .then((searchResult) {
                                     context.read<DiscountProductsBloc>().add(
                                         SearchInDiscount(
@@ -454,7 +462,7 @@ class EndDrawer extends StatelessWidget {
                                 } else {
                                   await cubit
                                       .searchInSeeAllProducts(searchWord,
-                                          oldCategoryName!, trendyProducts)
+                                          oldCategoryName!, products)
                                       .then((searchResult) {
                                     context.read<DiscountProductsBloc>().add(
                                         SearchInDiscount(

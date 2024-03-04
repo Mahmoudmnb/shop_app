@@ -31,7 +31,7 @@ class Profile extends StatelessWidget {
                           : null,
                       color: Constant.currentUser == null
                           ? Colors.black
-                          : Colors.transparent,
+                          : Colors.black,
                       shape: BoxShape.circle),
                   child: image == null
                       ? Text(

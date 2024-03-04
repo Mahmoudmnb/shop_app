@@ -1,5 +1,6 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 part 'discount_products_event.dart';
 part 'discount_products_state.dart';
 
@@ -16,6 +17,8 @@ class DiscountProductsBloc
       } else if (event is GetAllDiscountEvent) {
         emit(AllDiscountProductState(
             allDiscountProducts: event.allDiscountProducts));
+      } else if (event is ChangeIsNewProductsFounded) {
+        emit(IsNewProductsFounded(isFounded: event.isFounded));
       }
     });
   }

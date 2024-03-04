@@ -56,7 +56,7 @@ class AddToCartBottomSheet extends StatelessWidget {
                           SizedBox(height: 8.5.h),
                           Text(
                             isDiscount
-                                ? '${(1 - product.disCount / 100) * product.price} \$'
+                                ? '${((1 - product.disCount / 100) * product.price).toStringAsFixed(2)} \$'
                                 : product.price.toString(),
                             style: TextStyle(
                               fontSize: 18.sp,
@@ -70,7 +70,7 @@ class AddToCartBottomSheet extends StatelessWidget {
                       !isDiscount
                           ? const SizedBox()
                           : Text(
-                              '\$${product.price}',
+                              '\$${product.price.toStringAsFixed(2)}',
                               style: TextStyle(
                                 textBaseline: TextBaseline.alphabetic,
                                 decoration: TextDecoration.lineThrough,

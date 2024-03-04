@@ -38,15 +38,14 @@ Future<void> main(List<String> args) async {
   //   anonKey: Constant.supabaseAnonkey,
   // );
   init();
-  InternetInfo.isconnected().then((value) async {
-    if (value) {
-      await sl.get<DataSource>().updateDataBase();
-      await sl.get<DataSource>().updateReviews();
-      await sl.get<SharedPreferences>().setString(
-          'lastUpdate', DateTime.now().millisecondsSinceEpoch.toString());
-      log('mahmoud');
-    }
-  });
+  bool isConnected = await InternetInfo.isconnected();
+  if (isConnected) {
+    await sl.get<DataSource>().updateDataBase();
+    await sl.get<DataSource>().updateReviews();
+    await sl.get<SharedPreferences>().setString(
+        'lastUpdate', DateTime.now().millisecondsSinceEpoch.toString());
+    log('mahmoud');
+  }
   SharedPreferences db = await SharedPreferences.getInstance();
   String? user = db.getString('currentUser');
   if (user != null) {

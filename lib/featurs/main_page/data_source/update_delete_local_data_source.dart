@@ -31,7 +31,7 @@ class UpdateDeleteLocalDataSource {
       List<Document> newProducts = p['newProducts'] ?? [];
       List<Document> updatedProducts = p['updatedProducts'] ?? [];
       if (newProducts.isNotEmpty) {
-        await sl.get<DataSource>().insertProductsIntoLocalDataBase(newProducts);
+        await sl.get<DataSource>().insertProductsIntoLocalDataBase(newProducts,true);
       }
       if (updatedProducts.isNotEmpty) {
         await updateProducts(updatedProducts);
@@ -44,11 +44,27 @@ class UpdateDeleteLocalDataSource {
     Database db = await openDatabase(Constant.productDataBasePath);
     for (var element in products) {
       ProductModel product = ProductModel.fromMap(element.data);
-      db.rawUpdate(
-          """ UPDATE products SET name ='${product.name}', price=${product.price}, makerCompany= '${product.makerCompany}',
-      sizes= '${product.sizes}', colors= '${product.colors}', discription='${product.discription}', imgUrl='${product.imgUrl}',
-       discount=${product.disCount},date='${product.date}', category='${product.category}', rating=${element.data['rating']}
-      WHERE name='${product.name}'""");
+      log(element.data.toString());
+      db.rawUpdate("""
+  UPDATE products SET name = ?, discription = ?, makerCompany = ?,sizes = ?, 
+  colors = ?,  date = ?, category = ? , price = ? ,discount = ?
+   WHERE name = ? """, [
+        product.name,
+        product.discription,
+        product.makerCompany,
+        product.sizes,
+        product.colors,
+        product.date,
+        product.category,
+        product.price,
+        product.disCount,
+        product.name
+      ]);
+      // db.rawUpdate(
+      //     """UPDATE products SET imgUrl ='${product.imgUrl}',name ='${product.name}',discription ='${product.discription}',
+      // price=${product.price}, makerCompany= '${product.makerCompany}',sizes= '${product.sizes}', colors= '${product.colors}',
+      // discount=${product.disCount},date='${product.date}', category='${product.category}', rating=${element.data['rating']}
+      // WHERE name='${product.name}'""");
     }
     log('done updating products');
   }

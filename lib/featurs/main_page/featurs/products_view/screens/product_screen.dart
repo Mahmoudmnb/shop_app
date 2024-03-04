@@ -302,6 +302,8 @@ class _ProductScreenState extends State<ProductScreen> {
         trendyProducts = await sl.get<DataSource>().getTrendyProducts();
       } else if (widget.fromPageTitle == 'Recommended') {
         trendyProducts = await sl.get<DataSource>().getTrendyProducts();
+      } else if (widget.fromPageTitle == 'New') {
+        trendyProducts = await sl.get<DataSource>().getNewestProducts();
       }
       if (widget.searchWord != '') {
         if (context.mounted) {

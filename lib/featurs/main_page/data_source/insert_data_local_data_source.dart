@@ -195,11 +195,13 @@ class InsertDataLocalDataSource {
     }
   }
 
-  Future<void> insertProductsIntoLocalDataBase(List<Document> products) async {
+  Future<void> insertProductsIntoLocalDataBase(
+      List<Document> products, bool isNew) async {
     try {
       Database db = await openDatabase(Constant.productDataBasePath);
       for (var element in products) {
         Map<String, dynamic> data = {
+          'isNew': isNew,
           'name': element.data['name'],
           'price': element.data['price'],
           'makerCompany': element.data['makerCompany'],

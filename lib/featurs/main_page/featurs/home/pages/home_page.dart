@@ -42,6 +42,7 @@ class HomePage extends StatelessWidget {
           ),
           SizedBox(height: 15.h),
           CollectionsSpacer(
+              isNew: false,
               onTap: () {
                 context.read<SearchCubit>().reset('', false);
                 context
@@ -79,51 +80,9 @@ class HomePage extends StatelessWidget {
                         discount: product.disCount.toString());
                   })),
           SizedBox(height: 15.h),
+          //! trendy products
           CollectionsSpacer(
-              onTap: () async {
-                context.read<SearchCubit>().reset('', false);
-                List<Map<String, dynamic>> recommendedProducts =
-                    await sl.get<DataSource>().getRecommendedProducts();
-                if (context.mounted) {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SeeAllProductsPage(
-                        searchWord: '',
-                        categoryName: 'Recommended',
-                        categoryProducts: recommendedProducts),
-                  ));
-                }
-              },
-              collectoinTitle: 'Recommended'),
-          //! Recommended products
-          SizedBox(height: 15.h),
-          FutureBuilder(
-              future: sl.get<DataSource>().getRecommendedProducts(),
-              builder: (context, snpashoot) {
-                return snpashoot.hasData
-                    ? SizedBox(
-                        height: 78.h,
-                        child: ListView.builder(
-                          keyboardDismissBehavior:
-                              ScrollViewKeyboardDismissBehavior.onDrag,
-                          itemCount: 3,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            ProductModel product =
-                                ProductModel.fromMap(snpashoot.data![index]);
-                            return RecommendedImage(
-                              companyMaker: product.makerCompany,
-                              imageUrl: product.imgUrl.split('|')[0],
-                              productPrice: '${product.price} \$',
-                              productNamge: product.name,
-                            );
-                          },
-                        ),
-                      )
-                    : const SizedBox.shrink();
-              }),
-          SizedBox(height: 15.h),
-          //! Trendy products
-          CollectionsSpacer(
+              isNew: false,
               onTap: () async {
                 context.read<SearchCubit>().reset('', false);
                 List<Map<String, dynamic>> trendyProducts =
@@ -155,11 +114,119 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
+          //! Recommended products
+          CollectionsSpacer(
+              isNew: false,
+              onTap: () async {
+                context.read<SearchCubit>().reset('', false);
+                List<Map<String, dynamic>> recommendedProducts =
+                    await sl.get<DataSource>().getRecommendedProducts();
+                if (context.mounted) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SeeAllProductsPage(
+                        searchWord: '',
+                        categoryName: 'Recommended',
+                        categoryProducts: recommendedProducts),
+                  ));
+                }
+              },
+              collectoinTitle: 'Recommended'),
           SizedBox(height: 15.h),
-          // CollectionsSpacer(onTap: () {}, collectoinTitle: 'Top Collection'),
-          //! Top collection
+          FutureBuilder(
+              future: sl.get<DataSource>().getRecommendedProducts(),
+              builder: (context, snpashoot) {
+                return snpashoot.hasData
+                    ? SizedBox(
+                        height: 78.h,
+                        child: ListView.builder(
+                          keyboardDismissBehavior:
+                              ScrollViewKeyboardDismissBehavior.onDrag,
+                          itemCount: 3,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            ProductModel product =
+                                ProductModel.fromMap(snpashoot.data![index]);
+                            return RecommendedImage(
+                              companyMaker: product.makerCompany,
+                              imageUrl: product.imgUrl.split('|')[0],
+                              productPrice: '${product.price} \$',
+                              productNamge: product.name,
+                            );
+                          },
+                        ),
+                      )
+                    : const SizedBox.shrink();
+              }),
+          SizedBox(height: 15.h),
+          //! new products
+          BlocBuilder<DiscountProductsBloc, DiscountProductsState>(
+            builder: (context, state) {
+              bool isFounded = false;
+              if (state is IsNewProductsFounded) {
+                isFounded = state.isFounded;
+              }
+              return CollectionsSpacer(
+                  isNew: isFounded,
+                  onTap: () async {
+                    context.read<SearchCubit>().reset('', false);
+                    List<Map<String, dynamic>> newestProducts =
+                        await sl.get<DataSource>().getNewestProducts();
+                    if (context.mounted) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => SeeAllProductsPage(
+                            searchWord: '',
+                            categoryName: 'New',
+                            categoryProducts: newestProducts),
+                      ));
+                    }
+                  },
+                  collectoinTitle: 'New');
+            },
+          ),
+          SizedBox(height: 15.h),
+          FutureBuilder(
+              future: sl.get<DataSource>().getNewestProducts(),
+              builder: (_, snapshoot) {
+                if (snapshoot.hasData) {
+                  for (var element in snapshoot.data!) {
+                    if (ProductModel.fromMap(element).isNew!) {
+                      context
+                          .read<DiscountProductsBloc>()
+                          .add(ChangeIsNewProductsFounded(isFounded: true));
+                      true;
+                      break;
+                    }
+                  }
+                  return Container(
+                    padding: EdgeInsets.only(left: 3.w, top: 1.h),
+                    width: 123.w,
+                    height: 180.h,
+                    child: ListView.builder(
+                      keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: snapshoot.data!.length,
+                      itemBuilder: (_, index) {
+                        ProductModel productModel =
+                            ProductModel.fromMap(snapshoot.data![index]);
+                        return TrendyImage(
+                          makerCompany: productModel.makerCompany,
+                          imageUrl: productModel.imgUrl,
+                          price: productModel.price.toString(),
+                          productName: productModel.name,
+                        );
+                      },
+                    ),
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              }),
+          // CollectionsSpacer(onTap: () {}, collectoinTitle: 'New'),
+          // // ! Top collection
           // SizedBox(height: 15.h),
           // const TopCollectionImage(),
+          SizedBox(height: 15.h),
         ],
       ),
     );
