@@ -86,6 +86,7 @@ class ProductCubit extends Cubit<ProductStates> {
     sl
         .get<DataSource>()
         .addToCart(AddToCartProductModel(
+            productId: product.id,
             orderId: product.id,
             imgUrl: imgUrl,
             quantity: amountOfProduct,

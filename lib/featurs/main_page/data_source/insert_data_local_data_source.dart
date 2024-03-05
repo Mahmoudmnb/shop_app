@@ -201,7 +201,7 @@ class InsertDataLocalDataSource {
       Database db = await openDatabase(Constant.productDataBasePath);
       for (var element in products) {
         Map<String, dynamic> data = {
-          'isNew': isNew,
+          'isNew': isNew ? 1 : 0,
           'name': element.data['name'],
           'price': element.data['price'],
           'makerCompany': element.data['makerCompany'],
@@ -246,7 +246,7 @@ class InsertDataLocalDataSource {
             'UPDATE AddToCartTable SET quantity=$q WHERE order_id==${addToCartTableModel.orderId}');
       } else {
         db.rawInsert(
-          "INSERT INTO AddToCartTable (imgUrl, quantity, productName, price,companyMaker, color, size, order_id) VALUES ('${addToCartTableModel.imgUrl}', ${addToCartTableModel.quantity},'${addToCartTableModel.productName}',${addToCartTableModel.price},'${addToCartTableModel.companyMaker}','${addToCartTableModel.color}','${addToCartTableModel.size}',${addToCartTableModel.orderId})",
+          "INSERT INTO AddToCartTable (imgUrl, quantity, productName, price,companyMaker, color, size, order_id , productId) VALUES ('${addToCartTableModel.imgUrl}', ${addToCartTableModel.quantity},'${addToCartTableModel.productName}',${addToCartTableModel.price},'${addToCartTableModel.companyMaker}','${addToCartTableModel.color}','${addToCartTableModel.size}',${addToCartTableModel.orderId},${addToCartTableModel.productId})",
         );
       }
     } catch (e) {

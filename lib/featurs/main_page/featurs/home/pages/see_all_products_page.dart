@@ -304,11 +304,16 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                           curve: Curves.fastEaseInToSlowEaseOut,
                           duration: const Duration(milliseconds: 500),
                           child: GestureDetector(
-                            onTap: () {
+                            onTap: () async {
                               ProductCubit productCubit =
                                   BlocProvider.of<ProductCubit>(context);
                               productCubit.widthOfPrice = 145;
                               productCubit.hidden = false;
+                              if (product.isNew!) {
+                                await sl
+                                    .get<DataSource>()
+                                    .updateProductToNotNew(product.name);
+                              }
                               productCubit.getReviws(product.id).then((value) {
                                 productCubit
                                     .getSimilarProducts(product)
@@ -418,7 +423,16 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                                             color: Color(
                                                                 0xffD8D8D8),
                                                           )))),
-                                      )
+                                      ),
+                                      product.isNew!
+                                          ? const Positioned(
+                                              child: Text(
+                                              'NEW',
+                                              style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize: 40),
+                                            ))
+                                          : const SizedBox.shrink()
                                     ],
                                   ),
                                 ),

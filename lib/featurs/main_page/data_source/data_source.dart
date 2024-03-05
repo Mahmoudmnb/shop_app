@@ -154,10 +154,6 @@ class DataSource {
     return insertDataLocalDataSource.setRecommendedProducts();
   }
 
-  Future<List<Document>> getPricesFromCloud(List<String> productsIds) async {
-    return remoteDataSource.getPricesFromCloud(productsIds);
-  }
-
   Future<bool> isAllBordersIsEmpty() async {
     return getDataLocalDataSource.isAllBordersIsEmpty();
   }
@@ -250,17 +246,16 @@ class DataSource {
   }
 
 //! this section for deleting and updating data
+  Future<void> updateProductToNotNew(String productName) async {
+    return updateDeleteLocalDataSource.updateProductToNotNew(productName);
+  }
+
   Future<void> updateReviews() async {
     return updateDeleteLocalDataSource.updateReviews();
   }
 
-  Future<void> updateDataBase() async {
+  Future<Map<String, List<Document>>> updateDataBase() async {
     return updateDeleteLocalDataSource.updateDataBase();
-  }
-
-  Future<void> updatePrices(
-      List<String> productsNames, List<double> oldPrices) async {
-    updateDeleteLocalDataSource.updatePrices(productsNames, oldPrices);
   }
 
   Future<void> deleteAddress(String addressName) async {

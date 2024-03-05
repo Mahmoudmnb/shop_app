@@ -8,6 +8,7 @@ import '../featurs/home/models/product_model.dart';
 import 'data_source_paths.dart';
 
 class GetDataLocalDataSource {
+
   Future<List<Map<String, dynamic>>> getNewestProducts() async {
     Database db = await openDatabase(Constant.productDataBasePath);
     var newestProducts =

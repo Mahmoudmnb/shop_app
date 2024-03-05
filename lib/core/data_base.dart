@@ -68,7 +68,7 @@ class MyDataBase {
         version: 1,
         onCreate: (db, version) async {
           db.execute(
-              'CREATE TABLE AddToCartTable (id INTEGER PRIMARY KEY , order_id INT NOT NULL, imgUrl TEXT NOT NULL, quantity INTEGER NOT NULL, productName TEXT NOT NULL ,price DOUBLE NOT NULL, companyMaker TEXT NOT NULL , color TEXT NOT NULL , size  TEXT NOT NULL)');
+              'CREATE TABLE AddToCartTable (id INTEGER PRIMARY KEY , order_id INT NOT NULL, imgUrl TEXT NOT NULL, quantity INTEGER NOT NULL, productId INT NOT NULL, productName TEXT NOT NULL ,price DOUBLE NOT NULL, companyMaker TEXT NOT NULL , color TEXT NOT NULL , size  TEXT NOT NULL)');
         },
       );
       log('Add to cart table created');

@@ -4,6 +4,7 @@ class AddToCartProductModel {
   int? id;
   int orderId;
   String productName;
+  int productId;
   double price;
   int quantity;
   String companyMaker;
@@ -12,6 +13,7 @@ class AddToCartProductModel {
   String imgUrl;
   AddToCartProductModel(
       {this.id,
+      required this.productId,
       required this.orderId,
       required this.quantity,
       required this.color,
@@ -22,6 +24,7 @@ class AddToCartProductModel {
       required this.imgUrl});
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'productId': productId,
       'id': id,
       'order_id': orderId,
       'productName': productName,
@@ -36,6 +39,7 @@ class AddToCartProductModel {
 
   factory AddToCartProductModel.fromMap(Map<String, dynamic> map) {
     return AddToCartProductModel(
+        productId: map['productId'] as int,
         orderId: map['order_id'] as int,
         id: map['id'] as int,
         productName: map['productName'] as String,

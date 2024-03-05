@@ -172,12 +172,28 @@ class HomePage extends StatelessWidget {
                     List<Map<String, dynamic>> newestProducts =
                         await sl.get<DataSource>().getNewestProducts();
                     if (context.mounted) {
-                      Navigator.of(context).push(MaterialPageRoute(
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
                         builder: (context) => SeeAllProductsPage(
                             searchWord: '',
                             categoryName: 'New',
                             categoryProducts: newestProducts),
-                      ));
+                      ))
+                          .then((value) async {
+                        var data =
+                            await sl.get<DataSource>().getNewestProducts();
+                        for (var element in data) {
+                          ProductModel productModel =
+                              ProductModel.fromMap(element);
+                          if (productModel.isNew!) {
+                            if (context.mounted) {
+                              context.read<DiscountProductsBloc>().add(
+                                  ChangeIsNewProductsFounded(isFounded: true));
+                            }
+                            break;
+                          }
+                        }
+                      });
                     }
                   },
                   collectoinTitle: 'New');

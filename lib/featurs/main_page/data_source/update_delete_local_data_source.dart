@@ -12,6 +12,11 @@ import '../../../core/constant.dart';
 import '../featurs/check_out/models/address_model.dart';
 
 class UpdateDeleteLocalDataSource {
+  Future<void> updateProductToNotNew(String productName) async {
+    Database db = await openDatabase(Constant.productDataBasePath);
+    db.rawUpdate("UPDATE products SET isNew = 0 WHERE name='$productName'");
+  }
+
   Future<void> updateReviews() async {
     var data = sl.get<SharedPreferences>().getString('lastUpdate');
     if (data != null) {
@@ -24,20 +29,24 @@ class UpdateDeleteLocalDataSource {
     log('done');
   }
 
-  Future<void> updateDataBase() async {
+  Future<Map<String, List<Document>>> updateDataBase() async {
     var data = sl.get<SharedPreferences>().getString('lastUpdate');
     if (data != null) {
       var p = await sl.get<DataSource>().getUpdatedProducts(data);
       List<Document> newProducts = p['newProducts'] ?? [];
       List<Document> updatedProducts = p['updatedProducts'] ?? [];
       if (newProducts.isNotEmpty) {
-        await sl.get<DataSource>().insertProductsIntoLocalDataBase(newProducts,true);
+        await sl
+            .get<DataSource>()
+            .insertProductsIntoLocalDataBase(newProducts, true);
       }
       if (updatedProducts.isNotEmpty) {
         await updateProducts(updatedProducts);
       }
       log(p.toString());
+      return p;
     }
+    return {};
   }
 
   Future<void> updateProducts(List<Document> products) async {
@@ -60,29 +69,21 @@ class UpdateDeleteLocalDataSource {
         product.disCount,
         product.name
       ]);
-      // db.rawUpdate(
-      //     """UPDATE products SET imgUrl ='${product.imgUrl}',name ='${product.name}',discription ='${product.discription}',
-      // price=${product.price}, makerCompany= '${product.makerCompany}',sizes= '${product.sizes}', colors= '${product.colors}',
-      // discount=${product.disCount},date='${product.date}', category='${product.category}', rating=${element.data['rating']}
-      // WHERE name='${product.name}'""");
+      Database cartDb = await openDatabase(Constant.addToCartTable);
+      cartDb.rawUpdate(
+          """UPDATE AddToCartTable SET imgUrl = ?, productName = ? , price = ? , companyMaker = ? 
+      WHERE productName = ? """,
+          [
+            product.imgUrl.split('|')[0],
+            product.name,
+            product.disCount > 0
+                ? (1 - product.disCount / 100) * product.price
+                : product.price,
+            product.makerCompany,
+            product.name
+          ]);
     }
     log('done updating products');
-  }
-
-  Future<void> updatePrices(
-      List<String> productsNames, List<double> oldPrices) async {
-    List<Document> data =
-        await sl.get<DataSource>().getPricesFromCloud(productsNames);
-    for (var i = 0; i < data.length; i++) {
-      if (data[i].data['price'] != oldPrices[i]) {
-        updatePrice(data[i].data['price'] * 1.0, data[i].data['name']);
-      }
-    }
-  }
-
-  Future<void> updatePrice(double price, String productName) async {
-    Database db = await openDatabase(Constant.productDataBasePath);
-    db.rawUpdate("UPDATE products set price=$price WHERE name='$productName'");
   }
 
   Future<void> deleteAddress(String addressName) async {
