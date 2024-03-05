@@ -103,21 +103,24 @@ class ProductDetails extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.baseline,
-                                    textBaseline: TextBaseline.alphabetic,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Text(
-                                        product.name,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          letterSpacing: .5,
-                                          fontFamily: 'Tenor Sans',
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 22.sp,
+                                      SizedBox(
+                                        width: 200.w,
+                                        child: FittedBox(
+                                          child: Text(
+                                            product.name,
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              letterSpacing: .5,
+                                              fontFamily: 'Tenor Sans',
+                                              fontWeight: FontWeight.bold,
+                                              // fontSize: 22.sp,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                      SizedBox(width: 3.w),
+                                      SizedBox(width: 5.w),
                                       Text.rich(
                                         TextSpan(
                                           children: [
