@@ -124,7 +124,6 @@ class ProductCubit extends Cubit<ProductStates> {
                 borderNameCon: TextEditingController(),
                 fromKey: GlobalKey<FormState>(),
               )).then((value) async {
-        log(selectedBorderIndex.toString());
         sl
             .get<DataSource>()
             .addProductToBorder(product.id, selectedBorderIndex + 1);

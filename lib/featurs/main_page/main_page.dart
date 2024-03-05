@@ -18,6 +18,7 @@ import 'featurs/profile/screen/profile_screen.dart';
 import 'featurs/search/screen/search_screen.dart';
 import 'featurs/shopping_bag/cubits/products_cubit/products_cubit.dart';
 import 'featurs/shopping_bag/screens/shopping_bag_screen.dart';
+import 'featurs/wishlist/screens/wishlist_screen.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -152,16 +153,15 @@ class _MainPageState extends State<MainPage>
           child: IconButton(
               icon: const Icon(Icons.favorite_border),
               onPressed: () async {
-                log(DateTime.now().millisecondsSinceEpoch.toString());
-
-                // List<Map<String, dynamic>> borders =
-                //     await sl.get<DataSource>().getBorders();
-                // if (context.mounted) {
-                //   Navigator.of(context).push(MaterialPageRoute(
-                //       builder: (context) => WishListScreen(
-                //             borders: borders,
-                //           )));
-                // }
+                // log(DateTime.now().millisecondsSinceEpoch.toString());
+                List<Map<String, dynamic>> borders =
+                    await sl.get<DataSource>().getBorders();
+                if (context.mounted) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => WishListScreen(
+                            borders: borders,
+                          )));
+                }
               }),
         )
       ],

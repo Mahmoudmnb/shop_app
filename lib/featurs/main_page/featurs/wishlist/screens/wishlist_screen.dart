@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -41,7 +39,6 @@ class WishListScreen extends StatelessWidget {
                           future: sl.get<DataSource>().isAllBordersIsEmpty(),
                           builder: (_, snapshoot) {
                             if (snapshoot.hasData) {
-                              log(snapshoot.toString());
                               return borders.isEmpty || snapshoot.data!
                                   ? Container(
                                       padding:
@@ -82,12 +79,74 @@ class WishListScreen extends StatelessWidget {
                                                         borders[index]['id']),
                                                 builder: (context, snapshot) {
                                                   return snapshot.hasData
-                                                      ? BorderCard(
-                                                          borderName: borders[
-                                                                  index]
-                                                              ['borderName'],
-                                                          borderProducts:
-                                                              snapshot.data!,
+                                                      ? Dismissible(
+                                                          key: ValueKey<int>(
+                                                              borders[index]
+                                                                  ['id']),
+                                                          onDismissed:
+                                                              (direction) async {
+                                                            sl
+                                                                .get<
+                                                                    DataSource>()
+                                                                .deleteBorder(
+                                                                    borders[index]
+                                                                        ['id']);
+                                                          },
+                                                          secondaryBackground:
+                                                              Container(
+                                                            // margin: EdgeInsets.only(left: 7.6335.w),
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    right: 19.65
+                                                                        .w),
+                                                            alignment: Alignment
+                                                                .centerRight,
+                                                            clipBehavior: Clip
+                                                                .antiAliasWithSaveLayer,
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                              color:
+                                                                  Colors.black,
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          10)),
+                                                            ),
+                                                            child: const Icon(
+                                                                Icons.delete,
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          background: Container(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 19.65
+                                                                        .w),
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            clipBehavior: Clip
+                                                                .antiAliasWithSaveLayer,
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                              color:
+                                                                  Colors.black,
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          10)),
+                                                            ),
+                                                            child: const Icon(
+                                                                Icons.delete,
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          child: BorderCard(
+                                                            borderName: borders[
+                                                                    index]
+                                                                ['borderName'],
+                                                            borderProducts:
+                                                                snapshot.data!,
+                                                          ),
                                                         )
                                                       : const SizedBox.shrink();
                                                 });

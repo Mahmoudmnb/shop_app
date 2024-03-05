@@ -246,6 +246,10 @@ class DataSource {
   }
 
 //! this section for deleting and updating data
+  Future<void> deleteBorder(int borderId) async {
+    return updateDeleteLocalDataSource.deleteBorder(borderId);
+  }
+
   Future<void> updateProductToNotNew(String productName) async {
     return updateDeleteLocalDataSource.updateProductToNotNew(productName);
   }

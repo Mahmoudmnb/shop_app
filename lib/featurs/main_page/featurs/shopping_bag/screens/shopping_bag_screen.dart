@@ -56,19 +56,67 @@ class ShoppingBagScreen extends StatelessWidget {
           ));
         });
       } else if (productNamesForColors == '') {
-        Toast.show(
-            "products (${productNamesForSizes.substring(0, productNamesForSizes.length - 1)}) doesn't have the sizes that you selected it please select another size",
-            duration: Toast.lengthLong);
+        showErrorMessage(
+            "products (${productNamesForSizes.substring(0, productNamesForSizes.length - 1)}) doesn't have the sizes that you selected please select another size",
+            context);
       } else if (productNamesForSizes == '') {
-        Toast.show(
-            "products (${productNamesForColors.substring(0, productNamesForSizes.length - 1)}) doesn't have the sizes that you selected it please select another size",
-            duration: Toast.lengthLong);
+        showErrorMessage(
+            "products (${productNamesForColors.substring(0, productNamesForColors.length - 1)}) doesn't have the sizes that you selected please select another size",
+            context);
       } else {
-        Toast.show(
-            "products (${productNamesForColors.substring(0, productNamesForSizes.length - 1)}) doesn't have the color that you selected it please select another color, and products (${productNamesForSizes.substring(0, productNamesForSizes.length)}) doesn't have the sizes that you selected it please select another size",
-            duration: Toast.lengthLong);
+        showErrorMessage(
+            "products (${productNamesForColors.substring(0, productNamesForColors.length - 1)}) doesn't have the color that you selected please select another color, and products (${productNamesForSizes.substring(0, productNamesForSizes.length - 1)}) doesn't have the sizes that you selected please select another size",
+            context);
       }
     }
+  }
+  
+
+  showErrorMessage(String message, BuildContext context) {
+    log(message.length.toString());
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Center(
+                  child: Text(
+                'Warning',
+                style: TextStyle(
+                    fontSize: 30.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red),
+              )),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+              content: SizedBox(
+                  height: message.length <= 140 ? 250.h : 380.h,
+                  width: 600.w,
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView(
+                            // mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                message,
+                                style: const TextStyle(fontSize: 25),
+                              ),
+                              SizedBox(height: 30.h),
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              "Okay",
+                              style: TextStyle(fontSize: 20),
+                            ))
+                      ],
+                    ),
+                  )),
+            ));
   }
 
   @override

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/featurs/main_page/featurs/products_view/cubits/product_screen/cubit.dart';
+import 'package:shop_app/injection.dart';
 
 import '../../../home/models/product_model.dart';
 
@@ -65,17 +69,28 @@ class WishlistBorder extends StatelessWidget {
               ],
             ),
             const Spacer(),
-            Container(
-              width: 22.w,
-              height: 22.w,
-              decoration: ShapeDecoration(
-                shape: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(22.w / 2),
-                  borderSide: const BorderSide(width: 1, color: Colors.white),
-                ),
-              ),
-              child: Icon(Icons.add, size: 18.sp, color: Colors.white),
-            ),
+            border['id'] != 1
+                ? GestureDetector(
+                    onTap: () {
+                      sl.get<DataSource>().deleteBorder(border['id']);
+                      context.read<ProductCubit>().changeSelectedBorderName(
+                          context.read<ProductCubit>().selectedBorder);
+                    },
+                    child: Container(
+                      width: 22.w,
+                      height: 22.w,
+                      decoration: ShapeDecoration(
+                        shape: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(22.w / 2),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.white),
+                        ),
+                      ),
+                      child:
+                          Icon(Icons.remove, size: 18.sp, color: Colors.white),
+                    ),
+                  )
+                : const SizedBox.shrink(),
             SizedBox(width: 25.w),
           ],
         ),

@@ -12,6 +12,14 @@ import '../../../core/constant.dart';
 import '../featurs/check_out/models/address_model.dart';
 
 class UpdateDeleteLocalDataSource {
+  Future<void> deleteBorder(int borderId) async {
+    Database db = await openDatabase(Constant.borderDataBasePath);
+    await db.rawDelete('DELETE FROM borders WHERE id=$borderId');
+    Database bDb = await openDatabase(Constant.broderProductsDataBasePath);
+    await bDb.rawUpdate(
+        'UPDATE borderProducts SET borderId=1 WHERE borderId=$borderId');
+  }
+
   Future<void> updateProductToNotNew(String productName) async {
     Database db = await openDatabase(Constant.productDataBasePath);
     db.rawUpdate("UPDATE products SET isNew = 0 WHERE name='$productName'");
