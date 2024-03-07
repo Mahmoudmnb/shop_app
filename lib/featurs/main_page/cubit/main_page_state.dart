@@ -11,3 +11,4 @@ final class AddLocationLoading extends MainPageState {}
 
 final class UpdateProfilePage extends MainPageState {}
 
+final class RefreshWishListPage extends MainPageState {}

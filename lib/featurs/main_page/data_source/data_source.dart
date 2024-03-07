@@ -129,6 +129,10 @@ class DataSource {
   }
 
   //! this section for getting data
+  Future<List<Map<String, dynamic>>> getProductsByNames(String names) async {
+    return getDataLocalDataSource.getProductsByNames(names);
+  }
+
   Future<List<Map<String, dynamic>>> getNewestProducts() async {
     return getDataLocalDataSource.getNewestProducts();
   }
@@ -246,6 +250,11 @@ class DataSource {
   }
 
 //! this section for deleting and updating data
+  Future<void> updateProductToNotDiscountUpdated(String productName) async {
+    return updateDeleteLocalDataSource
+        .updateProductToNotDiscountUpdated(productName);
+  }
+
   Future<void> deleteBorder(int borderId) async {
     return updateDeleteLocalDataSource.deleteBorder(borderId);
   }

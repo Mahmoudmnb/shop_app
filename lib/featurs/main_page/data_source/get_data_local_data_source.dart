@@ -8,6 +8,19 @@ import '../featurs/home/models/product_model.dart';
 import 'data_source_paths.dart';
 
 class GetDataLocalDataSource {
+  Future<List<Map<String, dynamic>>> getProductsByNames(String names) async {
+    Database db = await openDatabase(Constant.productDataBasePath);
+    List<Map<String, dynamic>> products = [];
+    names = names.replaceAll('|', ',');
+    try {
+      products =
+          await db.rawQuery("SELECT * FROM products WHERE name IN($names)");
+      log(products.toString());
+    } catch (e) {
+      log(e.toString());
+    }
+    return products;
+  }
 
   Future<List<Map<String, dynamic>>> getNewestProducts() async {
     Database db = await openDatabase(Constant.productDataBasePath);
@@ -35,7 +48,6 @@ class GetDataLocalDataSource {
     Database db = await openDatabase(Constant.broderProductsDataBasePath);
     var data =
         await db.rawQuery('SELECT * FROM borderProducts where borderId != 1 ');
-    log(data.toString());
     return data.isEmpty;
   }
 
@@ -159,7 +171,8 @@ class GetDataLocalDataSource {
     List<Map<String, dynamic>> orders = [];
     Database db = await openDatabase(Constant.productDataBasePath);
     // String data = ordersIds.replaceAll('|', ',');
-    List<String> p = ordersIds.split('|');
+    List<String> p =
+        ordersIds.contains('|') ? ordersIds.split('|') : [ordersIds];
     try {
       for (var i = 0; i < p.length; i++) {
         var d = await db.rawQuery('SELECT * FROM products WHERE id = ${p[i]}');
@@ -169,7 +182,6 @@ class GetDataLocalDataSource {
     } catch (e) {
       log(e.toString());
     }
-
     return orders;
   }
 

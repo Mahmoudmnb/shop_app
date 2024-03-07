@@ -29,3 +29,8 @@ final class IsNewProductsFounded extends DiscountProductsState {
   final bool isFounded;
   IsNewProductsFounded({required this.isFounded});
 }
+
+final class IsDisCountUpdatedEvent extends DiscountProductsState {
+  final bool isDiscountUpdated;
+  IsDisCountUpdatedEvent({required this.isDiscountUpdated});
+}

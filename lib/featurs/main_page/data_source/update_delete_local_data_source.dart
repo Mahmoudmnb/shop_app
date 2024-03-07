@@ -3,15 +3,25 @@ import 'dart:developer';
 import 'package:appwrite/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
-import 'package:shop_app/featurs/main_page/featurs/home/models/product_model.dart';
 import 'package:shop_app/featurs/main_page/featurs/products_view/models/review_model.dart';
 import 'package:shop_app/injection.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../core/constant.dart';
 import '../featurs/check_out/models/address_model.dart';
+import '../featurs/home/models/product_model.dart';
 
 class UpdateDeleteLocalDataSource {
+  Future<void> updateProductToNotDiscountUpdated(String productName) async {
+    Database db = await openDatabase(Constant.productDataBasePath);
+    try {
+      db.rawUpdate(
+          "UPDATE products SET isDiscountUpdated = 0 WHERE name='$productName'");
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   Future<void> deleteBorder(int borderId) async {
     Database db = await openDatabase(Constant.borderDataBasePath);
     await db.rawDelete('DELETE FROM borders WHERE id=$borderId');
@@ -59,37 +69,49 @@ class UpdateDeleteLocalDataSource {
 
   Future<void> updateProducts(List<Document> products) async {
     Database db = await openDatabase(Constant.productDataBasePath);
+    String names = '';
     for (var element in products) {
-      ProductModel product = ProductModel.fromMap(element.data);
       log(element.data.toString());
+      names += "'${element.data['name']}'|";
+    }
+    var len = names.length;
+    names = names.substring(0, len - 1);
+    var oldProducts = await sl.get<DataSource>().getProductsByNames(names);
+    int index = 0;
+    for (var element in products) {
+      ProductModel newProduct = ProductModel.fromMap(element.data);
       db.rawUpdate("""
-  UPDATE products SET name = ?, discription = ?, makerCompany = ?,sizes = ?, 
-  colors = ?,  date = ?, category = ? , price = ? ,discount = ?
-   WHERE name = ? """, [
-        product.name,
-        product.discription,
-        product.makerCompany,
-        product.sizes,
-        product.colors,
-        product.date,
-        product.category,
-        product.price,
-        product.disCount,
-        product.name
+    UPDATE products SET name = ?, discription = ?, makerCompany = ?,sizes = ?,
+    colors = ?,  date = ?, category = ? , price = ? ,discount = ?, isDiscountUpdated=?
+     WHERE name = ? """, [
+        newProduct.name,
+        newProduct.discription,
+        newProduct.makerCompany,
+        newProduct.sizes,
+        newProduct.colors,
+        newProduct.date,
+        newProduct.category,
+        newProduct.price,
+        newProduct.disCount,
+        ProductModel.fromMap(oldProducts[index]).disCount == newProduct.disCount
+            ? false
+            : true,
+        newProduct.name,
       ]);
       Database cartDb = await openDatabase(Constant.addToCartTable);
       cartDb.rawUpdate(
-          """UPDATE AddToCartTable SET imgUrl = ?, productName = ? , price = ? , companyMaker = ? 
-      WHERE productName = ? """,
+          """UPDATE AddToCartTable SET imgUrl = ?, productName = ? , price = ? , companyMaker = ?
+        WHERE productName = ? """,
           [
-            product.imgUrl.split('|')[0],
-            product.name,
-            product.disCount > 0
-                ? (1 - product.disCount / 100) * product.price
-                : product.price,
-            product.makerCompany,
-            product.name
+            newProduct.imgUrl.split('|')[0],
+            newProduct.name,
+            newProduct.disCount > 0
+                ? (1 - newProduct.disCount / 100) * newProduct.price
+                : newProduct.price,
+            newProduct.makerCompany,
+            newProduct.name
           ]);
+      index++;
     }
     log('done updating products');
   }

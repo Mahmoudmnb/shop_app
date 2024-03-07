@@ -37,9 +37,10 @@ class CollectionsSpacer extends StatelessWidget {
                         color: const Color(0xff6D6D6D),
                       )),
                   isNew
-                      ? const Text(
-                          'New',
-                          style: TextStyle(color: Colors.red, fontSize: 20),
+                      ? Text(
+                          collectoinTitle == 'New' ? 'New' : 'New Discount',
+                          style:
+                              const TextStyle(color: Colors.red, fontSize: 20),
                         )
                       : const SizedBox.shrink()
                 ]),

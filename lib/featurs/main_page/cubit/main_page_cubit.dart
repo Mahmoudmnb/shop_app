@@ -71,4 +71,8 @@ class MainPageCubit extends Cubit<MainPageState> {
                   )),
             ));
   }
+
+  void refreshWishListPage() {
+    emit(RefreshWishListPage());
+  }
 }

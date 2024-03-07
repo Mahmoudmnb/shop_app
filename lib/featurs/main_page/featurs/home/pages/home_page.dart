@@ -14,18 +14,14 @@ import '../widgets/trendy_image.dart';
 import 'home_pages.dart';
 
 class HomePage extends StatelessWidget {
-  final List<Map<String, Object?>> disCountProducts;
   final List<Map<String, dynamic>> trindyProducts;
-  const HomePage(
-      {super.key,
-      required this.disCountProducts,
-      required this.trindyProducts});
+  const HomePage({super.key, required this.trindyProducts});
 
   @override
   Widget build(BuildContext context) {
-    context
-        .read<DiscountProductsBloc>()
-        .add(GetDiscountProducts(discountProducts: disCountProducts));
+    // context
+    //     .read<DiscountProductsBloc>()
+    //     .add(GetDiscountProducts(discountProducts: disCountProducts));
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: ListView(
@@ -41,44 +37,88 @@ class HomePage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 15.h),
-          CollectionsSpacer(
-              isNew: false,
-              onTap: () {
-                context.read<SearchCubit>().reset('', false);
-                context
-                    .read<SearchCubit>()
-                    .searchInSeeAllProducts(null, 'Discount', null)
-                    .then((disCountProducts) {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SeeAllProductsPage(
-                        searchWord: '',
-                        categoryName: 'Discount',
-                        categoryProducts: disCountProducts),
-                  ));
-                });
-              },
-              collectoinTitle: 'Discount'),
+          BlocBuilder<DiscountProductsBloc, DiscountProductsState>(
+            builder: (context, state) {
+              bool isDiscountUpdated = false;
+              if (state is IsDisCountUpdatedEvent) {
+                isDiscountUpdated = state.isDiscountUpdated;
+              }
+              return CollectionsSpacer(
+                  isNew: isDiscountUpdated,
+                  onTap: () {
+                    context.read<SearchCubit>().reset('', false);
+                    context
+                        .read<SearchCubit>()
+                        .searchInSeeAllProducts(null, 'Discount', null)
+                        .then((disCountProducts) {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                        builder: (context) => SeeAllProductsPage(
+                            searchWord: '',
+                            categoryName: 'Discount',
+                            categoryProducts: disCountProducts),
+                      ))
+                          .then((value) async {
+                        var data =
+                            await sl.get<DataSource>().getDiscountsProducts();
+                        for (var element in data) {
+                          ProductModel productModel =
+                              ProductModel.fromMap(element);
+                          if (productModel.isDisCountUpdated) {
+                            if (context.mounted) {
+                              context.read<DiscountProductsBloc>().add(
+                                  ChangeIsDisCountUpdated(
+                                      isDisCountUpdated: true));
+                            }
+                            break;
+                          }
+                        }
+                      });
+                    });
+                  },
+                  collectoinTitle: 'Discount');
+            },
+          ),
           SizedBox(height: 15.h),
           //! Discount products
-          SizedBox(
-              width: double.infinity,
-              height: 182.h,
-              child: ListView.builder(
-                  keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.onDrag,
-                  scrollDirection: Axis.horizontal,
-                  itemCount:
-                      disCountProducts.length < 6 ? disCountProducts.length : 6,
-                  itemBuilder: (context, index) {
-                    ProductModel product =
-                        ProductModel.fromMap(disCountProducts[index]);
-                    return DisCountImage(
-                        makerCompany: product.makerCompany,
-                        imageUrl: product.imgUrl,
-                        price: product.price.toString(),
-                        productName: product.name,
-                        discount: product.disCount.toString());
-                  })),
+          FutureBuilder(
+              future: sl.get<DataSource>().getDiscountsProducts(),
+              builder: (_, snapshoot) {
+                if (snapshoot.hasData) {
+                  bool key = false;
+                  for (var element in snapshoot.data!) {
+                    if (ProductModel.fromMap(element).isDisCountUpdated) {
+                      key = true;
+                      break;
+                    }
+                  }
+                  context
+                      .read<DiscountProductsBloc>()
+                      .add(ChangeIsDisCountUpdated(isDisCountUpdated: key));
+                }
+                return snapshoot.hasData
+                    ? SizedBox(
+                        width: double.infinity,
+                        height: 182.h,
+                        child: ListView.builder(
+                            keyboardDismissBehavior:
+                                ScrollViewKeyboardDismissBehavior.onDrag,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshoot.data!.length < 6
+                                ? snapshoot.data!.length
+                                : 6,
+                            itemBuilder: (context, index) {
+                              ProductModel product =
+                                  ProductModel.fromMap(snapshoot.data![index]);
+                              return DisCountImage(
+                                  makerCompany: product.makerCompany,
+                                  imageUrl: product.imgUrl,
+                                  price: product.price.toString(),
+                                  productName: product.name,
+                                  discount: product.disCount.toString());
+                            }))
+                    : SizedBox.fromSize();
+              }),
           SizedBox(height: 15.h),
           //! trendy products
           CollectionsSpacer(
@@ -185,7 +225,7 @@ class HomePage extends StatelessWidget {
                         for (var element in data) {
                           ProductModel productModel =
                               ProductModel.fromMap(element);
-                          if (productModel.isNew!) {
+                          if (productModel.isNew) {
                             if (context.mounted) {
                               context.read<DiscountProductsBloc>().add(
                                   ChangeIsNewProductsFounded(isFounded: true));
@@ -204,15 +244,16 @@ class HomePage extends StatelessWidget {
               future: sl.get<DataSource>().getNewestProducts(),
               builder: (_, snapshoot) {
                 if (snapshoot.hasData) {
+                  bool key = false;
                   for (var element in snapshoot.data!) {
-                    if (ProductModel.fromMap(element).isNew!) {
-                      context
-                          .read<DiscountProductsBloc>()
-                          .add(ChangeIsNewProductsFounded(isFounded: true));
-                      true;
+                    if (ProductModel.fromMap(element).isNew) {
+                      key = true;
                       break;
                     }
                   }
+                  context
+                      .read<DiscountProductsBloc>()
+                      .add(ChangeIsNewProductsFounded(isFounded: key));
                   return Container(
                     padding: EdgeInsets.only(left: 3.w, top: 1.h),
                     width: 123.w,

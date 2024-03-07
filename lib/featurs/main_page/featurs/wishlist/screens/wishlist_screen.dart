@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:shop_app/featurs/main_page/cubit/main_page_cubit.dart';
 import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
 import 'package:shop_app/injection.dart';
 
@@ -35,126 +36,155 @@ class WishListScreen extends StatelessWidget {
               builder: (context, state) {
                 return Expanded(
                   child: context.read<WishListCubit>().kindOfOrder == "Borders"
-                      ? FutureBuilder(
-                          future: sl.get<DataSource>().isAllBordersIsEmpty(),
-                          builder: (_, snapshoot) {
-                            if (snapshoot.hasData) {
-                              return borders.isEmpty || snapshoot.data!
-                                  ? Container(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 50.h),
-                                      width: double.infinity,
-                                      child: Column(
-                                        children: [
-                                          Image(
-                                            height: 200.h,
-                                            image: const AssetImage(
-                                                'assets/icons/saadHart.png'),
-                                          ),
-                                          SizedBox(height: 25.h),
-                                          Text(
-                                            "You don't have borders",
-                                            style: TextStyle(
-                                                fontSize: 18.sp,
-                                                color: Colors.grey[600]),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  : ListView.builder(
-                                      keyboardDismissBehavior:
-                                          ScrollViewKeyboardDismissBehavior
-                                              .onDrag,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 15.w),
-                                      itemCount: borders.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return index == 0
-                                            ? SizedBox(height: 15.h)
-                                            : FutureBuilder(
-                                                future: sl
-                                                    .get<DataSource>()
-                                                    .getProductsInBorder(
-                                                        borders[index]['id']),
-                                                builder: (context, snapshot) {
-                                                  return snapshot.hasData
-                                                      ? Dismissible(
-                                                          key: ValueKey<int>(
-                                                              borders[index]
-                                                                  ['id']),
-                                                          onDismissed:
-                                                              (direction) async {
-                                                            sl
-                                                                .get<
-                                                                    DataSource>()
-                                                                .deleteBorder(
-                                                                    borders[index]
-                                                                        ['id']);
-                                                          },
-                                                          secondaryBackground:
-                                                              Container(
-                                                            // margin: EdgeInsets.only(left: 7.6335.w),
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    right: 19.65
-                                                                        .w),
-                                                            alignment: Alignment
-                                                                .centerRight,
-                                                            clipBehavior: Clip
-                                                                .antiAliasWithSaveLayer,
-                                                            decoration:
-                                                                const BoxDecoration(
+                      ? Column(
+                          children: [
+                            BlocBuilder<MainPageCubit, MainPageState>(
+                              builder: (context, state) {
+                                return FutureBuilder(
+                                    future: sl
+                                        .get<DataSource>()
+                                        .isAllBordersIsEmpty(),
+                                    builder: (_, snapshoot) {
+                                      if (snapshoot.hasData) {
+                                        return borders.isEmpty ||
+                                                snapshoot.data!
+                                            ? Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 50.h),
+                                                width: double.infinity,
+                                                child: Column(
+                                                  children: [
+                                                    Image(
+                                                      height: 200.h,
+                                                      image: const AssetImage(
+                                                          'assets/icons/saadHart.png'),
+                                                    ),
+                                                    SizedBox(height: 25.h),
+                                                    Text(
+                                                      "You don't have borders",
+                                                      style: TextStyle(
+                                                          fontSize: 18.sp,
+                                                          color:
+                                                              Colors.grey[600]),
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            : const SizedBox.shrink();
+                                      } else {
+                                        return const SizedBox.shrink();
+                                      }
+                                    });
+                              },
+                            ),
+                            Expanded(
+                                child: ListView.builder(
+                                    keyboardDismissBehavior:
+                                        ScrollViewKeyboardDismissBehavior
+                                            .onDrag,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 15.w),
+                                    itemCount: borders.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return index == 0
+                                          ? SizedBox(height: 15.h)
+                                          : FutureBuilder(
+                                              future: sl
+                                                  .get<DataSource>()
+                                                  .getProductsInBorder(
+                                                      borders[index]['id']),
+                                              builder: (context, snapshot) {
+                                                return snapshot.hasData
+                                                    ? Dismissible(
+                                                        key: ValueKey<int>(
+                                                            borders[index]
+                                                                ['id']),
+                                                        onDismissed:
+                                                            (direction) async {
+                                                          await sl
+                                                              .get<DataSource>()
+                                                              .deleteBorder(
+                                                                  borders[index]
+                                                                      ['id']);
+                                                          if (context.mounted) {
+                                                            if (borders
+                                                                    .isEmpty ||
+                                                                await sl
+                                                                    .get<
+                                                                        DataSource>()
+                                                                    .isAllBordersIsEmpty()) {
+                                                              if (context
+                                                                  .mounted) {
+                                                                context
+                                                                    .read<
+                                                                        MainPageCubit>()
+                                                                    .refreshWishListPage();
+                                                              }
+                                                            }
+                                                          }
+                                                        },
+                                                        secondaryBackground:
+                                                            Container(
+                                                          // margin: EdgeInsets.only(left: 7.6335.w),
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right:
+                                                                      19.65.w),
+                                                          alignment: Alignment
+                                                              .centerRight,
+                                                          clipBehavior: Clip
+                                                              .antiAliasWithSaveLayer,
+                                                          decoration:
+                                                              const BoxDecoration(
+                                                            color: Colors.black,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            10)),
+                                                          ),
+                                                          child: const Icon(
+                                                              Icons.delete,
                                                               color:
-                                                                  Colors.black,
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          10)),
-                                                            ),
-                                                            child: const Icon(
-                                                                Icons.delete,
-                                                                color: Colors
-                                                                    .white),
+                                                                  Colors.white),
+                                                        ),
+                                                        background: Container(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left:
+                                                                      19.65.w),
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          clipBehavior: Clip
+                                                              .antiAliasWithSaveLayer,
+                                                          decoration:
+                                                              const BoxDecoration(
+                                                            color: Colors.black,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            10)),
                                                           ),
-                                                          background: Container(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    left: 19.65
-                                                                        .w),
-                                                            alignment: Alignment
-                                                                .centerLeft,
-                                                            clipBehavior: Clip
-                                                                .antiAliasWithSaveLayer,
-                                                            decoration:
-                                                                const BoxDecoration(
+                                                          child: const Icon(
+                                                              Icons.delete,
                                                               color:
-                                                                  Colors.black,
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          10)),
-                                                            ),
-                                                            child: const Icon(
-                                                                Icons.delete,
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                          child: BorderCard(
-                                                            borderName: borders[
-                                                                    index]
-                                                                ['borderName'],
-                                                            borderProducts:
-                                                                snapshot.data!,
-                                                          ),
-                                                        )
-                                                      : const SizedBox.shrink();
-                                                });
-                                      });
-                            } else {
-                              return const SizedBox.shrink();
-                            }
-                          })
+                                                                  Colors.white),
+                                                        ),
+                                                        child: BorderCard(
+                                                          borderName: borders[
+                                                                  index]
+                                                              ['borderName'],
+                                                          borderProducts:
+                                                              snapshot.data!,
+                                                        ),
+                                                      )
+                                                    : const SizedBox.shrink();
+                                              });
+                                    }))
+                          ],
+                        )
                       : FutureBuilder(
                           future: sl.get<DataSource>().getAllFavoritProducts(),
                           builder: (context, snapshot) {

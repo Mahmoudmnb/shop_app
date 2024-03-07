@@ -278,7 +278,6 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
           SizedBox(height: 30.h),
           BlocBuilder<DiscountProductsBloc, DiscountProductsState>(
             builder: (context, state) {
-              log(state.toString());
               if (state is SearchInDiscountResult) {
                 categoryProducts = state.searchResult;
               } else if (state is AllDiscountProductState) {
@@ -309,10 +308,16 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                   BlocProvider.of<ProductCubit>(context);
                               productCubit.widthOfPrice = 145;
                               productCubit.hidden = false;
-                              if (product.isNew!) {
+                              if (product.isNew) {
                                 await sl
                                     .get<DataSource>()
                                     .updateProductToNotNew(product.name);
+                              }
+                              if (product.isDisCountUpdated) {
+                                await sl
+                                    .get<DataSource>()
+                                    .updateProductToNotDiscountUpdated(
+                                        product.name);
                               }
                               productCubit.getReviws(product.id).then((value) {
                                 productCubit
@@ -424,7 +429,7 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                                                 0xffD8D8D8),
                                                           )))),
                                       ),
-                                      product.isNew!
+                                      product.isNew
                                           ? const Positioned(
                                               child: Text(
                                               'NEW',
@@ -432,7 +437,15 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                                   color: Colors.red,
                                                   fontSize: 40),
                                             ))
-                                          : const SizedBox.shrink()
+                                          : product.isDisCountUpdated
+                                              ? const Positioned(
+                                                  child: Text(
+                                                  'NEW Discount',
+                                                  style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontSize: 20),
+                                                ))
+                                              : const SizedBox.shrink()
                                     ],
                                   ),
                                 ),

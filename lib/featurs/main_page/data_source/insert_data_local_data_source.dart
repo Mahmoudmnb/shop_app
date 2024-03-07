@@ -213,7 +213,8 @@ class InsertDataLocalDataSource {
           'date': element.data['date'],
           'rating': element.data['rating'],
           'category': element.data['category'],
-          'isFavorate': 0
+          'isFavorate': 0,
+          'isDiscountUpdated': element.data['discount'] >= 0 ? true : false
         };
         try {
           await db.insert('products', data);

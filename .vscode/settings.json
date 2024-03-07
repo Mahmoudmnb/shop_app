@@ -1,3 +1,4 @@
 {
-  "cmake.configureOnOpen": true
+  "cmake.configureOnOpen": true,
+  "cmake.sourceDirectory": "/home/mahmoud/Desktop/shop_app/windows/flutter"
 }

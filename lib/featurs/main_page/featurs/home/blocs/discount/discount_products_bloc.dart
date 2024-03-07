@@ -19,6 +19,9 @@ class DiscountProductsBloc
             allDiscountProducts: event.allDiscountProducts));
       } else if (event is ChangeIsNewProductsFounded) {
         emit(IsNewProductsFounded(isFounded: event.isFounded));
+      } else if (event is ChangeIsDisCountUpdated) {
+        emit(
+            IsDisCountUpdatedEvent(isDiscountUpdated: event.isDisCountUpdated));
       }
     });
   }

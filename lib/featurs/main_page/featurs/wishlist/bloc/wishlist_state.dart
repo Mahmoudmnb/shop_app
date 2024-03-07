@@ -12,3 +12,4 @@ class ChanegNumOfCharacterState extends WishListState {}
 class ChangeRating extends WishListState {}
 
 class IsLoading extends WishListState {}
+

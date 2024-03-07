@@ -160,6 +160,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                       'All items';
                                   context
                                       .read<ProductCubit>()
+                                      .selectedBorderIndex = 0;
+                                  context
+                                      .read<ProductCubit>()
                                       .createModelBottomSheet(
                                           context, borders, product);
                                 }

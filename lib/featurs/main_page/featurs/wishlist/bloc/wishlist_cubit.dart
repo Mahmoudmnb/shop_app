@@ -30,6 +30,4 @@ class WishListCubit extends Cubit<WishListState> {
     kindOfOrder = kind;
     emit(ChangKindOfOrderState());
   }
-
- 
 }
