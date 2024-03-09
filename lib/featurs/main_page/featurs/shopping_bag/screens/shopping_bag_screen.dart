@@ -70,7 +70,6 @@ class ShoppingBagScreen extends StatelessWidget {
       }
     }
   }
-  
 
   showErrorMessage(String message, BuildContext context) {
     log(message.length.toString());
@@ -105,6 +104,37 @@ class ShoppingBagScreen extends StatelessWidget {
                             ],
                           ),
                         ),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              "Okay",
+                              style: TextStyle(fontSize: 20),
+                            ))
+                      ],
+                    ),
+                  )),
+            ));
+  }
+
+  Future<dynamic> showMessage(BuildContext context, String text) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+              content: SizedBox(
+                  height: 250.h,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          text,
+                          style: const TextStyle(fontSize: 25),
+                        ),
+                        SizedBox(height: 30.h),
                         TextButton(
                             onPressed: () {
                               Navigator.pop(context);
@@ -224,72 +254,40 @@ class ShoppingBagScreen extends StatelessWidget {
                                               i < oldProducts.length;
                                               i++) {
                                             for (var element in d) {
-                                              AddToCartProductModel oldProduct =
-                                                  AddToCartProductModel.fromMap(
-                                                      oldProducts[i]);
-                                              ProductModel newProduct =
-                                                  ProductModel.fromMap(
-                                                      element.data);
-                                              var newPrice = newProduct
-                                                          .disCount >
-                                                      0
-                                                  ? (1 -
-                                                          newProduct.disCount /
-                                                              100) *
-                                                      newProduct.price
-                                                  : newProduct.price;
-                                              if (oldProduct.price !=
-                                                      newPrice &&
-                                                  oldProduct.productName ==
-                                                      newProduct.name) {
-                                                key = true;
-                                                context
-                                                        .read<AddToCartCubit>()
-                                                        .setIsProceedButtonLoading =
-                                                    false;
-                                                showDialog(
-                                                    context: context,
-                                                    builder:
-                                                        (context) =>
-                                                            AlertDialog(
-                                                              contentPadding:
-                                                                  EdgeInsets.symmetric(
-                                                                      horizontal:
-                                                                          10.w,
-                                                                      vertical:
-                                                                          10.h),
-                                                              content: SizedBox(
-                                                                  height: 250.h,
-                                                                  child: Center(
-                                                                    child:
-                                                                        Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        const Text(
-                                                                          'Some prices are changed please take a look at the new prices before continue',
-                                                                          style:
-                                                                              TextStyle(fontSize: 25),
-                                                                        ),
-                                                                        SizedBox(
-                                                                            height:
-                                                                                30.h),
-                                                                        TextButton(
-                                                                            onPressed:
-                                                                                () {
-                                                                              Navigator.pop(context);
-                                                                            },
-                                                                            child:
-                                                                                const Text(
-                                                                              "Okay",
-                                                                              style: TextStyle(fontSize: 20),
-                                                                            ))
-                                                                      ],
-                                                                    ),
-                                                                  )),
-                                                            ));
-                                                break;
+                                              if (element.data['isAvailable']) {
+                                                AddToCartProductModel
+                                                    oldProduct =
+                                                    AddToCartProductModel
+                                                        .fromMap(
+                                                            oldProducts[i]);
+                                                ProductModel newProduct =
+                                                    ProductModel.fromMap(
+                                                        element.data);
+                                                var newPrice = newProduct
+                                                            .disCount >
+                                                        0
+                                                    ? (1 -
+                                                            newProduct
+                                                                    .disCount /
+                                                                100) *
+                                                        newProduct.price
+                                                    : newProduct.price;
+                                                if (oldProduct.price !=
+                                                        newPrice &&
+                                                    oldProduct.productName ==
+                                                        newProduct.name) {
+                                                  key = true;
+                                                  context
+                                                          .read<AddToCartCubit>()
+                                                          .setIsProceedButtonLoading =
+                                                      false;
+                                                  showMessage(context,
+                                                      'Some prices are changed please take a look at the new prices before continue');
+                                                  break;
+                                                }
+                                              } else {
+                                                showMessage(context,
+                                                    'product ${element.data['name']} is done please deleted form you cart and try again');
                                               }
                                             }
                                           }
@@ -302,7 +300,6 @@ class ShoppingBagScreen extends StatelessWidget {
                                                 .fetchData();
                                           }
                                           if (!key) {
-                                            // Todo: make sure all the colors or prices are available
                                             if (context.mounted) {
                                               goToNextPage(context);
                                             }

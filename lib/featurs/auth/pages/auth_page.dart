@@ -49,9 +49,9 @@ class AuthPage extends StatelessWidget {
         await myDataBase.createBorderProductsTable();
         await myDataBase.createRecommendedProductTable();
 
-        await sl.get<DataSource>().setRecommendedProducts();
         await sl.get<DataSource>().addBorder('All items');
         await sl.get<DataSource>().getProductsFormCloudDataBase();
+        await sl.get<DataSource>().setRecommendedProducts();
         await sl.get<DataSource>().getReviewsFromCloud();
         if (fromButton != 'Skip') {
           await sl.get<DataSource>().getOrdersFromCloud();
@@ -78,7 +78,7 @@ class AuthPage extends StatelessWidget {
         builder: (context, _) => Scaffold(
           body: SingleChildScrollView(
             child: SizedBox(
-              height: 816.h,
+              height: 800.h,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 17.5.w),
                 child: Column(

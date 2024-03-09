@@ -2,14 +2,14 @@ import 'dart:developer';
 
 import 'package:appwrite/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
-import 'package:shop_app/featurs/main_page/featurs/products_view/models/review_model.dart';
 import 'package:shop_app/injection.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../core/constant.dart';
 import '../featurs/check_out/models/address_model.dart';
 import '../featurs/home/models/product_model.dart';
+import '../featurs/products_view/models/review_model.dart';
+import 'data_source.dart';
 
 class UpdateDeleteLocalDataSource {
   Future<void> updateProductToNotDiscountUpdated(String productName) async {
@@ -80,24 +80,37 @@ class UpdateDeleteLocalDataSource {
     int index = 0;
     for (var element in products) {
       ProductModel newProduct = ProductModel.fromMap(element.data);
-      db.rawUpdate("""
+      if (element.data['isAvailable']) {
+        db.rawUpdate("""
     UPDATE products SET name = ?, discription = ?, makerCompany = ?,sizes = ?,
     colors = ?,  date = ?, category = ? , price = ? ,discount = ?, isDiscountUpdated=?
      WHERE name = ? """, [
-        newProduct.name,
-        newProduct.discription,
-        newProduct.makerCompany,
-        newProduct.sizes,
-        newProduct.colors,
-        newProduct.date,
-        newProduct.category,
-        newProduct.price,
-        newProduct.disCount,
-        ProductModel.fromMap(oldProducts[index]).disCount == newProduct.disCount
-            ? false
-            : true,
-        newProduct.name,
-      ]);
+          newProduct.name,
+          newProduct.discription,
+          newProduct.makerCompany,
+          newProduct.sizes,
+          newProduct.colors,
+          newProduct.date,
+          newProduct.category,
+          newProduct.price,
+          newProduct.disCount,
+          ProductModel.fromMap(oldProducts[index]).disCount ==
+                  newProduct.disCount
+              ? false
+              : true,
+          newProduct.name,
+        ]);
+      } else {
+        var d = await sl
+            .get<DataSource>()
+            .getProductsByNames("'${newProduct.name}'");
+        Database recommendedDb =
+            await openDatabase(Constant.recommendedProductsDataBasePath);
+        await recommendedDb.rawDelete(
+            "DELETE FROM recommended WHERE productId = ${ProductModel.fromMap(d[0]).id}");
+        await db.rawDelete(
+            "DELETE FROM products WHERE name = '${newProduct.name}'");
+      }
       Database cartDb = await openDatabase(Constant.addToCartTable);
       cartDb.rawUpdate(
           """UPDATE AddToCartTable SET imgUrl = ?, productName = ? , price = ? , companyMaker = ?

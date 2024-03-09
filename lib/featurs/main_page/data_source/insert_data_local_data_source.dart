@@ -39,8 +39,12 @@ class InsertDataLocalDataSource {
     }
     Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
     for (var i = 0; i < finalProductIds.length; i++) {
-      db.rawInsert(
-          'INSERT INTO recommended(productId,freq) VALUES (${finalProductIds[i]},${freq[i]})');
+      var l = await sl.get<DataSource>().getProductById(finalProductIds[i]);
+      log(l.toString());
+      if (l.isNotEmpty) {
+        db.rawInsert(
+            'INSERT INTO recommended(productId,freq) VALUES (${finalProductIds[i]},${freq[i]})');
+      }
     }
     log('done inserting recommended products');
   }
@@ -214,7 +218,7 @@ class InsertDataLocalDataSource {
           'rating': element.data['rating'],
           'category': element.data['category'],
           'isFavorate': 0,
-          'isDiscountUpdated': element.data['discount'] >= 0 ? true : false
+          // 'isDiscountUpdated': element.data['discount'] >= 0 ? 1 : 0
         };
         try {
           await db.insert('products', data);

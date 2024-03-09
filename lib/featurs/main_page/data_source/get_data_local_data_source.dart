@@ -12,9 +12,11 @@ class GetDataLocalDataSource {
     Database db = await openDatabase(Constant.productDataBasePath);
     List<Map<String, dynamic>> products = [];
     names = names.replaceAll('|', ',');
+    log(names);
     try {
       products =
           await db.rawQuery("SELECT * FROM products WHERE name IN($names)");
+      log('message');
       log(products.toString());
     } catch (e) {
       log(e.toString());
@@ -97,7 +99,7 @@ class GetDataLocalDataSource {
     Database db = await openDatabase(Constant.productDataBasePath);
     List<Map<String, dynamic>> products =
         await db.rawQuery('SELECT * FROM products WHERE id=$id');
-    return products[0];
+    return products.isEmpty ? {} : products[0];
   }
 
   Future<List<Map<String, dynamic>>> getSimilarProducts(

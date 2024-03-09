@@ -43,6 +43,7 @@ class RemoteDataSource {
         collectionId: "655860259ae4b331bee6",
         queries: [
           Query.greaterThan('date', lastDate),
+          Query.equal('isAvailable', true),
         ],
       );
       finalNewProducts = newProducts.documents;
@@ -190,14 +191,16 @@ class RemoteDataSource {
     Databases databases = Databases(client);
     try {
       var result = await databases.listDocuments(
-        databaseId: '65585f55e896c3e87515',
-        collectionId: "655860259ae4b331bee6",
-      );
+          databaseId: '65585f55e896c3e87515',
+          collectionId: "655860259ae4b331bee6",
+          queries: [Query.equal('isAvailable', true)]);
       data = result.documents;
     } on AppwriteException catch (e) {
       log(e.message.toString());
     }
-    return data;
+    var finalData =
+        data.where((element) => element.data['isAvailable']).toList();
+    return finalData;
   }
 
   Future<void> addOrderToCloudDataBase(
