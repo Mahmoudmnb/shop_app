@@ -56,10 +56,10 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image(
-                                  width: 300.w,
-                                  height: 300.w,
                                     image:
-                                        const AssetImage('assets/images/lock.png')),
+                                        ResizeImage(
+                              width: 300.w.toInt(),
+                              height: 300.w.toInt(),const AssetImage('assets/images/lock.png'))),
                                 TextButton(
                                     onPressed: () {
                                       Navigator.of(context)
