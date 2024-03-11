@@ -12,12 +12,9 @@ class GetDataLocalDataSource {
     Database db = await openDatabase(Constant.productDataBasePath);
     List<Map<String, dynamic>> products = [];
     names = names.replaceAll('|', ',');
-    log(names);
     try {
       products =
           await db.rawQuery("SELECT * FROM products WHERE name IN($names)");
-      log('message');
-      log(products.toString());
     } catch (e) {
       log(e.toString());
     }
@@ -178,10 +175,13 @@ class GetDataLocalDataSource {
     try {
       for (var i = 0; i < p.length; i++) {
         var d = await db.rawQuery('SELECT * FROM products WHERE id = ${p[i]}');
-        orders.add(d[0]);
+        if (d.isNotEmpty) {
+          orders.add(d[0]);
+        }
       }
       // orders = await db.rawQuery('SELECT * FROM products WHERE id IN ($data)');
     } catch (e) {
+      log('message');
       log(e.toString());
     }
     return orders;
