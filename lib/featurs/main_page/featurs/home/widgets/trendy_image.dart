@@ -25,12 +25,16 @@ class TrendyImage extends StatelessWidget {
           alignment: Alignment.center,
           margin: EdgeInsets.symmetric(horizontal: 8.w),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: AssetImage(
-                    imageUrl.split('|')[0],
-                  ))),
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(
+              fit: BoxFit.fill,
+              //! maybe the image isn't واضحة but this the solution 
+              image: ResizeImage(
+                width: 100.w.toInt(),
+                AssetImage(imageUrl.split('|')[0]),
+              ),
+            ),
+          ),
         ),
         SizedBox(
           width: 110.w,

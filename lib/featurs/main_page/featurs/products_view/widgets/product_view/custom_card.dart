@@ -22,9 +22,11 @@ class CustomCard extends StatelessWidget {
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(5)),
             child: Image(
-              image: AssetImage(product.imgUrl.split('|')[0]),
-              height: height, //- 6.h,
-              width: width,
+              image: ResizeImage(
+                AssetImage(product.imgUrl.split('|')[0]),
+                height: height.toInt(), //- 6.h,
+                width: width.toInt(),
+              ),
               fit: BoxFit.cover,
             ),
           ),
@@ -39,15 +41,19 @@ class CustomCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          product.makerCompany,
-                          style: TextStyle(
-                            color: const Color(0xFF383838),
-                            fontSize: 14.sp,
-                            fontFamily: 'Tenor Sans',
-                            fontWeight: FontWeight.w400,
-                            height: 1.06,
-                            letterSpacing: 1,
+                        SizedBox(
+                          width: 90.w,
+                          child: Text(
+                            product.name,
+                            style: TextStyle(
+                              color: const Color(0xFF383838),
+                              fontSize: 14.sp,
+                              fontFamily: 'Tenor Sans',
+                              overflow: TextOverflow.ellipsis,
+                              fontWeight: FontWeight.w400,
+                              height: 1.06,
+                              letterSpacing: 1,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 2),
@@ -68,11 +74,12 @@ class CustomCard extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 2.0),
                         child: Text(
-                          product.name,
+                          product.makerCompany,
                           style: TextStyle(
                             color: const Color(0xFF818181),
                             fontSize: 11.sp,
                             fontFamily: 'Tenor Sans',
+                            overflow: TextOverflow.ellipsis,
                             fontWeight: FontWeight.w400,
                             height: 1.06,
                           ),

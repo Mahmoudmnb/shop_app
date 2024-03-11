@@ -149,7 +149,7 @@ class HomePage extends StatelessWidget {
               itemBuilder: (_, index) => TrendyImage(
                 makerCompany: trindyProducts[index]['makerCompany'],
                 imageUrl: trindyProducts[index]['imgUrl'].split('|')[0],
-                price: trindyProducts[index]['price'].toString(),
+                price: (trindyProducts[index]['price'] as int).toStringAsFixed(1),
                 productName: trindyProducts[index]['name'],
               ),
             ),
@@ -181,7 +181,7 @@ class HomePage extends StatelessWidget {
                         child: ListView.builder(
                           keyboardDismissBehavior:
                               ScrollViewKeyboardDismissBehavior.onDrag,
-                          itemCount: 3,
+                          itemCount: 2,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             ProductModel product =

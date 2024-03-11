@@ -297,198 +297,210 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                       ProductModel product =
                           ProductModel.fromMap(categoryProducts[index]);
                       return AnimationConfiguration.staggeredGrid(
+                        duration: const Duration(milliseconds: 400),
                         position: index,
                         columnCount: 2,
                         child: ScaleAnimation(
-                          curve: Curves.fastEaseInToSlowEaseOut,
-                          duration: const Duration(milliseconds: 500),
-                          child: GestureDetector(
-                            onTap: () async {
-                              ProductCubit productCubit =
-                                  BlocProvider.of<ProductCubit>(context);
-                              productCubit.widthOfPrice = 145;
-                              productCubit.hidden = false;
-                              if (product.isNew) {
-                                await sl
-                                    .get<DataSource>()
-                                    .updateProductToNotNew(product.name);
-                              }
-                              if (product.isDisCountUpdated) {
-                                await sl
-                                    .get<DataSource>()
-                                    .updateProductToNotDiscountUpdated(
-                                        product.name);
-                              }
-                              productCubit.getReviws(product.id).then((value) {
+                          // scale: 0.1,
+                          curve: Curves.fastLinearToSlowEaseIn,
+                          duration: const Duration(milliseconds: 800),
+                          child: FadeInAnimation(
+                            child: GestureDetector(
+                              onTap: () async {
+                                ProductCubit productCubit =
+                                    BlocProvider.of<ProductCubit>(context);
+                                productCubit.widthOfPrice = 145;
+                                productCubit.hidden = false;
+                                if (product.isNew) {
+                                  await sl
+                                      .get<DataSource>()
+                                      .updateProductToNotNew(product.name);
+                                }
+                                if (product.isDisCountUpdated) {
+                                  await sl
+                                      .get<DataSource>()
+                                      .updateProductToNotDiscountUpdated(
+                                          product.name);
+                                }
                                 productCubit
-                                    .getSimilarProducts(product)
+                                    .getReviws(product.id)
                                     .then((value) {
-                                  Navigator.of(context)
-                                      .pushReplacement(MaterialPageRoute(
-                                    builder: (context) => ProductScreen(
-                                      categoryName: categoryName,
-                                      fromPage: 'seeAll',
-                                      searchCubit: cubit,
-                                      searchWord: searchController.text,
-                                      product: product,
-                                      fromPageTitle: categoryName,
-                                      cubit: BlocProvider.of<ProductCubit>(
-                                          context),
-                                    ),
-                                  ));
+                                  productCubit
+                                      .getSimilarProducts(product)
+                                      .then((value) {
+                                    Navigator.of(context)
+                                        .pushReplacement(MaterialPageRoute(
+                                      builder: (context) => ProductScreen(
+                                        categoryName: categoryName,
+                                        fromPage: 'seeAll',
+                                        searchCubit: cubit,
+                                        searchWord: searchController.text,
+                                        product: product,
+                                        fromPageTitle: categoryName,
+                                        cubit: BlocProvider.of<ProductCubit>(
+                                            context),
+                                      ),
+                                    ));
+                                  });
                                 });
-                              });
-                            },
-                            child: Column(
-                              children: [
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(boxShadow: [
-                                    BoxShadow(
-                                        offset: const Offset(0, 4),
-                                        color: Colors.black.withOpacity(.25),
-                                        blurRadius: 2)
-                                  ], borderRadius: BorderRadius.circular(10)),
-                                  child: Stack(
-                                    alignment: const Alignment(.80, -.89),
-                                    children: [
-                                      Image.asset(
-                                        product.imgUrl.split('|')[0].trim(),
-                                        fit: BoxFit.cover,
-                                        height: 206.h,
-                                        width: 141.w,
-                                      ),
-                                      Positioned(
-                                        right: 2.w,
-                                        child: CircleAvatar(
-                                            backgroundColor: Colors.white,
-                                            child: GestureDetector(
-                                                onTap: () {
-                                                  // if (searchController.text ==
-                                                  //     '') {
-                                                  //   cubit
-                                                  //       .setFavorateProduct(
-                                                  //           product.id,
-                                                  //           !product.isFavorite)
-                                                  //       .then((value) {
-                                                  //     cubit
-                                                  //         .searchInSeeAllProducts(
-                                                  //             null,
-                                                  //             categoryName,
-                                                  //             categoryProducts)
-                                                  //         .then((searchResult) {
-                                                  //       context
-                                                  //           .read<
-                                                  //               DiscountProductsBloc>()
-                                                  //           .add(SearchInDiscount(
-                                                  //               searchResult:
-                                                  //                   searchResult));
-                                                  //     });
-                                                  //   });
-                                                  // } else {
-                                                  //   cubit
-                                                  //       .setFavorateProduct(
-                                                  //           product.id,
-                                                  //           !product.isFavorite)
-                                                  //       .then((value) {
-                                                  //     cubit
-                                                  //         .searchInSeeAllProducts(
-                                                  //             searchController
-                                                  //                 .text,
-                                                  //             categoryName,
-                                                  //             categoryProducts)
-                                                  //         .then((searchResult) {
-                                                  //       context
-                                                  //           .read<
-                                                  //               DiscountProductsBloc>()
-                                                  //           .add(SearchInDiscount(
-                                                  //               searchResult:
-                                                  //                   searchResult));
-                                                  //     });
-                                                  //   });
-                                                  // }
-                                                },
-                                                child: Container(
-                                                    height: 33.h,
-                                                    width: 33.h,
-                                                    alignment: Alignment.center,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                            color: Colors.white,
-                                                            shape: BoxShape
-                                                                .circle),
-                                                    child: product.isFavorite
-                                                        ? const Icon(
-                                                            Icons.favorite,
-                                                            color: Color(
-                                                                0xffFF6E6E),
-                                                          )
-                                                        : const Icon(
-                                                            Icons.favorite,
-                                                            color: Color(
-                                                                0xffD8D8D8),
-                                                          )))),
-                                      ),
-                                      product.isNew
-                                          ? const Positioned(
-                                              child: Text(
-                                              'NEW',
-                                              style: TextStyle(
-                                                  color: Colors.red,
-                                                  fontSize: 40),
-                                            ))
-                                          : product.isDisCountUpdated
-                                              ? const Positioned(
-                                                  child: Text(
-                                                  'NEW Discount',
-                                                  style: TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 20),
-                                                ))
-                                              : const SizedBox.shrink()
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: 15.h),
-                                SizedBox(
-                                  height: 17.h,
-                                  width: 141.w,
-                                  child: Row(
-                                    children: [
-                                      //! this sizedBox for ellipis
-                                      SizedBox(
-                                        width: 100.w,
-                                        child: Text(
-                                          product.name,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontSize: 14.sp,
-                                              fontFamily: 'Tenor Sans'),
+                              },
+                              child: Column(
+                                children: [
+                                  Container(
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(boxShadow: [
+                                      BoxShadow(
+                                          offset: const Offset(0, 4),
+                                          color: Colors.black.withOpacity(.25),
+                                          blurRadius: 2)
+                                    ], borderRadius: BorderRadius.circular(10)),
+                                    child: Stack(
+                                      alignment: const Alignment(.80, -.89),
+                                      children: [
+                                        Image(
+                                          image: ResizeImage(
+                                            AssetImage(product.imgUrl
+                                                .split('|')[0]
+                                                .trim()),
+                                          height: 206.h.toInt(),
+                                          width: 141.w.toInt(),
+                                          ),
+                                          fit: BoxFit.cover,
                                         ),
-                                      ),
-                                      const Spacer(),
-                                      Text(
-                                        "${product.price} \$",
-                                        style: TextStyle(
-                                            color: const Color(0xFFD57676),
-                                            fontSize: 10.sp),
-                                      )
-                                    ],
+                                        Positioned(
+                                          right: 2.w,
+                                          child: CircleAvatar(
+                                              backgroundColor: Colors.white,
+                                              child: GestureDetector(
+                                                  onTap: () {
+                                                    // if (searchController.text ==
+                                                    //     '') {
+                                                    //   cubit
+                                                    //       .setFavorateProduct(
+                                                    //           product.id,
+                                                    //           !product.isFavorite)
+                                                    //       .then((value) {
+                                                    //     cubit
+                                                    //         .searchInSeeAllProducts(
+                                                    //             null,
+                                                    //             categoryName,
+                                                    //             categoryProducts)
+                                                    //         .then((searchResult) {
+                                                    //       context
+                                                    //           .read<
+                                                    //               DiscountProductsBloc>()
+                                                    //           .add(SearchInDiscount(
+                                                    //               searchResult:
+                                                    //                   searchResult));
+                                                    //     });
+                                                    //   });
+                                                    // } else {
+                                                    //   cubit
+                                                    //       .setFavorateProduct(
+                                                    //           product.id,
+                                                    //           !product.isFavorite)
+                                                    //       .then((value) {
+                                                    //     cubit
+                                                    //         .searchInSeeAllProducts(
+                                                    //             searchController
+                                                    //                 .text,
+                                                    //             categoryName,
+                                                    //             categoryProducts)
+                                                    //         .then((searchResult) {
+                                                    //       context
+                                                    //           .read<
+                                                    //               DiscountProductsBloc>()
+                                                    //           .add(SearchInDiscount(
+                                                    //               searchResult:
+                                                    //                   searchResult));
+                                                    //     });
+                                                    //   });
+                                                    // }
+                                                  },
+                                                  child: Container(
+                                                      height: 33.h,
+                                                      width: 33.h,
+                                                      alignment: Alignment
+                                                          .center,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              shape: BoxShape
+                                                                  .circle),
+                                                      child: product.isFavorite
+                                                          ? const Icon(
+                                                              Icons.favorite,
+                                                              color: Color(
+                                                                  0xffFF6E6E),
+                                                            )
+                                                          : const Icon(
+                                                              Icons.favorite,
+                                                              color: Color(
+                                                                  0xffD8D8D8),
+                                                            )))),
+                                        ),
+                                        product.isNew
+                                            ? const Positioned(
+                                                child: Text(
+                                                'NEW',
+                                                style: TextStyle(
+                                                    color: Colors.red,
+                                                    fontSize: 40),
+                                              ))
+                                            : product.isDisCountUpdated
+                                                ? const Positioned(
+                                                    child: Text(
+                                                    'NEW Discount',
+                                                    style: TextStyle(
+                                                        color: Colors.red,
+                                                        fontSize: 20),
+                                                  ))
+                                                : const SizedBox.shrink()
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 15.h,
-                                  width: 141.w,
-                                  child: Text(
-                                    product.makerCompany,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        color: const Color(0xFF828282),
-                                        fontSize: 11.sp,
-                                        fontFamily: 'Tenor Sans'),
+                                  SizedBox(height: 15.h),
+                                  SizedBox(
+                                    height: 17.h,
+                                    width: 141.w,
+                                    child: Row(
+                                      children: [
+                                        //! this sizedBox for ellipsis
+                                        SizedBox(
+                                          width: 100.w,
+                                          child: Text(
+                                            product.name,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 14.sp,
+                                                fontFamily: 'Tenor Sans'),
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Text(
+                                          "${product.price} \$",
+                                          style: TextStyle(
+                                              color: const Color(0xFFD57676),
+                                              fontSize: 10.sp),
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                )
-                              ],
+                                  SizedBox(
+                                    height: 15.h,
+                                    width: 141.w,
+                                    child: Text(
+                                      product.makerCompany,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                          color: const Color(0xFF828282),
+                                          fontSize: 11.sp,
+                                          fontFamily: 'Tenor Sans'),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),

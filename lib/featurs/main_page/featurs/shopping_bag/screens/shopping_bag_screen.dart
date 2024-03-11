@@ -175,10 +175,11 @@ class ShoppingBagScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image(
-                              image: const AssetImage(
+                              image: ResizeImage(const AssetImage(
                                   'assets/images/empty_cart.png'),
-                              width: 150.w,
-                              height: 150.w,
+                              width: 150.w.toInt(),
+                              height: 150.w.toInt(),
+                                  ),
                             ),
                             SizedBox(height: 5.h),
                             Text('Your cart is empty',

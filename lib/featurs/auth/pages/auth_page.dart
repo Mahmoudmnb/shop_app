@@ -110,6 +110,12 @@ class AuthPage extends StatelessWidget {
                     ),
                     Image.asset('assets/images/logo.png',
                         height: 170.h, width: 170.h),
+                    //! this image was so bad
+                    // Image(
+                    //     image: ResizeImage(
+                    //         height: 125.h.toInt(),
+                    //         width: 170.w.toInt(),
+                    //         const AssetImage('assets/images/logo.png'))),
                     SizedBox(height: 8.5.h),
                     Row(
                       children: [

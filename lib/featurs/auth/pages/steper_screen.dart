@@ -35,10 +35,12 @@ class _SteperScreenState extends State<SteperScreen> {
             Container(
               alignment: Alignment.bottomLeft,
               padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 20.h),
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage(
-                        'assets/images/splash1.jpg',
+                      image: ResizeImage(
+                        height: MediaQuery.of(context).size.height.toInt(),
+                        width: MediaQuery.of(context).size.width.toInt(),
+                        const AssetImage('assets/images/splash1.jpg'),
                       ),
                       fit: BoxFit.cover)),
               child: Column(
@@ -109,10 +111,12 @@ class _SteperScreenState extends State<SteperScreen> {
             Container(
               alignment: Alignment.bottomLeft,
               padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 6.h),
-              decoration: const BoxDecoration(
+              decoration:  BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage(
-                        'assets/images/splash2.jpg',
+                      image: ResizeImage(
+                        height: MediaQuery.of(context).size.height.toInt(),
+                        width: MediaQuery.of(context).size.width.toInt(),
+                        const AssetImage('assets/images/splash2.jpg'),
                       ),
                       fit: BoxFit.cover)),
               child: Column(
