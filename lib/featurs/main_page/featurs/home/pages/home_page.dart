@@ -181,7 +181,9 @@ class HomePage extends StatelessWidget {
                         child: ListView.builder(
                           keyboardDismissBehavior:
                               ScrollViewKeyboardDismissBehavior.onDrag,
-                          itemCount: 2,
+
+                          itemCount: snpashoot.data!.length,
+
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             ProductModel product =

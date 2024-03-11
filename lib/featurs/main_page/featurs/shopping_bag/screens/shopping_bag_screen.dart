@@ -21,8 +21,6 @@ import '../widgets/shopping_bag_body.dart';
 class ShoppingBagScreen extends StatelessWidget {
   const ShoppingBagScreen({super.key});
   Future<void> goToNextPage(BuildContext context) async {
-    ToastContext().init(context);
-
     var data = context.read<AddToCartCubit>().products;
     String ids = '';
     for (var element in data) {
@@ -33,20 +31,34 @@ class ShoppingBagScreen extends StatelessWidget {
     var dddd = await sl.get<DataSource>().getProductsByIds(ids);
     String productNamesForColors = '';
     String productNamesForSizes = '';
-    for (var i = 0; i < dddd.length; i++) {
-      ProductModel product = ProductModel.fromMap(dddd[i]);
-      AddToCartProductModel cartProductModel =
-          AddToCartProductModel.fromMap(data[i]);
-      if (!product.colors.contains(cartProductModel.color)) {
-        productNamesForColors += '${product.name},';
+    String productNamesForDeletedProducts = '';
+    if (dddd.length != data.length) {
+      int j = 0;
+      for (var i = 0; i < data.length; i++) {
+        if (data[i]['productName'] != dddd[j]['name']) {
+          productNamesForDeletedProducts += '${data[i]['productName']},';
+        } else {
+          j++;
+        }
       }
-      if (!product.sizes.contains(cartProductModel.size)) {
-        productNamesForSizes += '${product.name},';
+    } else {
+      for (var i = 0; i < dddd.length; i++) {
+        ProductModel product = ProductModel.fromMap(dddd[i]);
+        AddToCartProductModel cartProductModel =
+            AddToCartProductModel.fromMap(data[i]);
+        if (!product.colors.contains(cartProductModel.color)) {
+          productNamesForColors += '${product.name},';
+        }
+        if (!product.sizes.contains(cartProductModel.size)) {
+          productNamesForSizes += '${product.name},';
+        }
       }
     }
     if (context.mounted) {
       context.read<AddToCartCubit>().setIsProceedButtonLoading = false;
-      if (productNamesForColors == '' && productNamesForSizes == '') {
+      if (productNamesForColors == '' &&
+          productNamesForSizes == '' &&
+          productNamesForDeletedProducts == '') {
         context.read<CheckOutCubit>().getLocations().then((value) {
           context.read<AddToCartCubit>().setIsProceedButtonLoading = false;
           Navigator.of(context).push(MaterialPageRoute(
@@ -55,17 +67,21 @@ class ShoppingBagScreen extends StatelessWidget {
             ),
           ));
         });
-      } else if (productNamesForColors == '') {
+      } else if (productNamesForDeletedProducts != '') {
         showErrorMessage(
-            "products (${productNamesForSizes.substring(0, productNamesForSizes.length - 1)}) doesn't have the sizes that you selected please select another size",
+            "products (${productNamesForDeletedProducts.substring(0, productNamesForDeletedProducts.length - 1)}) is done please delete them from your cart and try again",
             context);
-      } else if (productNamesForSizes == '') {
+      } else if (productNamesForColors == '' && productNamesForSizes != '') {
         showErrorMessage(
-            "products (${productNamesForColors.substring(0, productNamesForColors.length - 1)}) doesn't have the sizes that you selected please select another size",
+            "products (${productNamesForSizes.substring(0, productNamesForSizes.length - 1)}) doesn't have the sizes that you selected please select another sizes",
+            context);
+      } else if (productNamesForSizes == '' && productNamesForColors != '') {
+        showErrorMessage(
+            "products (${productNamesForColors.substring(0, productNamesForColors.length - 1)}) doesn't have the sizes that you selected please select another sizes",
             context);
       } else {
         showErrorMessage(
-            "products (${productNamesForColors.substring(0, productNamesForColors.length - 1)}) doesn't have the color that you selected please select another color, and products (${productNamesForSizes.substring(0, productNamesForSizes.length - 1)}) doesn't have the sizes that you selected please select another size",
+            "products (${productNamesForColors.substring(0, productNamesForColors.length - 1)}) doesn't have the color that you selected please select another colors, and products (${productNamesForSizes.substring(0, productNamesForSizes.length - 1)}) doesn't have the sizes that you selected please select another sizes",
             context);
       }
     }
@@ -218,10 +234,6 @@ class ShoppingBagScreen extends StatelessWidget {
                               ),
                               onPressed: () async {
                                 bool key = false;
-                                log(context
-                                    .read<AddToCartCubit>()
-                                    .products
-                                    .toString());
                                 if (!context
                                     .read<AddToCartCubit>()
                                     .getIsProceedButtonLoading) {
@@ -287,8 +299,9 @@ class ShoppingBagScreen extends StatelessWidget {
                                                   break;
                                                 }
                                               } else {
-                                                showMessage(context,
-                                                    'product ${element.data['name']} is done please deleted form you cart and try again');
+                                                // showMessage(context,
+                                                //     'product ${element.data['name']} is done please deleted form you cart and try again');
+                                                // key = true;
                                               }
                                             }
                                           }
