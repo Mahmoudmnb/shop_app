@@ -130,6 +130,7 @@ class UpdateDeleteLocalDataSource {
   }
 
   Future<void> deleteAddress(String addressName) async {
+    
     Database db = await openDatabase(Constant.locationsDataBasePath);
     db.rawDelete('DELETE FROM locations WHERE addressName="$addressName"');
   }

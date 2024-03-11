@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/core/constant.dart';
 import 'package:shop_app/featurs/auth/models/user_model.dart';
+import 'package:shop_app/featurs/main_page/featurs/check_out/models/address_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../injection.dart';
@@ -16,6 +17,49 @@ class RemoteDataSource {
   final client = Client()
       .setEndpoint('https://cloud.appwrite.io/v1')
       .setProject(Constant.appWriteProjectId);
+  Future<void> deleteLocationFromCloud(AddressModel address) async {
+    Databases db = Databases(client);
+    try {
+      db.listDocuments(
+          databaseId: '65585f55e896c3e87515',
+          collectionId: '65ec7d873aa0c21fdeab');
+      db.deleteDocument(
+        databaseId: '65585f55e896c3e87515',
+        collectionId: '65ec7d873aa0c21fdeab',
+        documentId: ID.unique(),
+      );
+      log('done upload location');
+    } on AppwriteException catch (e) {
+      log(e.message.toString());
+    }
+  }
+
+  Future<void> addLoationToCloude(AddressModel address) async {
+    Databases db = Databases(client);
+    try {
+      var d = await db.createDocument(
+          databaseId: '65585f55e896c3e87515',
+          collectionId: '65ec7d873aa0c21fdeab',
+          documentId: ID.unique(),
+          data: {
+            'fullName': address.fullName,
+            'phoneNumber': address.phoneNumber,
+            'emailAddress': address.emailAddress,
+            'addressName': address.addressName,
+            'longitude_code': address.longitude,
+            'latitude_code': address.latitude,
+            'city': address.city,
+            'country': address.country,
+            'address': address.address,
+            'owner_email': Constant.currentUser!.email
+          });
+      d.$id;
+      log('done upload location');
+    } on AppwriteException catch (e) {
+      log(e.message.toString());
+    }
+  }
+
   Future<List<Document>> getUpdatedReviews(String lastDate) async {
     Databases databases = Databases(client);
     var newReviews = await databases.listDocuments(

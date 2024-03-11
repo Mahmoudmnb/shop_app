@@ -270,7 +270,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                     InkWell(
                       borderRadius: BorderRadius.circular(10),
                       onTap: () {
-                        //todo i have to replace last name and first name with full name
+                        //todo: i have to replace last name and first name with full name
                         InternetInfo.isconnected().then((value) async {
                           if (value) {
                             context
@@ -300,7 +300,6 @@ class _AddNewAddressState extends State<AddNewAddress> {
                                   city: cityController.text.trim(),
                                   country: countryController.text.trim(),
                                   address: addressController.text.trim());
-
                               if (context
                                   .read<CheckOutCubit>()
                                   .isAddressNameIsAvailable) {

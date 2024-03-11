@@ -21,6 +21,10 @@ class DataSource {
     required this.insertDataLocalDataSource,
   });
   //! this section for inserting data
+  Future<void> addLoationToCloude(AddressModel address) async {
+    return remoteDataSource.addLoationToCloude(address);
+  }
+
   Future<void> insertProductsIntoLocalDataBase(
       List<Document> products, bool isNew) async {
     return insertDataLocalDataSource.insertProductsIntoLocalDataBase(

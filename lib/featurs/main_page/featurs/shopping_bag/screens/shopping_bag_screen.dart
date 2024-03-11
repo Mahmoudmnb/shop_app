@@ -6,13 +6,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/core/internet_info.dart';
 import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
-import 'package:shop_app/featurs/main_page/featurs/products_view/models/add_to_cart_product_model.dart';
 import 'package:shop_app/injection.dart';
 import 'package:toast/toast.dart';
 
 import '../../check_out/cubit/check_out_cubit.dart';
 import '../../check_out/screens/first_step.dart';
 import '../../home/models/product_model.dart';
+import '../../products_view/models/add_to_cart_product_model.dart';
 import '../cubits/products_cubit/products_cubit.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_button.dart';
@@ -34,11 +34,17 @@ class ShoppingBagScreen extends StatelessWidget {
     String productNamesForDeletedProducts = '';
     if (dddd.length != data.length) {
       int j = 0;
-      for (var i = 0; i < data.length; i++) {
-        if (data[i]['productName'] != dddd[j]['name']) {
+      if (dddd.isNotEmpty) {
+        for (var i = 0; i < data.length; i++) {
+          if (data[i]['productName'] != dddd[j]['name']) {
+            productNamesForDeletedProducts += '${data[i]['productName']},';
+          } else {
+            j++;
+          }
+        }
+      } else {
+        for (var i = 0; i < data.length; i++) {
           productNamesForDeletedProducts += '${data[i]['productName']},';
-        } else {
-          j++;
         }
       }
     } else {
@@ -69,7 +75,7 @@ class ShoppingBagScreen extends StatelessWidget {
         });
       } else if (productNamesForDeletedProducts != '') {
         showErrorMessage(
-            "products (${productNamesForDeletedProducts.substring(0, productNamesForDeletedProducts.length - 1)}) is done please delete them from your cart and try again",
+            "products (${productNamesForDeletedProducts.substring(0, productNamesForDeletedProducts.length - 1)}) is't available any more please delete them from your cart and try again",
             context);
       } else if (productNamesForColors == '' && productNamesForSizes != '') {
         showErrorMessage(
@@ -191,11 +197,12 @@ class ShoppingBagScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image(
-                              image: ResizeImage(const AssetImage(
-                                  'assets/images/empty_cart.png'),
-                              width: 150.w.toInt(),
-                              height: 150.w.toInt(),
-                                  ),
+                              image: ResizeImage(
+                                const AssetImage(
+                                    'assets/images/empty_cart.png'),
+                                width: 150.w.toInt(),
+                                height: 150.w.toInt(),
+                              ),
                             ),
                             SizedBox(height: 5.h),
                             Text('Your cart is empty',

@@ -28,9 +28,7 @@ class ShoppingAddress extends StatelessWidget {
                           width: 40.w,
                           image: const AssetImage("assets/images/backicon.png"),
                         )),
-                    SizedBox(
-                      width: 8.w,
-                    ),
+                    SizedBox(width: 8.w),
                     Text(
                       "Shopping Address",
                       style:
