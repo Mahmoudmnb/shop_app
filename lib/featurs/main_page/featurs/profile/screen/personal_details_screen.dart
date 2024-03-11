@@ -81,8 +81,9 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                             image: Constant.currentUser!.imgUrl != null
                                 ? DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: FileImage(
-                                        File(Constant.currentUser!.imgUrl!)))
+                                    image: ResizeImage(height: 130.h.toInt(),
+                        width: 130.w.toInt(),FileImage(
+                                        File(Constant.currentUser!.imgUrl!))))
                                 : null,
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(12)),

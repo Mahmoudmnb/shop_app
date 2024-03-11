@@ -330,13 +330,13 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                                         child: Stack(
                                           alignment: const Alignment(.80, -.89),
                                           children: [
-                                            Image.asset(
-                                              product.imgUrl
+                                            Image(
+                                              image: ResizeImage(height: 206.h.toInt(),
+                                              width: 141.w.toInt(),AssetImage(product.imgUrl
                                                   .split('|')[0]
-                                                  .trim(),
+                                                  .trim())),
                                               fit: BoxFit.cover,
-                                              height: 206.h,
-                                              width: 141.w,
+                                              
                                             ),
                                             Positioned(
                                               right: 2.w,

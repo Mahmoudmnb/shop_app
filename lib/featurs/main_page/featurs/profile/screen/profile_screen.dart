@@ -46,9 +46,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image(
-                            image: const AssetImage('assets/images/lock.png'),
-                            width: 300.w,
-                            height: 300.w),
+                          image: ResizeImage(
+                              width: 300.w.toInt(),
+                              height: 300.w.toInt(),
+                              const AssetImage('assets/images/lock.png')),
+                        ),
                         TextButton(
                             onPressed: () {
                               Navigator.of(context)
@@ -104,11 +106,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   BorderRadius.circular(12),
                                               child: Image(
                                                   fit: BoxFit.cover,
-                                                  height: 100.h,
-                                                  width: 100.h,
-                                                  image: FileImage(File(context
-                                                      .read<ProfileCubit>()
-                                                      .profileImagePath!))),
+                                                  image: ResizeImage(
+                                                      height: 100.h.toInt(),
+                                                      width: 100.h.toInt(),
+                                                      FileImage(File(context
+                                                          .read<ProfileCubit>()
+                                                          .profileImagePath!)))),
                                             ),
                                     ),
                                     SizedBox(height: 8.h),

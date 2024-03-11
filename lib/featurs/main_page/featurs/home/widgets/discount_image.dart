@@ -30,9 +30,9 @@ class DisCountImage extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
                   fit: BoxFit.fill,
-                  image: AssetImage(
+                  image: ResizeImage(width: 100.w.toInt(),AssetImage(
                     imageUrl.split('|')[0],
-                  ))),
+                  )))),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

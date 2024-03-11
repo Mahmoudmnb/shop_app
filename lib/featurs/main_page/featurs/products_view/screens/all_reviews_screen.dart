@@ -66,11 +66,11 @@ class AllReviewsScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Image(
-                          height: 200.h,
-                          image: const AssetImage('assets/icons/noReveiws.png'),
+                          
+                          image: ResizeImage(height: 200.h.toInt(),const AssetImage('assets/icons/noReveiws.png')),
                         ),
                         SizedBox(
-                          height: 25.h,
+                          height: 25.h
                         ),
                         Text(
                           "No reviews published",
