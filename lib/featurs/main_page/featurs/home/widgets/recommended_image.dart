@@ -28,11 +28,10 @@ class RecommendedImage extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              imageUrl,
+            child: Image(
+              image: ResizeImage(AssetImage(imageUrl),
+                  height: 68.h.toInt(), width: 70.w.toInt()),
               fit: BoxFit.fill,
-              height: 68.h,
-              width: 70.w,
             ),
           ),
           const SizedBox(width: 4),

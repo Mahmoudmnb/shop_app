@@ -82,7 +82,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // debugInvertOversizedImages = true;
+    debugInvertOversizedImages = true;
     return ScreenUtilInit(
         designSize: const Size(393, 852),
         builder: (context, child) => MaterialApp(
