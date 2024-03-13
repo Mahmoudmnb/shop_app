@@ -17,6 +17,40 @@ class RemoteDataSource {
   final client = Client()
       .setEndpoint('https://cloud.appwrite.io/v1')
       .setProject(Constant.appWriteProjectId);
+  Future<List<Document>> downloadLoactionsFromCloud() async {
+    Databases databases = Databases(client);
+    var locations = await databases.listDocuments(
+      databaseId: '65585f55e896c3e87515',
+      collectionId: "65ec7d873aa0c21fdeab",
+      queries: [
+        Query.equal('owner_email', Constant.currentUser!.email),
+      ],
+    );
+    try {
+      for (var element in locations.documents) {
+        var d = element.data;
+        await sl.get<DataSource>().addNewLocation(
+            AddressModel(
+                id: d['\$id'],
+                fullName: d['fullName'],
+                lastName: d['fullName'],
+                phoneNumber: d['phoneNumber'],
+                emailAddress: d['emailAddress'],
+                addressName: d['addressName'],
+                longitude: d['longitude_code'],
+                latitude: d['latitude_code'],
+                city: d['city'],
+                country: d['country'],
+                address: d['address']),
+            'update');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    log('done gettting locations');
+    return locations.documents;
+  }
+
   Future<void> updateLocationInCloud(AddressModel address) async {
     Databases db = Databases(client);
     log(address.id.toString());
@@ -184,7 +218,9 @@ class RemoteDataSource {
           data: {
             'borderProducts': borderProducts,
             'cartProducts': cartProducts,
-            'borders': borders
+            'borders': borders,
+            'defaultLocation':
+                sl.get<SharedPreferences>().getString('defaultLocation')
           });
     } catch (e) {
       log(e.toString());

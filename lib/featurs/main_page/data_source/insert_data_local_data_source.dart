@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:appwrite/models.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/injection.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -52,6 +53,12 @@ class InsertDataLocalDataSource {
   Future<void> insertPersonalDataInDataBase() async {
     Map<String, dynamic> personalData =
         await sl.get<DataSource>().getPersonalDataFromCloud();
+    if (personalData['defaultLocation'] != null &&
+        personalData['defaultLocation'] != '') {
+      sl
+          .get<SharedPreferences>()
+          .setString('defaultLocation', personalData['defaultLocation']);
+    }
     if (personalData['cartProducts'] != null &&
         personalData['cartProducts'] != '') {
       var temp = personalData['cartProducts'].toString().split('|');
@@ -232,12 +239,22 @@ class InsertDataLocalDataSource {
     }
   }
 
-  Future<void> addNewLocation(AddressModel address) async {
+  Future<void> addNewLocation(AddressModel address, String type) async {
     Database db = await openDatabase(Constant.locationsDataBasePath);
-    String id = await sl.get<DataSource>().addLoationToCloude(address);
-    await db.rawInsert(
-      "INSERT INTO locations (id,firstName, lastName, phoneNumber, emailAddress,addressName, longitude_code, latitude_code,city,country,address) VALUES ('$id','${address.fullName}', '${address.lastName}','${address.phoneNumber}','${address.emailAddress}','${address.addressName}','${address.longitude}','${address.latitude}','${address.city}','${address.country}','${address.address}')",
-    );
+    try {
+      if (type == 'new') {
+        String id = await sl.get<DataSource>().addLoationToCloude(address);
+        await db.rawInsert(
+          "INSERT INTO locations (id,firstName, lastName, phoneNumber, emailAddress,addressName, longitude_code, latitude_code,city,country,address) VALUES ('$id','${address.fullName}', '${address.lastName}','${address.phoneNumber}','${address.emailAddress}','${address.addressName}','${address.longitude}','${address.latitude}','${address.city}','${address.country}','${address.address}')",
+        );
+      } else {
+        await db.rawInsert(
+          "INSERT INTO locations (id,firstName, lastName, phoneNumber, emailAddress,addressName, longitude_code, latitude_code,city,country,address) VALUES ('${address.id}','${address.fullName}', '${address.lastName}','${address.phoneNumber}','${address.emailAddress}','${address.addressName}','${address.longitude}','${address.latitude}','${address.city}','${address.country}','${address.address}')",
+        );
+      }
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   Future<void> addToCart(AddToCartProductModel addToCartTableModel) async {

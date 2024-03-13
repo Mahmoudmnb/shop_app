@@ -4,7 +4,6 @@ import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/core/constant.dart';
 
 import '../../injection.dart';
@@ -154,9 +153,6 @@ class _MainPageState extends State<MainPage>
               icon: const Icon(Icons.favorite_border),
               onPressed: () async {
                 log(DateTime.now().millisecondsSinceEpoch.toString());
-                String? defaultLocation =
-                    sl.get<SharedPreferences>().getString('defaultLocation');
-                log(defaultLocation!);
                 // List<Map<String, dynamic>> borders =
                 //     await sl.get<DataSource>().getBorders();
                 // if (context.mounted) {

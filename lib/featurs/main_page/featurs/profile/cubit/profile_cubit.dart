@@ -61,8 +61,11 @@ class ProfileCubit extends Cubit<ProfileState> {
     proBor = proBor.isEmpty ? '' : proBor.substring(0, proBor.length - 1);
     await sl.get<DataSource>().uploadProfileSettings(proBor, cartPro, bor);
     await sl.get<SharedPreferences>().remove('currentUser');
+    await sl.get<SharedPreferences>().remove('defaultLocation');
     await sl.get<DataSource>().clearAddToCartTable();
     await sl.get<DataSource>().clearBordersTable();
     await sl.get<DataSource>().clearBorderProductsTable();
+    await sl.get<DataSource>().clearOrdersTable();
+    await sl.get<DataSource>().clearLocationsTable();
   }
 }

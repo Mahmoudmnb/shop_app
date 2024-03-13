@@ -43,7 +43,7 @@ class CheckOutCubit extends Cubit<CheckOutState> {
 //! mnb
   String selectedCountryCode = '+963';
   Future<void> addNewAdress(AddressModel address) async {
-    await sl.get<DataSource>().addNewLocation(address);
+    await sl.get<DataSource>().addNewLocation(address, 'new');
   }
 
   Future<List<Map<String, dynamic>>> getLocations() async {
@@ -72,9 +72,7 @@ class CheckOutCubit extends Cubit<CheckOutState> {
   set setIsUpdateAddLocationButtonLoading(value) {
     _isUpdateAddLocationButtonLoading = value;
     emit(IsUpdateAddLocationButtonLoading());
-
   }
 
   get getIsUpdateAddLocationButtonLoading => _isUpdateAddLocationButtonLoading;
-
 }

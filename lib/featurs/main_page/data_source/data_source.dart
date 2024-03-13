@@ -21,6 +21,10 @@ class DataSource {
     required this.insertDataLocalDataSource,
   });
   //! this section for inserting data
+  Future<List<Document>> downloadLoactionsFromCloud() async {
+    return remoteDataSource.downloadLoactionsFromCloud();
+  }
+
   Future<String> addLoationToCloude(AddressModel address) async {
     return remoteDataSource.addLoationToCloude(address);
   }
@@ -116,8 +120,8 @@ class DataSource {
         deliveryAddress, shoppingMethod, latitude, longitude);
   }
 
-  Future<void> addNewLocation(AddressModel address) async {
-    return insertDataLocalDataSource.addNewLocation(address);
+  Future<void> addNewLocation(AddressModel address, String type) async {
+    return insertDataLocalDataSource.addNewLocation(address, type);
   }
 
   Future<void> addToCart(AddToCartProductModel addToCartTableModel) async {
@@ -133,6 +137,7 @@ class DataSource {
   }
 
   //! this section for getting data
+
   Future<List<Map<String, dynamic>>> getProductsByNames(String names) async {
     return getDataLocalDataSource.getProductsByNames(names);
   }
@@ -254,6 +259,14 @@ class DataSource {
   }
 
 //! this section for deleting and updating data
+  Future<void> clearLocationsTable() async {
+    return updateDeleteLocalDataSource.clearLocationsTable();
+  }
+
+  Future<void> clearOrdersTable() async {
+    return updateDeleteLocalDataSource.clearOrdersTable();
+  }
+
   Future<void> updateLocationInCloud(AddressModel address) async {
     return remoteDataSource.updateLocationInCloud(address);
   }
