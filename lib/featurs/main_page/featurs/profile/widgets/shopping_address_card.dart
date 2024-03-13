@@ -14,14 +14,14 @@ class ShoppingAddressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? defaultLocation =
-        sl.get<SharedPreferences>().getString('defaultLocation');
-    if (defaultLocation != null) {
-      context.read<ProfileCubit>().selectAddress = defaultLocation;
-    }
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
         ProfileCubit cubit = ProfileCubit.get(context);
+        String? defaultLocation =
+            sl.get<SharedPreferences>().getString('defaultLocation');
+        if (defaultLocation != null) {
+          context.read<ProfileCubit>().selectAddress = defaultLocation;
+        }
         return Container(
           decoration: BoxDecoration(boxShadow: [
             BoxShadow(

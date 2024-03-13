@@ -129,18 +129,38 @@ class UpdateDeleteLocalDataSource {
     log('done updating products');
   }
 
-  Future<void> deleteAddress(String addressName) async {
-    
+  Future<String> deleteAddress(AddressModel address) async {
+    await sl.get<DataSource>().deleteLocationFromCloud(address);
     Database db = await openDatabase(Constant.locationsDataBasePath);
-    db.rawDelete('DELETE FROM locations WHERE addressName="$addressName"');
+    await db.rawDelete(
+        'DELETE FROM locations WHERE addressName="${address.addressName}"');
+    var data = await sl.get<DataSource>().getLocations();
+    String? defaultLocation =
+        sl.get<SharedPreferences>().getString('defaultLocation');
+    if (data.isNotEmpty) {
+      if (defaultLocation != null && defaultLocation == address.addressName) {
+        await sl.get<SharedPreferences>().setString(
+            'defaultLocation', AddressModel.fromMap(data[0]).addressName);
+        return AddressModel.fromMap(data[0]).addressName;
+      }
+    } else {
+      await sl.get<SharedPreferences>().remove('defaultLocation');
+    }
+    return defaultLocation ?? '';
   }
 
   Future<void> updateAddress(
       AddressModel address, String oldAddressName) async {
     Database db = await openDatabase(Constant.locationsDataBasePath);
-    var i = await db.rawUpdate(
-        "UPDATE locations SET firstName='${address.fullName}',lastName='${address.fullName}',phoneNumber='${address.phoneNumber}',emailAddress='${address.emailAddress}',addressName='${address.addressName}',longitude_code='${address.longitude}',latitude_code='${address.latitude}',city='${address.city}',country='${address.country}',address='${address.address}' WHERE addressName== '$oldAddressName'");
-    log(i.toString());
+    try {
+      await sl.get<DataSource>().updateLocationInCloud(address);
+      var i = await db.rawUpdate(
+          "UPDATE locations SET firstName='${address.fullName}',lastName='${address.fullName}',phoneNumber='${address.phoneNumber}',emailAddress='${address.emailAddress}',addressName='${address.addressName}',longitude_code='${address.longitude}',latitude_code='${address.latitude}',city='${address.city}',country='${address.country}',address='${address.address}' WHERE addressName== '$oldAddressName'");
+      log(i.toString());
+    } catch (e) {
+      log(e.toString());
+    }
+    db.close();
   }
 
   Future<void> deleteWordFormSearchHistory(String word) async {

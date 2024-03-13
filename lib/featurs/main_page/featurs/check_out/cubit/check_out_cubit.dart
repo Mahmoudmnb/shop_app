@@ -67,4 +67,14 @@ class CheckOutCubit extends Cubit<CheckOutState> {
     selectedCountryCode = value;
     emit(ChangeSelectedCountryCode());
   }
+
+  bool _isUpdateAddLocationButtonLoading = false;
+  set setIsUpdateAddLocationButtonLoading(value) {
+    _isUpdateAddLocationButtonLoading = value;
+    emit(IsUpdateAddLocationButtonLoading());
+
+  }
+
+  get getIsUpdateAddLocationButtonLoading => _isUpdateAddLocationButtonLoading;
+
 }

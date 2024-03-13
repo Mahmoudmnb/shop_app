@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
     // debugInvertOversizedImages = true;
     return ScreenUtilInit(
         designSize: const Size(393, 852),
-        builder: (context, child) => MaterialApp(
+        builder: (context, child) => MaterialApp( 
               theme: ThemeData(
                   primaryColor: Colors.black,
                   colorScheme: ColorScheme(

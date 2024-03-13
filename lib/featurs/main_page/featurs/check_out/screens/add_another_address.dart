@@ -7,13 +7,13 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
-import 'package:shop_app/featurs/main_page/featurs/profile/screen/shopping_address.dart';
 import 'package:shop_app/gogole_map.dart';
 import 'package:shop_app/injection.dart';
 import 'package:toast/toast.dart';
 
 import '../../../../../core/country_codes.dart';
 import '../../../../../core/internet_info.dart';
+import '../../profile/screen/shopping_address.dart';
 import '../cubit/check_out_cubit.dart';
 import '../models/address_model.dart';
 import '../widget/text_field_address.dart';
@@ -103,7 +103,6 @@ class _AddNewAddressState extends State<AddNewAddress> {
       context.read<CheckOutCubit>().selectedCountryCode =
           countryCode[0]['dial_code'];
     }
-
     super.initState();
   }
 
@@ -271,92 +270,112 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       borderRadius: BorderRadius.circular(10),
                       onTap: () {
                         //todo: i have to replace last name and first name with full name
-                        InternetInfo.isconnected().then((value) async {
-                          if (value) {
-                            context
-                                .read<CheckOutCubit>()
-                                .getLocationByName(
-                                    addressNameController.text.trim())
-                                .then((value) {
-                              log(value.toString());
+                        if (!context
+                            .read<CheckOutCubit>()
+                            .getIsUpdateAddLocationButtonLoading) {
+                          context
+                              .read<CheckOutCubit>()
+                              .setIsUpdateAddLocationButtonLoading = true;
+                          InternetInfo.isconnected().then((value) async {
+                            if (value) {
                               context
                                   .read<CheckOutCubit>()
-                                  .isAddressNameIsAvailable = value.isEmpty;
-                            });
-                            if (formState.currentState!.validate()) {
-                              AddressModel address = AddressModel(
-                                  fullName: fullNameController.text.trim(),
-                                  lastName: fullNameController.text.trim(),
-                                  phoneNumber: context
-                                          .read<CheckOutCubit>()
-                                          .selectedCountryCode +
-                                      phoneNumberController.text.trim(),
-                                  emailAddress:
-                                      emailAddressController.text.trim(),
-                                  addressName:
-                                      addressNameController.text.trim(),
-                                  longitude: longController.text.trim(),
-                                  latitude: latController.text.trim(),
-                                  city: cityController.text.trim(),
-                                  country: countryController.text.trim(),
-                                  address: addressController.text.trim());
-                              if (context
-                                  .read<CheckOutCubit>()
-                                  .isAddressNameIsAvailable) {
-                                if (widget.fromPage == 'Orders') {
-                                  context
-                                      .read<CheckOutCubit>()
-                                      .addNewAdress(address)
-                                      .then((value) {
+                                  .getLocationByName(
+                                      addressNameController.text.trim())
+                                  .then((value) {
+                                context
+                                    .read<CheckOutCubit>()
+                                    .isAddressNameIsAvailable = value.isEmpty;
+                              });
+                              if (formState.currentState!.validate()) {
+                                AddressModel address = AddressModel(
+                                    fullName: fullNameController.text.trim(),
+                                    lastName: fullNameController.text.trim(),
+                                    phoneNumber: context
+                                            .read<CheckOutCubit>()
+                                            .selectedCountryCode +
+                                        phoneNumberController.text.trim(),
+                                    emailAddress:
+                                        emailAddressController.text.trim(),
+                                    addressName:
+                                        addressNameController.text.trim(),
+                                    longitude: longController.text.trim(),
+                                    latitude: latController.text.trim(),
+                                    city: cityController.text.trim(),
+                                    country: countryController.text.trim(),
+                                    address: addressController.text.trim());
+                                if (context
+                                    .read<CheckOutCubit>()
+                                    .isAddressNameIsAvailable) {
+                                  if (widget.fromPage == 'Orders') {
                                     context
                                         .read<CheckOutCubit>()
-                                        .getLocations()
+                                        .addNewAdress(address)
                                         .then((value) {
-                                      Navigator.of(context)
-                                          .pushReplacement(MaterialPageRoute(
-                                        builder: (context) =>
-                                            FirstStep(locations: value),
-                                      ));
+                                      context
+                                          .read<CheckOutCubit>()
+                                          .getLocations()
+                                          .then((value) {
+                                        Navigator.of(context)
+                                            .pushReplacement(MaterialPageRoute(
+                                          builder: (context) =>
+                                              FirstStep(locations: value),
+                                        ));
+                                      });
                                     });
-                                  });
-                                } else {
-                                  if (widget.type == 'Edit') {
-                                    await sl.get<DataSource>().updateAddress(
-                                        address, widget.data['addressName']);
                                   } else {
-                                    await context
-                                        .read<CheckOutCubit>()
-                                        .addNewAdress(address);
-                                  }
-                                  var addressList =
-                                      await sl.get<DataSource>().getLocations();
-                                  if (context.mounted) {
-                                    Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (_) => ShoppingAddress(
-                                                addressList: addressList)));
+                                    if (widget.type == 'Edit') {
+                                      address.id = widget.data['id'];
+                                      await sl.get<DataSource>().updateAddress(
+                                          address, widget.data['addressName']);
+                                    } else {
+                                      await context
+                                          .read<CheckOutCubit>()
+                                          .addNewAdress(address);
+                                    }
+                                    var addressList = await sl
+                                        .get<DataSource>()
+                                        .getLocations();
+                                    if (context.mounted) {
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (_) => ShoppingAddress(
+                                                  addressList: addressList)));
+                                    }
                                   }
                                 }
-                              }
-                              if (context.mounted) {
-                                if (defaultLocation == null ||
-                                    context
-                                        .read<CheckOutCubit>()
-                                        .isDelfaultLocatoin) {
-                                  sl.get<SharedPreferences>().setString(
-                                      'defaultLocation',
-                                      addressNameController.text.trim());
+                                if (context.mounted) {
+                                  if (defaultLocation == null ||
+                                      context
+                                          .read<CheckOutCubit>()
+                                          .isDelfaultLocatoin) {
+                                    sl.get<SharedPreferences>().setString(
+                                        'defaultLocation',
+                                        addressNameController.text.trim());
+                                  }
+                                  context
+                                          .read<CheckOutCubit>()
+                                          .setIsUpdateAddLocationButtonLoading =
+                                      false;
                                 }
+                              } else {
+                                context
+                                        .read<CheckOutCubit>()
+                                        .setIsUpdateAddLocationButtonLoading =
+                                    false;
+                                setState(() {
+                                  autovalidateMode = AutovalidateMode.always;
+                                });
                               }
+                            } else {
+                              context
+                                  .read<CheckOutCubit>()
+                                  .setIsUpdateAddLocationButtonLoading = false;
+                              ToastContext().init(context);
+                              Toast.show('check your internet connection');
                             }
-                            setState(() {
-                              autovalidateMode = AutovalidateMode.always;
-                            });
-                          } else {
-                            ToastContext().init(context);
-                            Toast.show('check your internet connection');
-                          }
-                        });
+                          });
+                        }
                       },
                       child: Ink(
                         width: double.infinity,
@@ -364,16 +383,27 @@ class _AddNewAddressState extends State<AddNewAddress> {
                         decoration: BoxDecoration(
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(10)),
-                        child: Text(
-                          widget.type == 'Edit'
-                              ? 'Edit address'
-                              : "Add new address",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "DM Sans"),
+                        child: BlocBuilder<CheckOutCubit, CheckOutState>(
+                          builder: (context, state) {
+                            return context
+                                    .watch<CheckOutCubit>()
+                                    .getIsUpdateAddLocationButtonLoading
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ))
+                                : Text(
+                                    widget.type == 'Edit'
+                                        ? 'Edit address'
+                                        : "Add new address",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 15.sp,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "DM Sans"),
+                                  );
+                          },
                         ),
                       ),
                     ),

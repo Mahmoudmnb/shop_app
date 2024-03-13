@@ -1,4 +1,5 @@
 class AddressModel {
+  String? id;
   final String fullName;
   final String lastName;
   final String phoneNumber;
@@ -11,7 +12,8 @@ class AddressModel {
   final String address;
 
   AddressModel(
-      {required this.fullName,
+      {this.id,
+      required this.fullName,
       required this.lastName,
       required this.phoneNumber,
       required this.emailAddress,
@@ -24,6 +26,7 @@ class AddressModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id ?? '',
       'firstName': fullName,
       'lastName': lastName,
       'phoneNumber': phoneNumber,
@@ -37,17 +40,18 @@ class AddressModel {
     };
   }
 
-  factory AddressModel.fromMap(Map<String, dynamic> locations) {
+  factory AddressModel.fromMap(Map<String, dynamic> location) {
     return AddressModel(
-        fullName: locations['firstName'] as String,
-        lastName: locations['lastName'] as String,
-        phoneNumber: locations['phoneNumber'] as String,
-        emailAddress: locations['emailAddress'] as String,
-        addressName: locations['addressName'] as String,
-        longitude: locations['longitude_code'] as String,
-        latitude: locations['latitude_code'] as String,
-        city: locations['city'] as String,
-        country: locations['country'] as String,
-        address: locations['address'] as String);
+        id: location['id'],
+        fullName: location['firstName'] as String,
+        lastName: location['lastName'] as String,
+        phoneNumber: location['phoneNumber'] as String,
+        emailAddress: location['emailAddress'] as String,
+        addressName: location['addressName'] as String,
+        longitude: location['longitude_code'] as String,
+        latitude: location['latitude_code'] as String,
+        city: location['city'] as String,
+        country: location['country'] as String,
+        address: location['address'] as String);
   }
 }

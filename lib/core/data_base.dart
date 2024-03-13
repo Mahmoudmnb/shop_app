@@ -86,7 +86,7 @@ class MyDataBase {
         version: 1,
         onCreate: (db, version) async {
           db.execute(
-              'CREATE TABLE locations (id INTEGER PRIMARY KEY , firstName TEXT NOT NULL,lastName TEXT NOT NULL, phoneNumber TEXT NOT NULL , emailAddress TEXT NOT NULL, addressName TEXT NOT NULL , longitude_code TEXT NOT NULL , latitude_code  TEXT NOT NULL,city TEXT NOT NULL ,country TEXT NOT NULL ,address TEXT NOT NULL)');
+              'CREATE TABLE locations (id TEXT PRIMARY KEY , firstName TEXT NOT NULL,lastName TEXT NOT NULL, phoneNumber TEXT NOT NULL , emailAddress TEXT NOT NULL, addressName TEXT NOT NULL , longitude_code TEXT NOT NULL , latitude_code  TEXT NOT NULL,city TEXT NOT NULL ,country TEXT NOT NULL ,address TEXT NOT NULL)');
         },
       );
       log('locations table created');

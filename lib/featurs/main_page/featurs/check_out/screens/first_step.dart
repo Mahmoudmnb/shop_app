@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/gogole_map.dart';
 import 'package:shop_app/injection.dart';
 
+import '../../../data_source/data_source_paths.dart';
 import '../cubit/check_out_cubit.dart';
 import '../models/address_model.dart';
 import '../widget/check_out_address.dart';
@@ -106,15 +107,52 @@ class FirstStep extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index) {
                       AddressModel address =
                           AddressModel.fromMap(locations[index]);
-                      return CheckOutAddressCard(
-                          title: address.addressName,
-                          description: address.address);
+                      return Dismissible(
+                          background: Container(
+                            padding: EdgeInsets.only(left: 19.65.w),
+                            alignment: Alignment.centerLeft,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            decoration: const BoxDecoration(
+                              color: Colors.black,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                            child:
+                                const Icon(Icons.delete, color: Colors.white),
+                          ),
+                          secondaryBackground: Container(
+                            // margin: EdgeInsets.only(left: 7.6335.w),
+                            padding: EdgeInsets.only(right: 19.65.w),
+                            alignment: Alignment.centerRight,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            decoration: const BoxDecoration(
+                              color: Colors.black,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                            child:
+                                const Icon(Icons.delete, color: Colors.white),
+                          ),
+                          onDismissed: (value) async {
+                            String add = await sl
+                                .get<DataSource>()
+                                .deleteAddress(address);
+                            if (context.mounted) {
+                              context.read<CheckOutCubit>().changeAddress(add);
+                            }
+                          },
+                          key: Key(address.addressName),
+                          child: CheckOutAddressCard(
+                              title: address.addressName,
+                              description: address.address));
                     },
                   ),
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const GoogleMapScreen(fromPage: 'Orders',),
+                        builder: (context) => const GoogleMapScreen(
+                          fromPage: 'Orders',
+                        ),
                       ));
                     },
                     child: Container(

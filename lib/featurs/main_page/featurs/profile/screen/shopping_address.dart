@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
-import 'package:shop_app/featurs/main_page/featurs/check_out/models/address_model.dart';
+import 'package:shop_app/featurs/main_page/featurs/profile/cubit/profile_cubit.dart';
 import 'package:shop_app/gogole_map.dart';
 import 'package:shop_app/injection.dart';
 
+import '../../../data_source/data_source.dart';
+import '../../check_out/models/address_model.dart';
 import '../widgets/shopping_address_card.dart';
 
 class ShoppingAddress extends StatelessWidget {
@@ -70,9 +72,12 @@ class ShoppingAddress extends StatelessWidget {
                           child: const Icon(Icons.delete, color: Colors.white),
                         ),
                         onDismissed: (value) async {
-                          await sl
-                              .get<DataSource>()
-                              .deleteAddress(address.addressName);
+                          await sl.get<DataSource>().deleteAddress(address);
+                          if (context.mounted) {
+                            context
+                                .read<ProfileCubit>()
+                                .updateProfileImageWidget();
+                          }
                         },
                         key: Key(address.addressName),
                         child: ShoppingAddressCard(
