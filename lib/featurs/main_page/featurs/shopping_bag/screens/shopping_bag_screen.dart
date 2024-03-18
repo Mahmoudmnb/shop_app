@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shop_app/core/internet_info.dart';
 import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
 import 'package:shop_app/injection.dart';
 import 'package:toast/toast.dart';
 
+import '../../../../../core/internet_info.dart';
 import '../../check_out/cubit/check_out_cubit.dart';
 import '../../check_out/screens/first_step.dart';
 import '../../home/models/product_model.dart';
@@ -94,7 +94,6 @@ class ShoppingBagScreen extends StatelessWidget {
   }
 
   showErrorMessage(String message, BuildContext context) {
-    log(message.length.toString());
     showDialog(
         context: context,
         builder: (context) => AlertDialog(

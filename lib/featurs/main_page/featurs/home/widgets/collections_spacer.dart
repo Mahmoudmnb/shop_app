@@ -37,6 +37,7 @@ class CollectionsSpacer extends StatelessWidget {
                         color: const Color(0xff6D6D6D),
                       )),
                   isNew
+                      //Todo: replace this widget with new label with star border
                       ? Text(
                           collectoinTitle == 'New' ? 'New' : 'New Discount',
                           style:

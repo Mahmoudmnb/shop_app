@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -237,7 +235,6 @@ class FirstStep extends StatelessWidget {
                                     ? 4.99
                                     : 9.99;
                         deliveryCost += 10;
-                        log(deliveryCost.toString());
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => CheckOutScreen2(
                               latitude: latitude,
