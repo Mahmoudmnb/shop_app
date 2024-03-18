@@ -27,11 +27,11 @@ class Profile extends StatelessWidget {
                   decoration: BoxDecoration(
                       image: image != null
                           ? DecorationImage(
-                              image: FileImage(File(image!.file.path)))
+                              image: ResizeImage(
+                                  width: 300.w.toInt(),
+                                  FileImage(File(image!.file.path))))
                           : null,
-                      color: Constant.currentUser == null
-                          ? Colors.black
-                          : Colors.black,
+                      color: Colors.black,
                       shape: BoxShape.circle),
                   child: image == null
                       ? Text(

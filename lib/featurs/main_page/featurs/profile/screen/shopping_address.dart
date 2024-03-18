@@ -72,12 +72,9 @@ class ShoppingAddress extends StatelessWidget {
                           child: const Icon(Icons.delete, color: Colors.white),
                         ),
                         onDismissed: (value) async {
-                          await sl.get<DataSource>().deleteAddress(address);
-                          if (context.mounted) {
-                            context
-                                .read<ProfileCubit>()
-                                .updateProfileImageWidget();
-                          }
+                          await sl
+                              .get<DataSource>()
+                              .deleteAddress(address);
                         },
                         key: Key(address.addressName),
                         child: ShoppingAddressCard(
