@@ -12,6 +12,26 @@ import '../featurs/products_view/models/review_model.dart';
 import 'data_source.dart';
 
 class UpdateDeleteLocalDataSource {
+  //! update section
+  Future<void> updateQuantity(int id, int quantity) async {
+    Database db = await openDatabase(Constant.addToCartTable);
+    db.rawUpdate('UPDATE AddToCartTable SET quantity=$quantity WHERE id==$id');
+  }
+
+  Future<void> updateAddress(
+      AddressModel address, String oldAddressName) async {
+    Database db = await openDatabase(Constant.locationsDataBasePath);
+    try {
+      await sl.get<DataSource>().updateLocationInCloud(address);
+      var i = await db.rawUpdate(
+          "UPDATE locations SET firstName='${address.fullName}',lastName='${address.fullName}',phoneNumber='${address.phoneNumber}',emailAddress='${address.emailAddress}',addressName='${address.addressName}',longitude_code='${address.longitude}',latitude_code='${address.latitude}',city='${address.city}',country='${address.country}',address='${address.address}' WHERE addressName== '$oldAddressName'");
+      log(i.toString());
+    } catch (e) {
+      log(e.toString());
+    }
+    db.close();
+  }
+
   Future<void> updateProductToNotDiscountUpdated(String productName) async {
     Database db = await openDatabase(Constant.productDataBasePath);
     try {
@@ -20,14 +40,6 @@ class UpdateDeleteLocalDataSource {
     } catch (e) {
       log(e.toString());
     }
-  }
-
-  Future<void> deleteBorder(int borderId) async {
-    Database db = await openDatabase(Constant.borderDataBasePath);
-    await db.rawDelete('DELETE FROM borders WHERE id=$borderId');
-    Database bDb = await openDatabase(Constant.broderProductsDataBasePath);
-    await bDb.rawUpdate(
-        'UPDATE borderProducts SET borderId=1 WHERE borderId=$borderId');
   }
 
   Future<void> updateProductToNotNew(String productName) async {
@@ -129,18 +141,33 @@ class UpdateDeleteLocalDataSource {
     log('done updating products');
   }
 
-  Future<void> deleteAddress(String addressName) async {
-    
-    Database db = await openDatabase(Constant.locationsDataBasePath);
-    db.rawDelete('DELETE FROM locations WHERE addressName="$addressName"');
+  //! delete section
+  Future<void> deleteBorder(int borderId) async {
+    Database db = await openDatabase(Constant.borderDataBasePath);
+    await db.rawDelete('DELETE FROM borders WHERE id=$borderId');
+    Database bDb = await openDatabase(Constant.broderProductsDataBasePath);
+    await bDb.rawUpdate(
+        'UPDATE borderProducts SET borderId=1 WHERE borderId=$borderId');
   }
 
-  Future<void> updateAddress(
-      AddressModel address, String oldAddressName) async {
+  Future<String> deleteAddress(AddressModel address) async {
+    await sl.get<DataSource>().deleteLocationFromCloud(address);
     Database db = await openDatabase(Constant.locationsDataBasePath);
-    var i = await db.rawUpdate(
-        "UPDATE locations SET firstName='${address.fullName}',lastName='${address.fullName}',phoneNumber='${address.phoneNumber}',emailAddress='${address.emailAddress}',addressName='${address.addressName}',longitude_code='${address.longitude}',latitude_code='${address.latitude}',city='${address.city}',country='${address.country}',address='${address.address}' WHERE addressName== '$oldAddressName'");
-    log(i.toString());
+    await db.rawDelete(
+        'DELETE FROM locations WHERE addressName="${address.addressName}"');
+    var data = await sl.get<DataSource>().getLocations();
+    String? defaultLocation =
+        sl.get<SharedPreferences>().getString('defaultLocation');
+    if (data.isNotEmpty) {
+      if (defaultLocation != null && defaultLocation == address.addressName) {
+        await sl.get<SharedPreferences>().setString(
+            'defaultLocation', AddressModel.fromMap(data[0]).addressName);
+        return AddressModel.fromMap(data[0]).addressName;
+      }
+    } else {
+      await sl.get<SharedPreferences>().remove('defaultLocation');
+    }
+    return defaultLocation ?? '';
   }
 
   Future<void> deleteWordFormSearchHistory(String word) async {
@@ -153,11 +180,13 @@ class UpdateDeleteLocalDataSource {
     db.rawDelete('DELETE FROM AddToCartTable WHERE id == $id');
   }
 
-  Future<void> updateQuantity(int id, int quantity) async {
-    Database db = await openDatabase(Constant.addToCartTable);
-    db.rawUpdate('UPDATE AddToCartTable SET quantity=$quantity WHERE id==$id');
+  Future<void> deleteProductFromBorder(int productId) async {
+    Database db = await openDatabase(Constant.broderProductsDataBasePath);
+    await db
+        .rawDelete('DELETE FROM borderProducts WHERE productId = $productId');
   }
 
+  //! clear section
   Future<void> clearAddToCartTable() async {
     Database db = await openDatabase(Constant.addToCartTable);
     db.rawDelete('delete from AddToCartTable');
@@ -182,9 +211,15 @@ class UpdateDeleteLocalDataSource {
     log(' borderProducts table cleared');
   }
 
-  Future<void> deleteProductFromBorder(int productId) async {
-    Database db = await openDatabase(Constant.broderProductsDataBasePath);
-    await db
-        .rawDelete('DELETE FROM borderProducts WHERE productId = $productId');
+  Future<void> clearOrdersTable() async {
+    Database db = await openDatabase(Constant.ordersDataBasePath);
+    db.rawDelete('delete from orders');
+    log(' orders table cleared');
+  }
+
+  Future<void> clearLocationsTable() async {
+    Database db = await openDatabase(Constant.locationsDataBasePath);
+    db.rawDelete('delete from locations');
+    log(' locations table cleared');
   }
 }

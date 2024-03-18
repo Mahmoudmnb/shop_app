@@ -6,10 +6,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/core/constant.dart';
 import 'package:shop_app/featurs/auth/models/user_model.dart';
-import 'package:shop_app/featurs/main_page/featurs/check_out/models/address_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../injection.dart';
+import '../featurs/check_out/models/address_model.dart';
 import '../featurs/products_view/models/review_model.dart';
 import 'data_source.dart';
 
@@ -17,24 +17,81 @@ class RemoteDataSource {
   final client = Client()
       .setEndpoint('https://cloud.appwrite.io/v1')
       .setProject(Constant.appWriteProjectId);
+  Future<List<Document>> downloadLoactionsFromCloud() async {
+    Databases databases = Databases(client);
+    var locations = await databases.listDocuments(
+      databaseId: '65585f55e896c3e87515',
+      collectionId: "65ec7d873aa0c21fdeab",
+      queries: [
+        Query.equal('owner_email', Constant.currentUser!.email),
+      ],
+    );
+    try {
+      for (var element in locations.documents) {
+        var d = element.data;
+        await sl.get<DataSource>().addNewLocation(
+            AddressModel(
+                id: d['\$id'],
+                fullName: d['fullName'],
+                lastName: d['fullName'],
+                phoneNumber: d['phoneNumber'],
+                emailAddress: d['emailAddress'],
+                addressName: d['addressName'],
+                longitude: d['longitude_code'],
+                latitude: d['latitude_code'],
+                city: d['city'],
+                country: d['country'],
+                address: d['address']),
+            'update');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    log('done gettting locations');
+    return locations.documents;
+  }
+
+  Future<void> updateLocationInCloud(AddressModel address) async {
+    Databases db = Databases(client);
+    log(address.id.toString());
+    try {
+      db.updateDocument(
+          databaseId: '65585f55e896c3e87515',
+          collectionId: '65ec7d873aa0c21fdeab',
+          documentId: address.id!,
+          data: {
+            'fullName': address.fullName,
+            'phoneNumber': address.phoneNumber,
+            'emailAddress': address.emailAddress,
+            'addressName': address.addressName,
+            'longitude_code': address.longitude,
+            'latitude_code': address.latitude,
+            'city': address.city,
+            'country': address.country,
+            'address': address.address,
+            'owner_email': Constant.currentUser!.email
+          });
+      log('done updating address data');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   Future<void> deleteLocationFromCloud(AddressModel address) async {
     Databases db = Databases(client);
     try {
-      db.listDocuments(
-          databaseId: '65585f55e896c3e87515',
-          collectionId: '65ec7d873aa0c21fdeab');
       db.deleteDocument(
         databaseId: '65585f55e896c3e87515',
         collectionId: '65ec7d873aa0c21fdeab',
-        documentId: ID.unique(),
+        documentId: address.id!,
       );
-      log('done upload location');
+      log('done deleting location');
     } on AppwriteException catch (e) {
       log(e.message.toString());
     }
   }
 
-  Future<void> addLoationToCloude(AddressModel address) async {
+  Future<String> addLoationToCloude(AddressModel address) async {
     Databases db = Databases(client);
     try {
       var d = await db.createDocument(
@@ -53,10 +110,11 @@ class RemoteDataSource {
             'address': address.address,
             'owner_email': Constant.currentUser!.email
           });
-      d.$id;
       log('done upload location');
+      return d.$id;
     } on AppwriteException catch (e) {
       log(e.message.toString());
+      return '';
     }
   }
 
@@ -160,7 +218,9 @@ class RemoteDataSource {
           data: {
             'borderProducts': borderProducts,
             'cartProducts': cartProducts,
-            'borders': borders
+            'borders': borders,
+            'defaultLocation':
+                sl.get<SharedPreferences>().getString('defaultLocation')
           });
     } catch (e) {
       log(e.toString());

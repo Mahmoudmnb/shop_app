@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
-import 'package:shop_app/featurs/main_page/featurs/check_out/models/address_model.dart';
+import 'package:shop_app/featurs/main_page/featurs/profile/cubit/profile_cubit.dart';
 import 'package:shop_app/gogole_map.dart';
 import 'package:shop_app/injection.dart';
 
+import '../../../data_source/data_source.dart';
+import '../../check_out/models/address_model.dart';
 import '../widgets/shopping_address_card.dart';
 
 class ShoppingAddress extends StatelessWidget {
@@ -38,65 +40,49 @@ class ShoppingAddress extends StatelessWidget {
                 ),
                 SizedBox(height: 40.h),
                 Expanded(
-                  child: addressList.isEmpty
-                      ? Center(
-                          child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.location_off_rounded, size: 100.w),
-                            SizedBox(height: 30.h),
-                            const Text('There is no address.',
-                                style: TextStyle(fontSize: 20)),
-                          ],
-                        ))
-                      : ListView.separated(
-                          keyboardDismissBehavior:
-                              ScrollViewKeyboardDismissBehavior.onDrag,
-                          physics: const BouncingScrollPhysics(),
-                          separatorBuilder: (context, index) =>
-                              SizedBox(height: 2.h),
-                          itemCount: addressList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            AddressModel address =
-                                AddressModel.fromMap(addressList[index]);
-                            return Dismissible(
-                              background: Container(
-                                padding: EdgeInsets.only(left: 19.65.w),
-                                alignment: Alignment.centerLeft,
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                decoration: const BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                ),
-                                child: const Icon(Icons.delete,
-                                    color: Colors.white),
-                              ),
-                              secondaryBackground: Container(
-                                // margin: EdgeInsets.only(left: 7.6335.w),
-                                padding: EdgeInsets.only(right: 19.65.w),
-                                alignment: Alignment.centerRight,
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                decoration: const BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                ),
-                                child: const Icon(Icons.delete,
-                                    color: Colors.white),
-                              ),
-                              onDismissed: (value) async {
-                                await sl
-                                    .get<DataSource>()
-                                    .deleteAddress(address.addressName);
-                              },
-                              key: Key(address.addressName),
-                              child: ShoppingAddressCard(
-                                addressModel: address,
-                              ),
-                            );
-                          },
+                  child: ListView.separated(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
+                    physics: const BouncingScrollPhysics(),
+                    separatorBuilder: (context, index) => SizedBox(height: 2.h),
+                    itemCount: addressList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      AddressModel address =
+                          AddressModel.fromMap(addressList[index]);
+                      return Dismissible(
+                        background: Container(
+                          padding: EdgeInsets.only(left: 19.65.w),
+                          alignment: Alignment.centerLeft,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          decoration: const BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: const Icon(Icons.delete, color: Colors.white),
                         ),
+                        secondaryBackground: Container(
+                          // margin: EdgeInsets.only(left: 7.6335.w),
+                          padding: EdgeInsets.only(right: 19.65.w),
+                          alignment: Alignment.centerRight,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          decoration: const BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: const Icon(Icons.delete, color: Colors.white),
+                        ),
+                        onDismissed: (value) async {
+                          await sl
+                              .get<DataSource>()
+                              .deleteAddress(address);
+                        },
+                        key: Key(address.addressName),
+                        child: ShoppingAddressCard(
+                          addressModel: address,
+                        ),
+                      );
+                    },
+                  ),
                 ),
                 InkWell(
                   borderRadius: BorderRadius.circular(10),

@@ -23,8 +23,20 @@ class AuthPage extends StatelessWidget {
     Future<void> goToHomePage(String fromButton) async {
       if (Navigator.of(context).canPop()) {
         if (fromButton != 'Skip') {
+          var locations =
+              await sl.get<DataSource>().downloadLoactionsFromCloud();
           await sl.get<DataSource>().getOrdersFromCloud();
           await sl.get<DataSource>().insertPersonalData();
+          if (sl.get<SharedPreferences>().getString('defaultLocation') ==
+                  null &&
+              locations.isNotEmpty) {
+            sl
+                .get<SharedPreferences>()
+                .setString('defaultLocation', locations[0].data['addressName']);
+          }
+          await sl.get<DataSource>().updateDataBase();
+          await sl.get<SharedPreferences>().setString(
+              'lastUpdate', DateTime.now().millisecondsSinceEpoch.toString());
           if (context.mounted) {
             await context.read<AddToCartCubit>().getAddToCartProducts();
             if (context.mounted) {
@@ -50,6 +62,7 @@ class AuthPage extends StatelessWidget {
         await myDataBase.createRecommendedProductTable();
 
         await sl.get<DataSource>().addBorder('All items');
+        var locations = await sl.get<DataSource>().downloadLoactionsFromCloud();
         await sl.get<DataSource>().getProductsFormCloudDataBase();
         await sl.get<DataSource>().setRecommendedProducts();
         await sl.get<DataSource>().getReviewsFromCloud();
@@ -58,7 +71,15 @@ class AuthPage extends StatelessWidget {
           await sl.get<DataSource>().insertPersonalData();
         }
         if (context.mounted) {
+          if (sl.get<SharedPreferences>().getString('defaultLocation') ==
+                  null &&
+              locations.isNotEmpty) {
+            sl
+                .get<SharedPreferences>()
+                .setString('defaultLocation', locations[0].data['addressName']);
+          }
           await context.read<AddToCartCubit>().getAddToCartProducts();
+
           sl.get<SharedPreferences>().setString(
               'lastUpdate', DateTime.now().millisecondsSinceEpoch.toString());
           if (context.mounted) {

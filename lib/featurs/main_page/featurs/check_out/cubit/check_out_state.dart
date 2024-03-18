@@ -18,3 +18,7 @@ class IsDefaultLoacatoinState extends CheckOutState {}
 class IsLoadingState extends CheckOutState {}
 
 class ChangeSelectedCountryCode extends CheckOutState {}
+
+class IsUpdateAddLocationButtonLoading extends CheckOutState {
+  IsUpdateAddLocationButtonLoading();
+}
