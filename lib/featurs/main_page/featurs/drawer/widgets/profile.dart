@@ -31,7 +31,9 @@ class Profile extends StatelessWidget {
                                   width: 300.w.toInt(),
                                   FileImage(File(image!.file.path))))
                           : null,
-                      color: Colors.black,
+                      color: Constant.currentUser == null
+                          ? Colors.white
+                          : Colors.black,
                       shape: BoxShape.circle),
                   child: image == null
                       ? Text(
