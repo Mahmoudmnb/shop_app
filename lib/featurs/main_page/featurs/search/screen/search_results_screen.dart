@@ -159,10 +159,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
               } else if (state is SaveState) {
                 searchProducts = state.categoryProducts;
               } else if (state is SearchResults) {
-                log(state.searchResult.toString());
                 searchProducts = state.searchResult;
               }
-
               return searchProducts.isEmpty
                   ? Column(
                       children: [
@@ -206,6 +204,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                     builder: (context) => ProductScreen(
                                       searchCubit: cubit,
                                       fromPage: 'SearchReasults',
+                                      fromPageTitle: 'SearchReasults',
                                       searchWord: searchController.text,
                                       product: product,
                                       cubit: BlocProvider.of<ProductCubit>(

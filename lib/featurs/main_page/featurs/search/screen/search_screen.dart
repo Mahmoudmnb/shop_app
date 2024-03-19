@@ -271,8 +271,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
   search(SearchCubit cubit) async {
     if (searchController.text.isNotEmpty) {
-      context.read<SearchCubit>().reset('', false);
-      sl.get<DataSource>().setSearchHistory(searchController.text);
+      await context.read<SearchCubit>().reset('', false);
+      await sl.get<DataSource>().setSearchHistory(searchController.text);
       List<Map<String, dynamic>> searchProduts =
           await cubit.search(searchController.text.trim());
       moveToSearchResultPage(searchProduts, cubit);
