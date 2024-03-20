@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/core/constant.dart';
 import 'package:shop_app/featurs/main_page/featurs/profile/cubit/profile_cubit.dart';
 import 'package:toast/toast.dart';
@@ -243,10 +244,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         .setIsLogOutLoading(true);
                                     InternetInfo.isconnected()
                                         .then((value) async {
+                                      XFile? image;
                                       if (value) {
+                                        if (File(
+                                                '${Constant.baseUrl}profileImage.jpg')
+                                            .existsSync()) {
+                                          image = XFile(
+                                              '${Constant.baseUrl}profileImage.jpg');
+                                        } else {
+                                          image = null;
+                                        }
                                         await context
                                             .read<ProfileCubit>()
-                                            .logOut();
+                                            .logOut(image);
                                         if (context.mounted) {
                                           context
                                               .read<ProfileCubit>()

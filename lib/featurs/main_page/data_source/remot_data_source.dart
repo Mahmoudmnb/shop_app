@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/core/constant.dart';
 import 'package:shop_app/featurs/auth/models/user_model.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../injection.dart';
 import '../featurs/check_out/models/address_model.dart';
@@ -17,6 +17,14 @@ class RemoteDataSource {
   final client = Client()
       .setEndpoint('https://cloud.appwrite.io/v1')
       .setProject(Constant.appWriteProjectId);
+  Future<Uint8List> downloadProfileImage(String cloudImageUrl) async {
+    Storage storage = Storage(client);
+    Uint8List profileImage = await storage.getFileDownload(
+        bucketId: '65969d60114e6c041d20', fileId: cloudImageUrl);
+    log(profileImage.toString());
+    return profileImage;
+  }
+
   Future<List<Document>> downloadLoactionsFromCloud() async {
     Databases databases = Databases(client);
     var locations = await databases.listDocuments(
@@ -271,23 +279,50 @@ class RemoteDataSource {
 
   Future<void> uploadImage(XFile image) async {
     final storage = Storage(client);
-    String id = const Uuid().v1();
     if (Constant.currentUser!.imgUrl != null) {
-      await storage.deleteFile(
-          bucketId: '65969d60114e6c041d20',
-          fileId: Constant.currentUser!.cloudImgUrl!);
+      try {
+        await storage.deleteFile(
+            bucketId: '65969d60114e6c041d20',
+            fileId: Constant.currentUser!.cloudImgUrl!);
+      } catch (e) {
+        log(e.toString());
+      }
     }
-    await storage.createFile(
+    var d = await storage.createFile(
       onProgress: (value) {
         log('hi');
         log(value.progress.toString());
       },
       bucketId: '65969d60114e6c041d20',
-      fileId: id,
+      fileId: ID.unique(),
       file: InputFile.fromPath(
           path: image.path, filename: '${Constant.currentUser!.email}.jpg'),
     );
-    Constant.currentUser!.cloudImgUrl = id;
+    Databases db = Databases(client);
+    var temp = await db.listDocuments(
+        databaseId: '655da767bc3f1651db70',
+        collectionId: '655da771422b6ac710aa');
+    List<Document> users = temp.documents;
+    String dId = '';
+    for (var element in users) {
+      if (element.data['email'] == Constant.currentUser!.email) {
+        log(element.data.toString());
+        dId = element.$id;
+        break;
+      }
+    }
+    db.updateDocument(
+        databaseId: '655da767bc3f1651db70',
+        collectionId: '655da771422b6ac710aa',
+        documentId: dId,
+        data: {
+          'imgUrl': d.$id
+          // 'https://cloud.appwrite.io/v1/storage/buckets/65969d60114e6c041d20/files/$id/view?project=655083f2b78dc8c2d628&mode=admin'
+        });
+    Constant.currentUser!.cloudImgUrl = d.$id;
+    sl
+        .get<SharedPreferences>()
+        .setString('currentUser', Constant.currentUser!.toJson());
   }
 
   Future<List<Document>> getProducts() async {

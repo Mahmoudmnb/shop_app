@@ -81,9 +81,11 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                             image: Constant.currentUser!.imgUrl != null
                                 ? DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: ResizeImage(height: 130.h.toInt(),
-                        width: 130.w.toInt(),FileImage(
-                                        File(Constant.currentUser!.imgUrl!))))
+                                    image: ResizeImage(
+                                        height: 130.h.toInt(),
+                                        width: 130.w.toInt(),
+                                        FileImage(File(
+                                            Constant.currentUser!.imgUrl!))))
                                 : null,
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(12)),
@@ -120,13 +122,9 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                             }
                             File profileImage = await File(file.path)
                                 .copy('${Constant.baseUrl}profileImage.jpg');
-
                             // await sl.get<DataSource>().uploadImage(file);
                             Constant.currentUser!.imgUrl = profileImage.path;
                             log('done');
-                            log(File(Constant.currentUser!.imgUrl!)
-                                .existsSync()
-                                .toString());
                             await sl.get<SharedPreferences>().setString(
                                 'currentUser', Constant.currentUser!.toJson());
                             imgUrl = profileImage.path;

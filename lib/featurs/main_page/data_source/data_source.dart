@@ -1,4 +1,5 @@
 import 'package:appwrite/models.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../featurs/check_out/models/address_model.dart';
@@ -137,6 +138,9 @@ class DataSource {
   }
 
   //! this section for getting data
+  Future<Uint8List> downloadProfileImage(String cloudImageUrl) async {
+    return remoteDataSource.downloadProfileImage(cloudImageUrl);
+  }
 
   Future<List<Map<String, dynamic>>> getProductsByNames(String names) async {
     return getDataLocalDataSource.getProductsByNames(names);

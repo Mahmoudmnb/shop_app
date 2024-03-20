@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/featurs/auth/pages/auth_page.dart';
 import 'package:shop_app/featurs/main_page/featurs/drawer/cubit/drawer_cubit.dart';
 import 'package:toast/toast.dart';
@@ -32,7 +33,13 @@ class CustomButton extends StatelessWidget {
               context.read<ProfileCubit>().setIsLogOutLoading(true);
               InternetInfo.isconnected().then((value) async {
                 if (value) {
-                  await context.read<ProfileCubit>().logOut();
+                  XFile? image;
+                  if (Constant.currentUser!.imgUrl != null) {
+                    image == XFile('${Constant.baseUrl}profileImage.jpg');
+                  } else {
+                    image = null;
+                  }
+                  await context.read<ProfileCubit>().logOut(image);
                   if (context.mounted) {
                     context.read<ProfileCubit>().setIsLogOutLoading(false);
                     Constant.currentUser = null;

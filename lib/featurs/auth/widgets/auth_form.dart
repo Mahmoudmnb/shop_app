@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +14,7 @@ import 'package:shop_app/injection.dart';
 import 'package:toast/toast.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../main_page/data_source/data_source_paths.dart';
 import '../blocs/auth_blocs.dart';
 import '../data.dart';
 import 'auth_widgets.dart';
@@ -152,8 +154,22 @@ class _AuthFormState extends State<AuthForm> {
           collectionId: '655da771422b6ac710aa',
           queries: [Query.equal('email', email)]);
       String name = data.documents[0].data['name'];
-      Constant.currentUser =
-          UserModel(email: email, name: name, password: password);
+      if (data.documents[0].data['imgUrl'] != null) {
+        Uint8List profileImage = await sl
+            .get<DataSource>()
+            .downloadProfileImage(data.documents[0].data['imgUrl']);
+        await File('${Constant.baseUrl}profileImage.jpg')
+            .writeAsBytes(profileImage);
+      }
+
+      Constant.currentUser = UserModel(
+          email: email,
+          name: name,
+          password: password,
+          cloudImgUrl: data.documents[0].data['imgUrl'],
+          imgUrl: data.documents[0].data['imgUrl'] == null
+              ? null
+              : '${Constant.baseUrl}profileImage.jpg');
       sl
           .get<SharedPreferences>()
           .setString('currentUser', Constant.currentUser!.toJson());
@@ -165,6 +181,8 @@ class _AuthFormState extends State<AuthForm> {
       if (e.message != null &&
           e.message!.contains('user_invalid_credentials')) {
         Toast.show('wrong email or password', duration: 2);
+      } else if (e.message!.contains('Please check the email and password')) {
+        Toast.show('invalid email or password please try again');
       } else {
         Toast.show('unkown error please try again');
       }
