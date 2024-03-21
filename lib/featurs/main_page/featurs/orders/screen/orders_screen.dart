@@ -50,33 +50,34 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                       backgroundColor: Colors.white,
                       body: Constant.currentUser == null
                           ? Padding(
-                            padding:  EdgeInsets.only(bottom: 30.h),
-                            child: Center(
-                              child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image(
-                                    image:
-                                        ResizeImage(
-                              width: 300.w.toInt(),
-                              height: 300.w.toInt(),const AssetImage('assets/images/lock.png'))),
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context)
-                                          .push(MaterialPageRoute(
-                                              builder: (_) => const AuthPage()))
-                                          .then((value) {
-                                        setState(() {});
-                                      });
-                                    },
-                                    child: Text(
-                                      'Register now',
-                                      style: TextStyle(fontSize: 20.sp),
-                                    ))
-                              ],
-                                                            ),
-                            ),
-                          )
+                              padding: EdgeInsets.only(bottom: 30.h),
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image(
+                                        image: ResizeImage(
+                                            width: 300.w.toInt(),
+                                            height: 300.w.toInt(),
+                                            const AssetImage(
+                                                'assets/images/lock.png'))),
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      const AuthPage(
+                                                        fromPage: 'profile',
+                                                      )));
+                                        },
+                                        child: Text(
+                                          'Register now',
+                                          style: TextStyle(fontSize: 20.sp),
+                                        ))
+                                  ],
+                                ),
+                              ),
+                            )
                           : Column(
                               children: [
                                 Container(
@@ -228,7 +229,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 25.w),
                                           child: ListView.separated(
-                                            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                                            keyboardDismissBehavior:
+                                                ScrollViewKeyboardDismissBehavior
+                                                    .onDrag,
                                             physics:
                                                 const BouncingScrollPhysics(),
                                             separatorBuilder:

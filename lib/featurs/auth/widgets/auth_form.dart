@@ -161,7 +161,6 @@ class _AuthFormState extends State<AuthForm> {
         await File('${Constant.baseUrl}profileImage.jpg')
             .writeAsBytes(profileImage);
       }
-
       Constant.currentUser = UserModel(
           email: email,
           name: name,

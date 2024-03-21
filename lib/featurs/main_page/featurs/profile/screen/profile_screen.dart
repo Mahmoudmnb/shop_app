@@ -1,13 +1,13 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shop_app/core/constant.dart';
-import 'package:shop_app/featurs/main_page/featurs/profile/cubit/profile_cubit.dart';
 import 'package:toast/toast.dart';
 
+import '../../../../../core/constant.dart';
 import '../../../../../core/internet_info.dart';
 import '../../../../../injection.dart';
 import '../../../../auth/pages/auth_pages.dart';
@@ -17,6 +17,7 @@ import '../../orders/screen/rate_order.dart';
 import '../../shopping_bag/cubits/products_cubit/products_cubit.dart';
 import '../../shopping_bag/screens/shopping_bag_screen.dart';
 import '../../wishlist/screens/wishlist_screen.dart';
+import '../cubit/profile_cubit.dart';
 import 'personal_details_screen.dart';
 import 'profile_order_screen.dart';
 import 'shopping_address.dart';
@@ -39,6 +40,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: Colors.white,
         body: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
+            log('message');
+
             return Constant.currentUser == null
                 ? Padding(
                     padding: EdgeInsets.only(bottom: 30.h),
@@ -53,13 +56,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               const AssetImage('assets/images/lock.png')),
                         ),
                         TextButton(
-                            onPressed: () {
-                              Navigator.of(context)
+                            onPressed: () async {
+                              await Navigator.of(context)
                                   .push(MaterialPageRoute(
-                                      builder: (_) => const AuthPage()))
-                                  .then((value) {
-                                setState(() {});
-                              });
+                                      builder: (_) => const AuthPage(
+                                            fromPage: 'Profile',
+                                          )));
+                              context
+                                  .read<ProfileCubit>()
+                                  .changeProfileImagePath(
+                                      Constant.currentUser!.imgUrl!);
+                              // setState(() {});
                             },
                             child: Text(
                               'Register now',
@@ -75,56 +82,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SizedBox(height: 60.h),
-                            BlocBuilder<ProfileCubit, ProfileState>(
-                              builder: (context, state) {
-                                return Column(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.black,
+                            Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.black,
+                                      borderRadius: BorderRadius.circular(12)),
+                                  child: context
+                                              .read<ProfileCubit>()
+                                              .profileImagePath ==
+                                          null
+                                      ? SizedBox(
+                                          height: 100.h,
+                                          width: 100.h,
+                                          child: Center(
+                                              child: Text(
+                                            Constant.getLetterName(
+                                                Constant.currentUser!.name),
+                                            style: TextStyle(
+                                                fontSize: 30.sp,
+                                                fontWeight: FontWeight.bold,
+                                                letterSpacing: 2,
+                                                color: Colors.white),
+                                          )),
+                                        )
+                                      : ClipRRect(
                                           borderRadius:
-                                              BorderRadius.circular(12)),
-                                      child: context
-                                                  .read<ProfileCubit>()
-                                                  .profileImagePath ==
-                                              null
-                                          ? SizedBox(
-                                              height: 100.h,
-                                              width: 100.h,
-                                              child: Center(
-                                                  child: Text(
-                                                Constant.getLetterName(
-                                                    Constant.currentUser!.name),
-                                                style: TextStyle(
-                                                    fontSize: 30.sp,
-                                                    fontWeight: FontWeight.bold,
-                                                    letterSpacing: 2,
-                                                    color: Colors.white),
-                                              )),
-                                            )
-                                          : ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              child: Image(
-                                                  fit: BoxFit.cover,
-                                                  image: ResizeImage(
-                                                      height: 100.h.toInt(),
-                                                      width: 100.h.toInt(),
-                                                      FileImage(File(context
-                                                          .read<ProfileCubit>()
-                                                          .profileImagePath!)))),
-                                            ),
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    Text(
-                                      Constant.currentUser!.name,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18.sp),
-                                    ),
-                                  ],
-                                );
-                              },
+                                              BorderRadius.circular(12),
+                                          child: Image(
+                                              fit: BoxFit.cover,
+                                              image: ResizeImage(
+                                                  height: 100.h.toInt(),
+                                                  width: 100.h.toInt(),
+                                                  FileImage(File(context
+                                                      .read<ProfileCubit>()
+                                                      .profileImagePath!)))),
+                                        ),
+                                ),
+                                SizedBox(height: 8.h),
+                                Text(
+                                  Constant.currentUser!.name,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.sp),
+                                ),
+                              ],
                             ),
                             Container(
                               margin: EdgeInsets.symmetric(

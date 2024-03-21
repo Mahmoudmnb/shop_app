@@ -75,38 +75,42 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 Stack(
                   alignment: const Alignment(1.2, 1.2),
                   children: [
-                    Container(
-                        height: 130.h,
-                        width: 130.w,
-                        decoration: BoxDecoration(
-                            image: Constant.currentUser!.imgUrl != null
-                                ? DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: ResizeImage(
-                                        height: 130.h.toInt(),
-                                        width: 130.w.toInt(),
-                                        FileImage(File(
-                                            Constant.currentUser!.imgUrl!))))
-                                : null,
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(12)),
-                        child: Constant.currentUser!.imgUrl == null
-                            ? SizedBox(
-                                height: 130,
-                                width: 130,
-                                child: Center(
-                                  child: Text(
-                                    Constant.getLetterName(
-                                        Constant.currentUser!.name),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 3,
-                                        fontSize: 40.sp,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              )
-                            : null),
+                    BlocBuilder<ProfileCubit, ProfileState>(
+                      builder: (context, state) {
+                        return Container(
+                            height: 130.h,
+                            width: 130.w,
+                            decoration: BoxDecoration(
+                                image: Constant.currentUser!.imgUrl != null
+                                    ? DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: ResizeImage(
+                                            height: 130.h.toInt(),
+                                            width: 130.w.toInt(),
+                                            FileImage(File(Constant
+                                                .currentUser!.imgUrl!))))
+                                    : null,
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(12)),
+                            child: Constant.currentUser!.imgUrl == null
+                                ? SizedBox(
+                                    height: 130,
+                                    width: 130,
+                                    child: Center(
+                                      child: Text(
+                                        Constant.getLetterName(
+                                            Constant.currentUser!.name),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 3,
+                                            fontSize: 40.sp,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  )
+                                : null);
+                      },
+                    ),
                     GestureDetector(
                       onTap: () async {
                         ImagePicker imagePicker = ImagePicker();
@@ -117,15 +121,10 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                             if (Constant.currentUser!.imgUrl != null) {
                               await File(Constant.currentUser!.imgUrl!)
                                   .delete();
-                              log(File(Constant.currentUser!.imgUrl!)
-                                  .existsSync()
-                                  .toString());
                             }
                             File profileImage = await File(file.path)
                                 .copy('${Constant.baseUrl}profileImage.jpg');
-                            // await sl.get<DataSource>().uploadImage(file);
                             Constant.currentUser!.imgUrl = profileImage.path;
-                            log('done');
                             await sl.get<SharedPreferences>().setString(
                                 'currentUser', Constant.currentUser!.toJson());
                             imgUrl = profileImage.path;

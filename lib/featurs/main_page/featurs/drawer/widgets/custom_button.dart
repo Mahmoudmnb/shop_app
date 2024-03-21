@@ -55,8 +55,10 @@ class CustomButton extends StatelessWidget {
             }
           } else {
             Scaffold.of(context).closeDrawer();
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => const AuthPage()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => const AuthPage(
+                      fromPage: 'profile',
+                    )));
           }
         },
         child: BlocBuilder<ProfileCubit, ProfileState>(

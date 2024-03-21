@@ -15,13 +15,14 @@ import '../blocs/auth_blocs.dart';
 import '../widgets/auth_widgets.dart';
 
 class AuthPage extends StatelessWidget {
-  const AuthPage({super.key});
+  final String fromPage;
+  const AuthPage({super.key, required this.fromPage});
 
   @override
   Widget build(BuildContext context) {
     context.read<VisiblePsswordBloc>().add(ShowPassword());
     Future<void> goToHomePage(String fromButton) async {
-      if (Navigator.of(context).canPop()) {
+      if (fromPage == 'Profile') {
         if (fromButton != 'Skip') {
           var locations =
               await sl.get<DataSource>().downloadLoactionsFromCloud();
@@ -46,7 +47,9 @@ class AuthPage extends StatelessWidget {
           }
         }
         if (context.mounted) {
-          Navigator.of(context).pop();
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => const MainPage(),
+          ));
         }
       } else {
         MyDataBase myDataBase = MyDataBase();
@@ -60,7 +63,6 @@ class AuthPage extends StatelessWidget {
         await myDataBase.createBorderTable();
         await myDataBase.createBorderProductsTable();
         await myDataBase.createRecommendedProductTable();
-
         await sl.get<DataSource>().addBorder('All items');
         var locations = await sl.get<DataSource>().downloadLoactionsFromCloud();
         await sl.get<DataSource>().getProductsFormCloudDataBase();

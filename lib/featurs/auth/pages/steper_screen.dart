@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/featurs/auth/pages/auth_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:shop_app/featurs/auth/pages/auth_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class SteperScreen extends StatefulWidget {
@@ -111,7 +110,7 @@ class _SteperScreenState extends State<SteperScreen> {
             Container(
               alignment: Alignment.bottomLeft,
               padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 6.h),
-              decoration:  BoxDecoration(
+              decoration: BoxDecoration(
                   image: DecorationImage(
                       image: ResizeImage(
                         height: MediaQuery.of(context).size.height.toInt(),
@@ -181,7 +180,11 @@ class _SteperScreenState extends State<SteperScreen> {
           Animation<Offset> offset =
               Tween<Offset>(begin: const Offset(1, 0), end: const Offset(0, 0))
                   .animate(animation);
-          return SlideTransition(position: offset, child: const AuthPage());
+          return SlideTransition(
+              position: offset,
+              child: const AuthPage(
+                fromPage: 'splash',
+              ));
         }));
   }
 }

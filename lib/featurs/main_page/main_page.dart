@@ -95,15 +95,12 @@ class _MainPageState extends State<MainPage>
           ),
           IconButton(onPressed: () async {
             if (Constant.currentUser != null) {
-              await sl
-                  .get<DataSource>()
-                  .getAddToCartProducts()
-                  .then((addToCartProducts) {
-                context.read<AddToCartCubit>().products = addToCartProducts;
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const ShoppingBagScreen(),
-                ));
-              });
+              var cartProducts =
+                  await sl.get<DataSource>().getAddToCartProducts();
+              context.read<AddToCartCubit>().products = cartProducts;
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const ShoppingBagScreen(),
+              ));
             } else {
               context.read<MainPageCubit>().showRegisterMessage(context);
             }

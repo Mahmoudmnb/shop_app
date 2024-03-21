@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/auth/pages/auth_pages.dart';
+
+import '../../auth/pages/auth_pages.dart';
 
 part 'main_page_state.dart';
 
@@ -53,10 +54,13 @@ class MainPageCubit extends Cubit<MainPageState> {
                         children: [
                           const Spacer(),
                           MaterialButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 Navigator.of(context).pop();
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) => const AuthPage()));
+                                await Navigator.of(context)
+                                    .pushReplacement(MaterialPageRoute(
+                                        builder: (_) => const AuthPage(
+                                              fromPage: 'Profile',
+                                            )));
                               },
                               child: Text(
                                 "Register now",
