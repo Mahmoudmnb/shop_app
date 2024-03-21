@@ -17,6 +17,34 @@ class RemoteDataSource {
   final client = Client()
       .setEndpoint('https://cloud.appwrite.io/v1')
       .setProject(Constant.appWriteProjectId);
+  Future<bool> updatePersonalData(UserModel user) async {
+    Databases db = Databases(client);
+    try {
+      var users = await db.listDocuments(
+          databaseId: '655da767bc3f1651db70',
+          collectionId: '655da771422b6ac710aa');
+      String dId = '';
+      for (var element in users.documents) {
+        if (element.data['email'] == Constant.currentUser!.email) {
+          dId = element.$id;
+        }
+      }
+      await db.updateDocument(
+          databaseId: '655da767bc3f1651db70',
+          collectionId: '655da771422b6ac710aa',
+          documentId: dId,
+          data: {
+            'name': user.name,
+            'email': user.email,
+            'phone_number': user.phoneNumber
+          });
+      return true;
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
   Future<Uint8List> downloadProfileImage(String cloudImageUrl) async {
     Storage storage = Storage(client);
     Uint8List profileImage = await storage.getFileDownload(

@@ -10,3 +10,5 @@ class ChangeAddressState extends ProfileState {}
 class ChangeProfileImagePath extends ProfileState {}
 
 class ChangeIsLogOutLoading extends ProfileState {}
+
+class ChangeIsSaveLoading extends ProfileState {}

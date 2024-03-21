@@ -91,6 +91,9 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                 controller: searchController,
                 style:
                     TextStyle(fontSize: 24.sp, color: const Color(0xff797979)),
+                onTapOutside: (value) {
+                  FocusScope.of(context).unfocus();
+                },
                 onSubmitted: (value) {
                   search(cubit);
                 },

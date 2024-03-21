@@ -6,12 +6,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shop_app/core/constant.dart';
-import 'package:shop_app/core/internet_info.dart';
-import 'package:shop_app/featurs/auth/models/user_model.dart';
-import 'package:shop_app/injection.dart';
 import 'package:toast/toast.dart';
 
+import '../../../../../core/constant.dart';
+import '../../../../../core/internet_info.dart';
+import '../../../../../injection.dart';
+import '../../../../auth/models/user_model.dart';
+import '../../../data_source/data_source.dart';
 import '../cubit/profile_cubit.dart';
 
 class PersonalDetails extends StatefulWidget {
@@ -196,6 +197,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ),
             ),
             TextField(
+              readOnly: true,
               maxLength: 50,
               cursorColor: Colors.black,
               onTapOutside: (value) {
@@ -367,20 +369,40 @@ class _PersonalDetailsState extends State<PersonalDetails> {
             InkWell(
               borderRadius: BorderRadius.circular(10),
               onTap: () async {
-                UserModel user = UserModel(
-                    phoneNumber: phoneNumberController.text != ''
-                        ? phoneNumberController.text.trim()
-                        : null,
-                    imgUrl: imgUrl,
-                    email: emailController.text.trim(),
-                    name: fullNameController.text.trim(),
-                    password: Constant.currentUser!.password);
-                Constant.currentUser = user;
-                await sl
-                    .get<SharedPreferences>()
-                    .setString('currentUser', user.toJson());
-                if (context.mounted) {
-                  Navigator.pop(context);
+                ToastContext().init(context);
+                context.read<ProfileCubit>().changeIsSaveButtonLoading(true);
+                bool isConnected = await InternetInfo.isconnected();
+                if (isConnected) {
+                  UserModel user = UserModel(
+                      cloudImgUrl: Constant.currentUser!.cloudImgUrl,
+                      phoneNumber: phoneNumberController.text != ''
+                          ? phoneNumberController.text.trim()
+                          : null,
+                      imgUrl: imgUrl,
+                      email: emailController.text.trim(),
+                      name: fullNameController.text.trim(),
+                      password: Constant.currentUser!.password);
+                  bool isSuccess =
+                      await sl.get<DataSource>().updatePersonalData(user);
+                  if (isSuccess) {
+                    Constant.currentUser = user;
+                    await sl
+                        .get<SharedPreferences>()
+                        .setString('currentUser', user.toJson());
+                    context
+                        .read<ProfileCubit>()
+                        .changeIsSaveButtonLoading(false);
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  } else {
+                    Toast.show('Something went wrong please try again',
+                        duration: Toast.lengthLong);
+                  }
+                } else {
+                  context.read<ProfileCubit>().changeIsSaveButtonLoading(false);
+                  Toast.show('Check your internet connection',
+                      duration: Toast.lengthLong);
                 }
               },
               child: Ink(
@@ -389,14 +411,22 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 decoration: BoxDecoration(
                     color: Colors.black,
                     borderRadius: BorderRadius.circular(10)),
-                child: Text(
-                  "Save",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'DM Sans',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.sp),
+                child: BlocBuilder<ProfileCubit, ProfileState>(
+                  builder: (context, state) {
+                    return context.watch<ProfileCubit>().isSaveButtonLoading
+                        ? Center(
+                            child:
+                                CircularProgressIndicator(color: Colors.white))
+                        : Text(
+                            "Save",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'DM Sans',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.sp),
+                          );
+                  },
                 ),
               ),
             ),

@@ -265,7 +265,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           context
                                               .read<AddToCartCubit>()
                                               .fetchData();
-                                          // setState(() {});
                                         }
                                       } else {
                                         context

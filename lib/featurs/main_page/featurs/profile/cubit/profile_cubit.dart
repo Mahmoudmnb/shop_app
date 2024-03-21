@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
 import 'package:shop_app/injection.dart';
 
 import '../../../../../core/constant.dart';
+import '../../../data_source/data_source.dart';
 
 part 'profile_state.dart';
 
@@ -20,6 +20,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   String selectAddress = '1';
   String? profileImagePath = '';
   bool isLogOutLoading = false;
+  bool isSaveButtonLoading = false;
   changeAddress(String address) {
     selectAddress = address;
     log(selectAddress);
@@ -42,6 +43,11 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   changePassword(String newPassword) async {
     sl.get<DataSource>().changePassword(newPassword);
+  }
+
+  changeIsSaveButtonLoading(bool value) {
+    isSaveButtonLoading = value;
+    emit(ChangeIsSaveLoading());
   }
 
   Future<void> logOut(XFile? image) async {

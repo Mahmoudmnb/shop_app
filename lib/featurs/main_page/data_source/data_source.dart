@@ -2,6 +2,7 @@ import 'package:appwrite/models.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../auth/models/user_model.dart';
 import '../featurs/check_out/models/address_model.dart';
 import '../featurs/home/models/product_model.dart';
 import '../featurs/products_view/models/add_to_cart_product_model.dart';
@@ -263,6 +264,10 @@ class DataSource {
   }
 
 //! this section for deleting and updating data
+  Future<bool> updatePersonalData(UserModel user) async {
+    return remoteDataSource.updatePersonalData(user);
+  }
+
   Future<void> clearLocationsTable() async {
     return updateDeleteLocalDataSource.clearLocationsTable();
   }
