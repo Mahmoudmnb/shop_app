@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -40,8 +39,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: Colors.white,
         body: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
-            log('message');
-
             return Constant.currentUser == null
                 ? Padding(
                     padding: EdgeInsets.only(bottom: 30.h),
@@ -62,10 +59,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       builder: (_) => const AuthPage(
                                             fromPage: 'Profile',
                                           )));
-                              context
-                                  .read<ProfileCubit>()
-                                  .changeProfileImagePath(
-                                      Constant.currentUser!.imgUrl!);
                               // setState(() {});
                             },
                             child: Text(

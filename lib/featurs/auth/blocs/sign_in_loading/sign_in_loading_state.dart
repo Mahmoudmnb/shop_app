@@ -9,3 +9,8 @@ final class IsLoading extends SignInLoadingState {
   final bool isLoading;
   IsLoading({required this.isLoading});
 }
+
+final class IsSkipButtonLoading extends SignInLoadingState {
+  final bool isLoading;
+  IsSkipButtonLoading({required this.isLoading});
+}

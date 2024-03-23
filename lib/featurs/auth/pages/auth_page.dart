@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:appwrite/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -64,13 +67,14 @@ class AuthPage extends StatelessWidget {
         await myDataBase.createBorderProductsTable();
         await myDataBase.createRecommendedProductTable();
         await sl.get<DataSource>().addBorder('All items');
-        var locations = await sl.get<DataSource>().downloadLoactionsFromCloud();
         await sl.get<DataSource>().getProductsFormCloudDataBase();
         await sl.get<DataSource>().setRecommendedProducts();
         await sl.get<DataSource>().getReviewsFromCloud();
+        List<Document> locations = [];
         if (fromButton != 'Skip') {
           await sl.get<DataSource>().getOrdersFromCloud();
           await sl.get<DataSource>().insertPersonalData();
+          locations = await sl.get<DataSource>().downloadLoactionsFromCloud();
         }
         if (context.mounted) {
           if (sl.get<SharedPreferences>().getString('defaultLocation') ==
@@ -81,7 +85,6 @@ class AuthPage extends StatelessWidget {
                 .setString('defaultLocation', locations[0].data['addressName']);
           }
           await context.read<AddToCartCubit>().getAddToCartProducts();
-
           sl.get<SharedPreferences>().setString(
               'lastUpdate', DateTime.now().millisecondsSinceEpoch.toString());
           if (context.mounted) {
@@ -89,6 +92,26 @@ class AuthPage extends StatelessWidget {
               builder: (context) => const MainPage(),
             ));
           }
+        }
+      }
+    }
+
+    void skipButtonOnTab() async {
+      log('message');
+      context
+          .read<SignInLoadingBloc>()
+          .add(ChangeSkipButtonLoading(isLoading: true));
+      bool isConnected = await InternetInfo.isconnected();
+      if (isConnected) {
+        await goToHomePage('Skip');
+        context
+            .read<SignInLoadingBloc>()
+            .add(ChangeSkipButtonLoading(isLoading: false));
+      } else {
+        if (context.mounted) {
+          ToastContext().init(context);
+          Toast.show('Check you internet connection',
+              duration: Toast.lengthLong);
         }
       }
     }
@@ -107,29 +130,37 @@ class AuthPage extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(height: 8.5.h),
-                    Row(
-                      children: [
-                        const Spacer(),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                              foregroundColor: const Color(0xFF2E2E2E)),
-                          child: Text('Skip',
-                              style: TextStyle(
-                                  fontFamily: 'DM Sans', fontSize: 22.sp)),
-                          onPressed: () async {
-                            bool isConnected = await InternetInfo.isconnected();
-                            if (isConnected) {
-                              goToHomePage('Skip');
-                            } else {
-                              if (context.mounted) {
-                                ToastContext().init(context);
-                                Toast.show('Check you internet connection',
-                                    duration: Toast.lengthLong);
-                              }
-                            }
-                          },
-                        ),
-                      ],
+                    BlocBuilder<SignInLoadingBloc, SignInLoadingState>(
+                      builder: (context, state) {
+                        bool isLoading = false;
+                        if (state is IsSkipButtonLoading) {
+                          isLoading = isLoading = state.isLoading;
+                        }
+                        return Row(
+                          children: [
+                            const Spacer(),
+                            TextButton(
+                                style: TextButton.styleFrom(
+                                    foregroundColor: const Color(0xFF2E2E2E)),
+                                child: isLoading
+                                    ? CircularProgressIndicator(
+                                        color: Colors.black)
+                                    : Text('Skip',
+                                        style: TextStyle(
+                                            fontFamily: 'DM Sans',
+                                            fontSize: 22.sp)),
+                                onPressed: state is IsLoading
+                                    ? state.isLoading
+                                        ? null
+                                        : state is IsSkipButtonLoading
+                                            ? state.isLoading
+                                                ? null
+                                                : skipButtonOnTab
+                                            : skipButtonOnTab
+                                    : skipButtonOnTab)
+                          ],
+                        );
+                      },
                     ),
                     Image.asset('assets/images/logo.png',
                         height: 170.h, width: 170.h),

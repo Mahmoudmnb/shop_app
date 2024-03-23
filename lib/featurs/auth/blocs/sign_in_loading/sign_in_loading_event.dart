@@ -7,3 +7,8 @@ final class ChangeLoadingState extends SignInLoadingEvent {
   final bool isLoading;
   ChangeLoadingState({required this.isLoading});
 }
+
+final class ChangeSkipButtonLoading extends SignInLoadingEvent {
+  final bool isLoading;
+  ChangeSkipButtonLoading({required this.isLoading});
+}

@@ -25,10 +25,14 @@ class AuthCustomButton extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF252525),
             ),
-            onPressed: state is IsLoading
+            onPressed: state is IsSkipButtonLoading
                 ? state.isLoading
                     ? null
-                    : onPressed
+                    : state is IsLoading
+                        ? state.isLoading
+                            ? null
+                            : onPressed
+                        : onPressed
                 : onPressed,
             child: text,
           ),
