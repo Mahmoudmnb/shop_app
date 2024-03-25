@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
-import 'package:shop_app/injection.dart';
 
+import '../../../../../injection.dart';
+import '../../../data_source/data_source.dart';
+import '../../products_view/cubits/product_screen/cubit.dart';
+import '../../products_view/screens/product_view_secreens.dart';
 import '../../search/cubit/sreach_cubit.dart';
 import '../blocs/discount/discount_products_bloc.dart';
 import '../models/product_model.dart';
@@ -37,6 +39,7 @@ class HomePage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 15.h),
+          //! Discount products
           BlocBuilder<DiscountProductsBloc, DiscountProductsState>(
             builder: (context, state) {
               bool isDiscountUpdated = false;
@@ -80,7 +83,6 @@ class HomePage extends StatelessWidget {
             },
           ),
           SizedBox(height: 15.h),
-          //! Discount products
           FutureBuilder(
               future: sl.get<DataSource>().getDiscountsProducts(),
               builder: (_, snapshoot) {
@@ -110,12 +112,29 @@ class HomePage extends StatelessWidget {
                             itemBuilder: (context, index) {
                               ProductModel product =
                                   ProductModel.fromMap(snapshoot.data![index]);
-                              return DisCountImage(
-                                  makerCompany: product.makerCompany,
-                                  imageUrl: product.imgUrl,
-                                  price: product.price.toString(),
-                                  productName: product.name,
-                                  discount: product.disCount.toString());
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => ProductScreen(
+                                      searchCubit:
+                                          BlocProvider.of<SearchCubit>(context),
+                                      fromPage: 'Home',
+                                      categoryName: 'Home',
+                                      fromPageTitle: 'Home',
+                                      searchWord: '',
+                                      product: product,
+                                      cubit: BlocProvider.of<ProductCubit>(
+                                          context),
+                                    ),
+                                  ));
+                                },
+                                child: DisCountImage(
+                                    makerCompany: product.makerCompany,
+                                    imageUrl: product.imgUrl,
+                                    price: product.price.toString(),
+                                    productName: product.name,
+                                    discount: product.disCount.toString()),
+                              );
                             }))
                     : SizedBox.fromSize();
               }),
@@ -146,12 +165,27 @@ class HomePage extends StatelessWidget {
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               scrollDirection: Axis.horizontal,
               itemCount: trindyProducts.length,
-              itemBuilder: (_, index) => TrendyImage(
-                makerCompany: trindyProducts[index]['makerCompany'],
-                imageUrl: trindyProducts[index]['imgUrl'].split('|')[0],
-                price:
-                    (trindyProducts[index]['price'] as int).toStringAsFixed(1),
-                productName: trindyProducts[index]['name'],
+              itemBuilder: (_, index) => GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => ProductScreen(
+                      searchCubit: BlocProvider.of<SearchCubit>(context),
+                      fromPage: 'Home',
+                      categoryName: 'Home',
+                      fromPageTitle: 'Home',
+                      searchWord: '',
+                      product: ProductModel.fromMap(trindyProducts[index]),
+                      cubit: BlocProvider.of<ProductCubit>(context),
+                    ),
+                  ));
+                },
+                child: TrendyImage(
+                  makerCompany: trindyProducts[index]['makerCompany'],
+                  imageUrl: trindyProducts[index]['imgUrl'].split('|')[0],
+                  price: (trindyProducts[index]['price'] as int)
+                      .toStringAsFixed(1),
+                  productName: trindyProducts[index]['name'],
+                ),
               ),
             ),
           ),
@@ -187,11 +221,28 @@ class HomePage extends StatelessWidget {
                           itemBuilder: (context, index) {
                             ProductModel product =
                                 ProductModel.fromMap(snpashoot.data![index]);
-                            return RecommendedImage(
-                              companyMaker: product.makerCompany,
-                              imageUrl: product.imgUrl.split('|')[0],
-                              productPrice: '${product.price} \$',
-                              productNamge: product.name,
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => ProductScreen(
+                                    searchCubit:
+                                        BlocProvider.of<SearchCubit>(context),
+                                    fromPage: 'Home',
+                                    categoryName: 'Home',
+                                    fromPageTitle: 'Home',
+                                    searchWord: '',
+                                    product: product,
+                                    cubit:
+                                        BlocProvider.of<ProductCubit>(context),
+                                  ),
+                                ));
+                              },
+                              child: RecommendedImage(
+                                companyMaker: product.makerCompany,
+                                imageUrl: product.imgUrl.split('|')[0],
+                                productPrice: '${product.price} \$',
+                                productNamge: product.name,
+                              ),
                             );
                           },
                         ),
@@ -267,11 +318,27 @@ class HomePage extends StatelessWidget {
                       itemBuilder: (_, index) {
                         ProductModel productModel =
                             ProductModel.fromMap(snapshoot.data![index]);
-                        return TrendyImage(
-                          makerCompany: productModel.makerCompany,
-                          imageUrl: productModel.imgUrl,
-                          price: productModel.price.toString(),
-                          productName: productModel.name,
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => ProductScreen(
+                                searchCubit:
+                                    BlocProvider.of<SearchCubit>(context),
+                                fromPage: 'Home',
+                                categoryName: 'Home',
+                                fromPageTitle: 'Home',
+                                searchWord: '',
+                                product: productModel,
+                                cubit: BlocProvider.of<ProductCubit>(context),
+                              ),
+                            ));
+                          },
+                          child: TrendyImage(
+                            makerCompany: productModel.makerCompany,
+                            imageUrl: productModel.imgUrl,
+                            price: productModel.price.toString(),
+                            productName: productModel.name,
+                          ),
                         );
                       },
                     ),

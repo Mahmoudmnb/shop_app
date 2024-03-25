@@ -55,6 +55,7 @@ class _AuthFormState extends State<AuthForm> {
   @override
   Widget build(BuildContext context) {
     ToastContext().init(context);
+    context.read<EmailTextBloc>().add(ChangeToInit());
     return Column(
       children: [
         Form(
@@ -153,28 +154,38 @@ class _AuthFormState extends State<AuthForm> {
           databaseId: '655da767bc3f1651db70',
           collectionId: '655da771422b6ac710aa',
           queries: [Query.equal('email', email)]);
-      String name = data.documents[0].data['name'];
-      if (data.documents[0].data['imgUrl'] != null) {
-        Uint8List profileImage = await sl
-            .get<DataSource>()
-            .downloadProfileImage(data.documents[0].data['imgUrl']);
-        await File('${Constant.baseUrl}profileImage.jpg')
-            .writeAsBytes(profileImage);
+      //! this was for make sure no one had loged in before in other device
+      // if (!data.documents[0].data['loged_in']) {
+      if (true) {
+        String name = data.documents[0].data['name'];
+        if (data.documents[0].data['imgUrl'] != null) {
+          Uint8List profileImage = await sl
+              .get<DataSource>()
+              .downloadProfileImage(data.documents[0].data['imgUrl']);
+          await File('${Constant.baseUrl}profileImage.jpg')
+              .writeAsBytes(profileImage);
+        }
+        Constant.currentUser = UserModel(
+            email: email,
+            name: name,
+            password: password,
+            cloudImgUrl: data.documents[0].data['imgUrl'],
+            imgUrl: data.documents[0].data['imgUrl'] == null
+                ? null
+                : '${Constant.baseUrl}profileImage.jpg');
+        sl
+            .get<SharedPreferences>()
+            .setString('currentUser', Constant.currentUser!.toJson());
+        await widget.goToHomePage();
+        context.read<EmailTextBloc>().add(ChangeEmailText(emailText: ''));
+        changeButtonLoadingState(false);
+        log('done');
       }
-      Constant.currentUser = UserModel(
-          email: email,
-          name: name,
-          password: password,
-          cloudImgUrl: data.documents[0].data['imgUrl'],
-          imgUrl: data.documents[0].data['imgUrl'] == null
-              ? null
-              : '${Constant.baseUrl}profileImage.jpg');
-      sl
-          .get<SharedPreferences>()
-          .setString('currentUser', Constant.currentUser!.toJson());
-      await widget.goToHomePage();
-      changeButtonLoadingState(false);
-      log('done');
+      // else {
+      //   Toast.show(
+      //       'Sorry but this account is used in other device please log out for the other device and try again',
+      //       duration: Toast.lengthLong);
+      // }
     } on AppwriteException catch (e) {
       log(e.toString());
       if (e.message != null &&
@@ -186,7 +197,7 @@ class _AuthFormState extends State<AuthForm> {
         Toast.show('unkown error please try again');
       }
       changeButtonLoadingState(false);
-    } on SocketException {
+    } on SocketException catch (e) {
       changeButtonLoadingState(false);
       Toast.show('Your internet is week please check your internet connection');
     } catch (e) {
@@ -237,6 +248,7 @@ class _AuthFormState extends State<AuthForm> {
           documentId: id,
           data: {'email': email, 'name': name, 'password': password});
       await widget.goToHomePage();
+      context.read<EmailTextBloc>().add(ChangeEmailText(emailText: ''));
       changeButtonLoadingState(false);
       log('done');
     } on AppwriteException catch (e) {

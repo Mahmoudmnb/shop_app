@@ -167,9 +167,10 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
               return searchProducts.isEmpty
                   ? Column(
                       children: [
-                        const Image(
-                          image: AssetImage('assets/icons/notFound.jpeg'),
-                        ),
+                        Image(
+                            image: ResizeImage(
+                                AssetImage('assets/icons/notFound.jpeg'),
+                                width: 280.w.toInt())),
                         Text(
                           "No products founded",
                           style: TextStyle(

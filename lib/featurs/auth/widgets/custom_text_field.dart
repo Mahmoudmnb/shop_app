@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,6 +29,7 @@ class CustomTextField extends StatelessWidget {
                 } else if (signUpState is IsSignUp) {
                   isSignUP = signUpState.isSignUp;
                 }
+                log(emailTextState.toString());
                 return HideItem(
                     maxHight: 70,
                     visabl: (!isSignUP &&

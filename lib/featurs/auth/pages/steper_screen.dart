@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/auth/pages/auth_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class SteperScreen extends StatefulWidget {
-  const SteperScreen({super.key});
+import 'auth_page.dart';
+
+class StepperScreen extends StatefulWidget {
+  const StepperScreen({super.key});
 
   @override
-  State<SteperScreen> createState() => _SteperScreenState();
+  State<StepperScreen> createState() => _StepperScreenState();
 }
 
-class _SteperScreenState extends State<SteperScreen> {
+class _StepperScreenState extends State<StepperScreen> {
   late PageController pageController;
   @override
   void initState() {
@@ -177,14 +178,15 @@ class _SteperScreenState extends State<SteperScreen> {
     Navigator.of(context).pushReplacement(PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 500),
         pageBuilder: (context, animation, secondaryAnimation) {
-          Animation<Offset> offset =
-              Tween<Offset>(begin: const Offset(1, 0), end: const Offset(0, 0))
-                  .animate(animation);
-          return SlideTransition(
-              position: offset,
-              child: const AuthPage(
-                fromPage: 'splash',
-              ));
+          // Animation<Offset> offset =
+          //     Tween<Offset>(begin: const Offset(1, 0), end: const Offset(0, 0))
+          //         .animate(animation);
+          return FadeTransition(
+            opacity: animation,
+            child: AuthPage(
+              fromPage: 'splash',
+            ),
+          );
         }));
   }
 }

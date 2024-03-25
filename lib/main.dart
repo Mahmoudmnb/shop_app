@@ -44,7 +44,7 @@ Future<void> main(List<String> args) async {
     await sl.get<DataSource>().updateReviews();
     await sl.get<SharedPreferences>().setString(
         'lastUpdate', DateTime.now().millisecondsSinceEpoch.toString());
-    log('mahmoud');
+    log('done updating data');
   }
   SharedPreferences db = await SharedPreferences.getInstance();
   String? user = db.getString('currentUser');
@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
     // debugInvertOversizedImages = true;
     return ScreenUtilInit(
         designSize: const Size(393, 852),
-        builder: (context, child) => MaterialApp( 
+        builder: (context, child) => MaterialApp(
               theme: ThemeData(
                   primaryColor: Colors.black,
                   colorScheme: ColorScheme(

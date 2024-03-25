@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
+import 'package:shop_app/featurs/main_page/main_page.dart';
 import 'package:shop_app/injection.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -361,6 +362,15 @@ class _ProductScreenState extends State<ProductScreen> {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (_) => BorderProductView(
                 borderName: widget.categoryName!, borderProducts: products)));
+      }
+    } else if (widget.fromPage == 'Home') {
+      if (Navigator.of(context).canPop()) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => MainPage()));
+        });
       }
     }
   }

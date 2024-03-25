@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:async';
 
 import 'package:appwrite/models.dart';
 import 'package:flutter/material.dart';
@@ -97,7 +97,6 @@ class AuthPage extends StatelessWidget {
     }
 
     void skipButtonOnTab() async {
-      log('message');
       context
           .read<SignInLoadingBloc>()
           .add(ChangeSkipButtonLoading(isLoading: true));
@@ -157,7 +156,11 @@ class AuthPage extends StatelessWidget {
                                                 ? null
                                                 : skipButtonOnTab
                                             : skipButtonOnTab
-                                    : skipButtonOnTab)
+                                    : state is IsSkipButtonLoading
+                                        ? state.isLoading
+                                            ? null
+                                            : skipButtonOnTab
+                                        : skipButtonOnTab)
                           ],
                         );
                       },

@@ -28,7 +28,7 @@ class MyDataBase {
     try {
       await openDatabase(
         dataBasePath,
-        version: 2,
+        version: 1,
         onCreate: (db, version) async {
           db.execute(
               'CREATE TABLE borders (id INTEGER PRIMARY KEY , borderName TEXT NOT NULL)');

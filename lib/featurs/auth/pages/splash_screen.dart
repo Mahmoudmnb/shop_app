@@ -1,7 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:shop_app/featurs/auth/pages/steper_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'steper_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   final double deviceHeight;
@@ -21,6 +23,8 @@ class _SplashScreenState extends State<SplashScreen> {
   int duraton = 700;
   double logoWidth = 15.w;
   double logoHeight = 15.w;
+  double logoOpacity = 1;
+
   double opacity = 0;
   Color color = Colors.grey;
   @override
@@ -50,15 +54,8 @@ class _SplashScreenState extends State<SplashScreen> {
       setState(() {});
     });
     Timer.periodic(const Duration(milliseconds: 2800), (timer) {
-      Navigator.of(context).pushReplacement(PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 1200),
-          pageBuilder: (context, animation, secondaryAnimation) {
-            Animation<Offset> offset = Tween<Offset>(
-                    begin: const Offset(1, 0), end: const Offset(0, 0))
-                .animate(animation);
-            return SlideTransition(
-                position: offset, child: const SteperScreen());
-          }));
+      logoOpacity = 0;
+      setState(() {});
       timer.cancel();
     });
   }
@@ -66,50 +63,61 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: const [
-                0.6,
-                1
-              ],
-                  colors: [
-                const Color(0xffFFEAD7),
-                Colors.black.withOpacity(0.3)
-              ])),
-          child: Column(
-            children: [
-              AnimatedContainer(
-                height: height,
-                duration: Duration(milliseconds: duraton),
-              ),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 500),
-                padding: const EdgeInsets.all(5),
-                width: logoWidth,
-                height: logoHeight,
-                alignment: Alignment.centerLeft,
-                decoration: BoxDecoration(
-                    color: color, borderRadius: BorderRadius.circular(50)),
-                child: logoWidth == 80
-                    ? null
-                    : ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: AnimatedOpacity(
-                          duration: const Duration(milliseconds: 500),
-                          opacity: opacity,
-                          child: Image.asset(
-                            'assets/images/splash_logo.png',
-                            height: 80,
-                            width: widget.deviceWidth * 0.78,
-                            fit: BoxFit.contain,
-                          ),
-                        )),
-              )
-            ],
-          )),
-    );
+        body: Stack(
+      children: [
+        AnimatedOpacity(
+          opacity: logoOpacity,
+          duration: Duration(milliseconds: 1000),
+          child: Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: const [
+                    0.6,
+                    1
+                  ],
+                      colors: [
+                    const Color(0xffFFEAD7),
+                    Colors.black.withOpacity(0.3)
+                  ])),
+              child: Column(
+                children: [
+                  AnimatedContainer(
+                    height: height,
+                    duration: Duration(milliseconds: duraton),
+                  ),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    padding: const EdgeInsets.all(5),
+                    width: logoWidth,
+                    height: logoHeight,
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(
+                        color: color, borderRadius: BorderRadius.circular(50)),
+                    child: logoWidth == 80
+                        ? null
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: AnimatedOpacity(
+                              duration: const Duration(milliseconds: 500),
+                              opacity: opacity,
+                              child: Image.asset(
+                                'assets/images/splash_logo.png',
+                                height: 80,
+                                width: widget.deviceWidth * 0.78,
+                                fit: BoxFit.contain,
+                              ),
+                            )),
+                  )
+                ],
+              )),
+        ),
+        AnimatedOpacity(
+            duration: Duration(milliseconds: 1000),
+            opacity: logoOpacity == 0 ? 1 : 0,
+            child: StepperScreen())
+      ],
+    ));
   }
 }
