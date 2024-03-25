@@ -197,7 +197,7 @@ class _AuthFormState extends State<AuthForm> {
         Toast.show('unkown error please try again');
       }
       changeButtonLoadingState(false);
-    } on SocketException catch (e) {
+    } on SocketException catch (_) {
       changeButtonLoadingState(false);
       Toast.show('Your internet is week please check your internet connection');
     } catch (e) {
