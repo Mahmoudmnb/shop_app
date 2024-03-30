@@ -31,6 +31,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    ToastContext().init(context);
     if (Constant.currentUser != null) {
       context.read<ProfileCubit>().profileImagePath =
           Constant.currentUser!.imgUrl;
@@ -195,16 +196,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   "assets/images/Favorite_fill.png",
                                   "My Wishlist",
                                   () async {
-                                    List<Map<String, dynamic>> borders =
+                                    var res =
                                         await sl.get<DataSource>().getBorders();
-                                    if (context.mounted) {
-                                      Navigator.of(context)
-                                          .push(MaterialPageRoute(
-                                        builder: (context) => WishListScreen(
-                                          borders: borders,
-                                        ),
-                                      ));
-                                    }
+                                    res.fold((borders) {
+                                      if (context.mounted) {
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                          builder: (context) => WishListScreen(
+                                            borders: borders,
+                                          ),
+                                        ));
+                                      }
+                                    }, (r) {
+                                      Toast.show(
+                                          'Something went wrong please try again',
+                                          duration: Toast.lengthLong);
+                                    });
                                   },
                                 ),
                                 buildListTile(
@@ -249,23 +256,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         } else {
                                           image = null;
                                         }
-                                        await context
+                                        var isSuccess = await context
                                             .read<ProfileCubit>()
                                             .logOut(image);
-                                        if (context.mounted) {
+                                        if (isSuccess) {
+                                          if (context.mounted) {
+                                            context
+                                                .read<ProfileCubit>()
+                                                .setIsLogOutLoading(false);
+                                            Constant.currentUser = null;
+                                            context
+                                                .read<AddToCartCubit>()
+                                                .fetchData();
+                                          }
+                                        } else {
                                           context
                                               .read<ProfileCubit>()
                                               .setIsLogOutLoading(false);
-                                          Constant.currentUser = null;
-                                          context
-                                              .read<AddToCartCubit>()
-                                              .fetchData();
+                                          Toast.show(
+                                              'Something went wrong please try again',
+                                              duration: Toast.lengthLong);
                                         }
                                       } else {
                                         context
                                             .read<ProfileCubit>()
                                             .setIsLogOutLoading(false);
-                                        ToastContext().init(context);
                                         Toast.show(
                                             'Check your internet connection',
                                             duration: Toast.lengthLong);

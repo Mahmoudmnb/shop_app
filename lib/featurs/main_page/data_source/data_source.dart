@@ -1,4 +1,5 @@
 import 'package:appwrite/models.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -23,7 +24,7 @@ class DataSource {
     required this.insertDataLocalDataSource,
   });
   //! this section for inserting data
-  Future<List<Document>> downloadLoactionsFromCloud() async {
+  Future<Either<List<Document>, bool>> downloadLoactionsFromCloud() async {
     return remoteDataSource.downloadLoactionsFromCloud();
   }
 
@@ -31,39 +32,39 @@ class DataSource {
     return remoteDataSource.addLoationToCloude(address);
   }
 
-  Future<void> insertProductsIntoLocalDataBase(
+  Future<bool> insertProductsIntoLocalDataBase(
       List<Document> products, bool isNew) async {
     return insertDataLocalDataSource.insertProductsIntoLocalDataBase(
         products, isNew);
   }
 
-  Future<void> uploadProfileSettings(
+  Future<bool> uploadProfileSettings(
       String borderProducts, String cartProducts, String borders) async {
     return remoteDataSource.uploadProfileSettings(
         borderProducts, cartProducts, borders);
   }
 
-  Future<void> rateApp(String descrition, double rate) async {
+  Future<bool> rateApp(String descrition, double rate) async {
     return await remoteDataSource.rateApp(descrition, rate);
   }
 
-  Future<void> changePassword(String newPassword) async {
-    remoteDataSource.changePassword(newPassword);
+  Future<bool> changePassword(String newPassword) async {
+    return remoteDataSource.changePassword(newPassword);
   }
 
-  Future<void> uploadImage(XFile image) async {
+  Future<bool> uploadImage(XFile image) async {
     return remoteDataSource.uploadImage(image);
   }
 
-  Future<void> getReviewsFromCloud() async {
+  Future<bool> getReviewsFromCloud() async {
     return remoteDataSource.getReviewsFromCloud();
   }
 
-  Future<void> addReviewToCloud(ReviewModel reviewModel) {
+  Future<bool> addReviewToCloud(ReviewModel reviewModel) {
     return remoteDataSource.addReviewToCloud(reviewModel);
   }
 
-  Future<void> addReiviewToProduct(ReviewModel reiview) async {
+  Future<bool> addReiviewToProduct(ReviewModel reiview) async {
     return insertDataLocalDataSource.addReviewToProduct(reiview);
   }
 
@@ -75,12 +76,12 @@ class DataSource {
     return insertDataLocalDataSource.addProductToBorder(productId, borderId);
   }
 
-  Future<void> insertDataInOrderTableFromCloud(List<Document> orders) async {
-    insertDataLocalDataSource.insertDataInOrderTableFromCloud(orders);
+  Future<bool> insertDataInOrderTableFromCloud(List<Document> orders) async {
+    return insertDataLocalDataSource.insertDataInOrderTableFromCloud(orders);
   }
 
-  Future<void> insertDataInReviewTableFromCloud(List<Document> document) async {
-    insertDataLocalDataSource.addDataToReviewTableFromCloue(document);
+  Future<bool> insertDataInReviewTableFromCloud(List<Document> document) async {
+    return insertDataLocalDataSource.addDataToReviewTableFromCloue(document);
   }
 
   Future<void> addOrder(
@@ -111,7 +112,7 @@ class DataSource {
         amounts);
   }
 
-  Future<void> addOrdersToCloudDataBase(
+  Future<bool> addOrdersToCloudDataBase(
       List<Map<String, dynamic>> orderProducts,
       double totalPrice,
       String deliveryAddress,
@@ -139,11 +140,13 @@ class DataSource {
   }
 
   //! this section for getting data
-  Future<Uint8List> downloadProfileImage(String cloudImageUrl) async {
+  Future<Either<Uint8List, bool>> downloadProfileImage(
+      String cloudImageUrl) async {
     return remoteDataSource.downloadProfileImage(cloudImageUrl);
   }
 
-  Future<List<Map<String, dynamic>>> getProductsByNames(String names) async {
+  Future<Either<List<Map<String, dynamic>>, bool>> getProductsByNames(
+      String names) async {
     return getDataLocalDataSource.getProductsByNames(names);
   }
 
@@ -155,7 +158,7 @@ class DataSource {
     return remoteDataSource.getUpdatedReviews(lastDate);
   }
 
-  Future<Map<String, List<Document>>> getUpdatedProducts(
+  Future<Either<Map<String, List<Document>>, bool>> getUpdatedProducts(
       String lastDate) async {
     return remoteDataSource.getUpdatedProducts(lastDate);
   }
@@ -164,11 +167,11 @@ class DataSource {
     return getDataLocalDataSource.getRecommendedProducts();
   }
 
-  Future<List<Document>> getRecommendedproductsFromCloud() async {
+  Future<Either<List<Document>, bool>> getRecommendedproductsFromCloud() async {
     return remoteDataSource.getRecommendedproductsFromCloud();
   }
 
-  Future<void> setRecommendedProducts() {
+  Future<bool> setRecommendedProducts() {
     return insertDataLocalDataSource.setRecommendedProducts();
   }
 
@@ -176,11 +179,11 @@ class DataSource {
     return getDataLocalDataSource.isAllBordersIsEmpty();
   }
 
-  Future<void> insertPersonalData() async {
+  Future<bool> insertPersonalData() async {
     return insertDataLocalDataSource.insertPersonalDataInDataBase();
   }
 
-  Future<Map<String, dynamic>> getPersonalDataFromCloud() async {
+  Future<Either<Map<String, dynamic>, bool>> getPersonalDataFromCloud() async {
     return remoteDataSource.getPersonalData();
   }
 
@@ -192,7 +195,8 @@ class DataSource {
     return getDataLocalDataSource.getProductsInBorder(borderId);
   }
 
-  Future<List<Map<String, dynamic>>> getAllBorderProducts() async {
+  Future<Either<List<Map<String, dynamic>>, bool>>
+      getAllBorderProducts() async {
     return getDataLocalDataSource.getBorderProducts();
   }
 
@@ -204,11 +208,11 @@ class DataSource {
     return getDataLocalDataSource.getTrendyProducts();
   }
 
-  Future<List<Map<String, dynamic>>> getBorders() async {
+  Future<Either<List<Map<String, dynamic>>, bool>> getBorders() async {
     return getDataLocalDataSource.getBorders();
   }
 
-  Future<void> getOrdersFromCloud() async {
+  Future<bool> getOrdersFromCloud() async {
     return remoteDataSource.getOrdersFromCloud();
   }
 
@@ -225,16 +229,20 @@ class DataSource {
     return getDataLocalDataSource.getProductsByIds(ordersIds);
   }
 
-  Future<void> getProductsFormCloudDataBase() async {
-    await insertDataLocalDataSource.insertProductsIntoLocalDataBase(
-        await remoteDataSource.getProducts(), false);
+  Future<bool> getProductsFormCloudDataBase() async {
+    var res = await remoteDataSource.getProducts();
+    return res.fold((l) {
+      return insertDataLocalDataSource.insertProductsIntoLocalDataBase(
+          l, false);
+    }, (r) => false);
   }
 
   Future<List<Map<String, dynamic>>> getLocations() async {
     return getDataLocalDataSource.getLocations();
   }
 
-  Future<List<Map<String, dynamic>>> getAddToCartProducts() async {
+  Future<Either<List<Map<String, dynamic>>, bool>>
+      getAddToCartProducts() async {
     return getDataLocalDataSource.getAddToCartProduct();
   }
 
@@ -276,12 +284,12 @@ class DataSource {
     return updateDeleteLocalDataSource.clearOrdersTable();
   }
 
-  Future<void> updateLocationInCloud(AddressModel address) async {
+  Future<bool> updateLocationInCloud(AddressModel address) async {
     return remoteDataSource.updateLocationInCloud(address);
   }
 
-  Future<void> deleteLocationFromCloud(AddressModel address) async {
-    remoteDataSource.deleteLocationFromCloud(address);
+  Future<bool> deleteLocationFromCloud(AddressModel address) async {
+    return remoteDataSource.deleteLocationFromCloud(address);
   }
 
   Future<void> updateProductToNotDiscountUpdated(String productName) async {
@@ -301,11 +309,11 @@ class DataSource {
     return updateDeleteLocalDataSource.updateReviews();
   }
 
-  Future<Map<String, List<Document>>> updateDataBase() async {
+  Future<Either<Map<String, List<Document>>, bool>> updateDataBase() async {
     return updateDeleteLocalDataSource.updateDataBase();
   }
 
-  Future<String> deleteAddress(AddressModel address) async {
+  Future<Either<String, bool>> deleteAddress(AddressModel address) async {
     return updateDeleteLocalDataSource.deleteAddress(address);
   }
 
@@ -341,7 +349,7 @@ class DataSource {
     return updateDeleteLocalDataSource.deleteWordFormSearchHistory(word);
   }
 
-  Future<void> updateAddress(
+  Future<bool> updateAddress(
       AddressModel address, String oldAddressName) async {
     return updateDeleteLocalDataSource.updateAddress(address, oldAddressName);
   }

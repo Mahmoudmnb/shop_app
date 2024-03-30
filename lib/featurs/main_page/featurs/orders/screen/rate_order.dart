@@ -1,14 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/core/constant.dart';
-import 'package:shop_app/core/internet_info.dart';
-import 'package:shop_app/injection.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import 'package:toast/toast.dart';
 
+import '../../../../../core/constant.dart';
+import '../../../../../core/internet_info.dart';
+import '../../../../../injection.dart';
 import '../../../data_source/data_source.dart';
 import '../../products_view/models/review_model.dart';
 import '../cubit/orders_cubit.dart';
@@ -19,6 +17,7 @@ class RatePage extends StatelessWidget {
   const RatePage({super.key, this.productId});
   @override
   Widget build(BuildContext context) {
+    ToastContext().init(context);
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -174,11 +173,11 @@ class RatePage extends StatelessWidget {
                               .text
                               .trim() ==
                           '') {
-                        ToastContext().init(context);
                         Toast.show(
                             'sorry, but you have to write you opnion before send back',
                             duration: Toast.lengthLong);
                       } else {
+                        bool isSuccess = false;
                         context.read<OrdersCubit>().changeIsLoading(true);
                         InternetInfo.isconnected().then((value) async {
                           if (value) {
@@ -197,19 +196,25 @@ class RatePage extends StatelessWidget {
                                   userName: Constant.currentUser!.name,
                                   userImage: Constant.currentUser!.cloudImgUrl,
                                   productId: productId!);
-                              await sl
+                              isSuccess = await sl
                                   .get<DataSource>()
                                   .addReviewToCloud(reiviewModel);
-                              await sl
-                                  .get<DataSource>()
-                                  .addReiviewToProduct(reiviewModel);
+                              if (isSuccess) {
+                                await sl
+                                    .get<DataSource>()
+                                    .addReiviewToProduct(reiviewModel);
+                              } else {
+                                Toast.show(
+                                    'Something went wrong please try again',
+                                    duration: Toast.lengthLong);
+                              }
                               if (context.mounted) {
                                 context
                                     .read<OrdersCubit>()
                                     .changeIsLoading(false);
                               }
                             } else {
-                              await sl.get<DataSource>().rateApp(
+                              isSuccess = await sl.get<DataSource>().rateApp(
                                     context
                                         .read<OrdersCubit>()
                                         .opinionController
@@ -222,15 +227,19 @@ class RatePage extends StatelessWidget {
                                     .read<OrdersCubit>()
                                     .changeIsLoading(false);
                               }
-                              log('mnb');
+                              if (!isSuccess) {
+                                Toast.show(
+                                    'Something went wrong please try again',
+                                    duration: Toast.lengthLong);
+                              }
                             }
-
                             if (context.mounted) {
-                              Navigator.of(context).pop();
+                              if (isSuccess) {
+                                Navigator.of(context).pop();
+                              }
                             }
                           } else {
                             context.read<OrdersCubit>().changeIsLoading(false);
-                            ToastContext().init(context);
                             Toast.show('check your internet');
                           }
                         });

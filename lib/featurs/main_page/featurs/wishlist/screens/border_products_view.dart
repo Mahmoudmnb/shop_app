@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:shop_app/injection.dart';
+import 'package:toast/toast.dart';
 
 import '../../../data_source/data_source.dart';
 import '../../home/models/product_model.dart';
@@ -22,8 +23,10 @@ class BorderProductView extends StatelessWidget {
       canPop: false,
       onPopInvoked: (value) {
         sl.get<DataSource>().getBorders().then((borders) {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (_) => WishListScreen(borders: borders)));
+          borders.fold((borders) {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (_) => WishListScreen(borders: borders)));
+          }, (r) => false);
         });
       },
       child: Scaffold(
@@ -37,14 +40,19 @@ class BorderProductView extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        List<Map<String, dynamic>> borders =
-                            await sl.get<DataSource>().getBorders();
-                        if (context.mounted) {
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (_) =>
-                                      WishListScreen(borders: borders)));
-                        }
+                        var res = await sl.get<DataSource>().getBorders();
+                        res.fold((borders) {
+                          if (context.mounted) {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        WishListScreen(borders: borders)));
+                          }
+                        }, (r) {
+                          ToastContext().init(context);
+                          Toast.show('Something went wrong please try again',
+                              duration: Toast.lengthLong);
+                        });
                       },
                       child: Container(
                         alignment: Alignment.center,

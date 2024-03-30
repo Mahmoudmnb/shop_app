@@ -114,6 +114,9 @@ class HomePage extends StatelessWidget {
                                   ProductModel.fromMap(snapshoot.data![index]);
                               return GestureDetector(
                                 onTap: () {
+                                  context
+                                      .read<ProductCubit>()
+                                      .getReviws(product.id);
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (_) => ProductScreen(
                                       searchCubit:
@@ -167,6 +170,9 @@ class HomePage extends StatelessWidget {
               itemCount: trindyProducts.length,
               itemBuilder: (_, index) => GestureDetector(
                 onTap: () {
+                  ProductModel trendyProduct =
+                      ProductModel.fromMap(trindyProducts[index]);
+                  context.read<ProductCubit>().getReviws(trendyProduct.id);
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => ProductScreen(
                       searchCubit: BlocProvider.of<SearchCubit>(context),
@@ -174,7 +180,7 @@ class HomePage extends StatelessWidget {
                       categoryName: 'Home',
                       fromPageTitle: 'Home',
                       searchWord: '',
-                      product: ProductModel.fromMap(trindyProducts[index]),
+                      product: trendyProduct,
                       cubit: BlocProvider.of<ProductCubit>(context),
                     ),
                   ));
@@ -223,6 +229,10 @@ class HomePage extends StatelessWidget {
                                 ProductModel.fromMap(snpashoot.data![index]);
                             return GestureDetector(
                               onTap: () {
+                                context
+                                    .read<ProductCubit>()
+                                    .getReviws(product.id);
+
                                 Navigator.of(context).push(MaterialPageRoute(
                                   builder: (_) => ProductScreen(
                                     searchCubit:
@@ -320,6 +330,9 @@ class HomePage extends StatelessWidget {
                             ProductModel.fromMap(snapshoot.data![index]);
                         return GestureDetector(
                           onTap: () {
+                            context
+                                .read<ProductCubit>()
+                                .getReviws(productModel.id);
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (_) => ProductScreen(
                                 searchCubit:

@@ -263,16 +263,21 @@ class CheckOutScreen2 extends StatelessWidget {
                                             latitude,
                                             longitude)
                                         .then((value) async {
-                                      await sl
-                                          .get<DataSource>()
-                                          .clearAddToCartTable();
-                                      log('done');
-                                      if (context.mounted) {
-                                        Navigator.of(context)
-                                            .pushReplacement(MaterialPageRoute(
-                                          builder: (context) =>
-                                              const CheckOutScreen3(),
-                                        ));
+                                      if (value) {
+                                        await sl
+                                            .get<DataSource>()
+                                            .clearAddToCartTable();
+                                        log('done');
+                                        if (context.mounted) {
+                                          Navigator.of(context).pushReplacement(
+                                              MaterialPageRoute(
+                                            builder: (context) =>
+                                                const CheckOutScreen3(),
+                                          ));
+                                        }
+                                      } else {
+                                        showMessage(context,
+                                            'Something went wrong please try again');
                                       }
                                     });
                                     log("onSuccess: $params");

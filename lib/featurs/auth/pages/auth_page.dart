@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shop_app/core/internet_info.dart';
 import 'package:toast/toast.dart';
 
 import '../../../core/data_base.dart';
+import '../../../core/internet_info.dart';
 import '../../../injection.dart';
 import '../../main_page/data_source/data_source.dart';
 import '../../main_page/featurs/profile/cubit/profile_cubit.dart';
@@ -23,26 +23,46 @@ class AuthPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ToastContext().init(context);
     context.read<VisiblePsswordBloc>().add(ShowPassword());
-    Future<void> goToHomePage(String fromButton) async {
+    Future<bool> goToHomePage(String fromButton) async {
       if (fromPage == 'Profile') {
         if (fromButton != 'Skip') {
-          var locations =
-              await sl.get<DataSource>().downloadLoactionsFromCloud();
-          await sl.get<DataSource>().getOrdersFromCloud();
-          await sl.get<DataSource>().insertPersonalData();
+          List<Document> locations = [];
+          var result = await sl.get<DataSource>().downloadLoactionsFromCloud();
+          bool s = result.fold((newLocations) {
+            locations = newLocations;
+            return true;
+          }, (r) {
+            return false;
+          });
+          if (!s) {
+            return false;
+          }
+          if (!await sl.get<DataSource>().getOrdersFromCloud()) {
+            return false;
+          }
+
+          if (!await sl.get<DataSource>().insertPersonalData()) {
+            return false;
+          }
           if (sl.get<SharedPreferences>().getString('defaultLocation') ==
                   null &&
               locations.isNotEmpty) {
-            sl
+            await sl
                 .get<SharedPreferences>()
                 .setString('defaultLocation', locations[0].data['addressName']);
           }
-          await sl.get<DataSource>().updateDataBase();
+          var res = await sl.get<DataSource>().updateDataBase();
+          if (!res.fold((l) => true, (r) => false)) {
+            return false;
+          }
           await sl.get<SharedPreferences>().setString(
               'lastUpdate', DateTime.now().millisecondsSinceEpoch.toString());
           if (context.mounted) {
-            await context.read<AddToCartCubit>().getAddToCartProducts();
+            if (!await context.read<AddToCartCubit>().getAddToCartProducts()) {
+              return false;
+            }
             if (context.mounted) {
               context.read<AddToCartCubit>().fetchData();
               context.read<ProfileCubit>().updateProfileImageWidget();
@@ -54,6 +74,7 @@ class AuthPage extends StatelessWidget {
             builder: (context) => const MainPage(),
           ));
         }
+        return true;
       } else {
         MyDataBase myDataBase = MyDataBase();
         await sl.get<SharedPreferences>().setBool('isFirstTime', false);
@@ -67,25 +88,37 @@ class AuthPage extends StatelessWidget {
         await myDataBase.createBorderProductsTable();
         await myDataBase.createRecommendedProductTable();
         await sl.get<DataSource>().addBorder('All items');
-        await sl.get<DataSource>().getProductsFormCloudDataBase();
-        await sl.get<DataSource>().setRecommendedProducts();
-        await sl.get<DataSource>().getReviewsFromCloud();
+        if (!await sl.get<DataSource>().getProductsFormCloudDataBase()) {
+          return false;
+        }
+        if (!await sl.get<DataSource>().setRecommendedProducts()) {
+          return false;
+        }
+        if (!await sl.get<DataSource>().getReviewsFromCloud()) {
+          return false;
+        }
         List<Document> locations = [];
         if (fromButton != 'Skip') {
-          await sl.get<DataSource>().getOrdersFromCloud();
-          await sl.get<DataSource>().insertPersonalData();
-          locations = await sl.get<DataSource>().downloadLoactionsFromCloud();
+          if (!await sl.get<DataSource>().getOrdersFromCloud()) {
+            return false;
+          }
+          if (!await sl.get<DataSource>().insertPersonalData()) {
+            return false;
+          }
+          // locations = await sl.get<DataSource>().downloadLoactionsFromCloud();
         }
         if (context.mounted) {
           if (sl.get<SharedPreferences>().getString('defaultLocation') ==
                   null &&
               locations.isNotEmpty) {
-            sl
+            await sl
                 .get<SharedPreferences>()
                 .setString('defaultLocation', locations[0].data['addressName']);
           }
-          await context.read<AddToCartCubit>().getAddToCartProducts();
-          sl.get<SharedPreferences>().setString(
+          if (!await context.read<AddToCartCubit>().getAddToCartProducts()) {
+            return false;
+          }
+          await sl.get<SharedPreferences>().setString(
               'lastUpdate', DateTime.now().millisecondsSinceEpoch.toString());
           if (context.mounted) {
             Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -93,6 +126,7 @@ class AuthPage extends StatelessWidget {
             ));
           }
         }
+        return true;
       }
     }
 
@@ -102,13 +136,14 @@ class AuthPage extends StatelessWidget {
           .add(ChangeSkipButtonLoading(isLoading: true));
       bool isConnected = await InternetInfo.isconnected();
       if (isConnected) {
-        await goToHomePage('Skip');
+        if (!await goToHomePage('Skip')) {
+          Toast.show('Something went wrong please try again');
+        }
         context
             .read<SignInLoadingBloc>()
             .add(ChangeSkipButtonLoading(isLoading: false));
       } else {
         if (context.mounted) {
-          ToastContext().init(context);
           Toast.show('Check you internet connection',
               duration: Toast.lengthLong);
         }
@@ -196,7 +231,10 @@ class AuthPage extends StatelessWidget {
                       ],
                     ),
                     AuthForm(goToHomePage: () async {
-                      await goToHomePage('Register');
+                      bool isSuccess = await goToHomePage('Register');
+                      if (!isSuccess) {
+                        Toast.show('Something went wrong please try again');
+                      }
                     }),
                     SizedBox(height: 8.5.h),
                     const AlternativeSignIn(),

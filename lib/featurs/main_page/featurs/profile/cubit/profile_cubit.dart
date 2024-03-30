@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shop_app/injection.dart';
 
 import '../../../../../core/constant.dart';
+import '../../../../../injection.dart';
 import '../../../data_source/data_source.dart';
 
 part 'profile_state.dart';
@@ -41,8 +41,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ProfileInitial());
   }
 
-  changePassword(String newPassword) async {
-    sl.get<DataSource>().changePassword(newPassword);
+  Future<bool> changePassword(String newPassword) async {
+    return sl.get<DataSource>().changePassword(newPassword);
   }
 
   changeIsSaveButtonLoading(bool value) {
@@ -50,10 +50,36 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ChangeIsSaveLoading());
   }
 
-  Future<void> logOut(XFile? image) async {
-    var cartProducts = await sl.get<DataSource>().getAddToCartProducts();
-    var borders = await sl.get<DataSource>().getBorders();
-    var borderProducts = await sl.get<DataSource>().getAllBorderProducts();
+  Future<bool> logOut(XFile? image) async {
+    var cartProducts = [];
+    var res = await sl.get<DataSource>().getAddToCartProducts();
+    var s = res.fold((l) {
+      cartProducts = l;
+      return true;
+    }, (r) => false);
+    if (!s) {
+      return false;
+    }
+    var borders = [];
+    var res1 = await sl.get<DataSource>().getBorders();
+    var s1 = res1.fold((l) {
+      borders = l;
+      return true;
+    }, (r) => false);
+    if (!s1) {
+      return false;
+    }
+
+    var borderProducts = [];
+    var res2 = await sl.get<DataSource>().getAllBorderProducts();
+    var s3 = res2.fold((l) {
+      borderProducts = l;
+      return true;
+    }, (r) => false);
+    if (!s3) {
+      return false;
+    }
+
     String bor = '';
     String proBor = '';
     String cartPro = '';
@@ -71,10 +97,16 @@ class ProfileCubit extends Cubit<ProfileState> {
     bor = bor.isEmpty ? '' : bor.substring(0, bor.length - 1);
     proBor = proBor.isEmpty ? '' : proBor.substring(0, proBor.length - 1);
     if (image != null) {
-      await sl.get<DataSource>().uploadImage(image);
+      if (!await sl.get<DataSource>().uploadImage(image)) {
+        return false;
+      }
       await File('${Constant.baseUrl}profileImage.jpg').delete();
     }
-    await sl.get<DataSource>().uploadProfileSettings(proBor, cartPro, bor);
+    var isSuccess =
+        await sl.get<DataSource>().uploadProfileSettings(proBor, cartPro, bor);
+    if (!isSuccess) {
+      return false;
+    }
     await sl.get<SharedPreferences>().remove('currentUser');
     await sl.get<SharedPreferences>().remove('defaultLocation');
     await sl.get<DataSource>().clearAddToCartTable();
@@ -82,5 +114,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     await sl.get<DataSource>().clearBorderProductsTable();
     await sl.get<DataSource>().clearOrdersTable();
     await sl.get<DataSource>().clearLocationsTable();
+    return true;
   }
 }

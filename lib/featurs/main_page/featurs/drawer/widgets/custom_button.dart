@@ -15,6 +15,7 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ToastContext().init(context);
     return SizedBox(
       width: 393.w,
       height: 40.h,
@@ -39,15 +40,18 @@ class CustomButton extends StatelessWidget {
                 } else {
                   image = null;
                 }
-                await context.read<ProfileCubit>().logOut(image);
-                if (context.mounted) {
-                  context.read<ProfileCubit>().setIsLogOutLoading(false);
-                  Constant.currentUser = null;
-                  context.read<DrawerCubit>().refreshDrawer();
+                if (!await context.read<ProfileCubit>().logOut(image)) {
+                  Toast.show('Something went wrong please try again',
+                      duration: Toast.lengthLong);
+                } else {
+                  if (context.mounted) {
+                    context.read<ProfileCubit>().setIsLogOutLoading(false);
+                    Constant.currentUser = null;
+                    context.read<DrawerCubit>().refreshDrawer();
+                  }
                 }
               } else {
                 context.read<ProfileCubit>().setIsLogOutLoading(false);
-                ToastContext().init(context);
                 Toast.show('Check your internet connection',
                     duration: Toast.lengthLong);
               }

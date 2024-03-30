@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/constant.dart';
+import 'package:toast/toast.dart';
 
 import '../../injection.dart';
 import 'cubit/main_page_cubit.dart';
@@ -55,7 +56,9 @@ class _MainPageState extends State<MainPage>
   @override
   void initState() {
     sl.get<DataSource>().getAddToCartProducts().then((value) {
-      context.read<AddToCartCubit>().products = value;
+      value.fold((l) {
+        context.read<AddToCartCubit>().products = l;
+      }, (r) {});
       setState(() {});
     });
     tabController = TabController(length: 4, vsync: this);
@@ -71,6 +74,7 @@ class _MainPageState extends State<MainPage>
 
   @override
   Widget build(BuildContext context) {
+    ToastContext().init(context);
     // debugInvertOversizedImages = true;
     final AppBar appBar = AppBar(
       backgroundColor: Colors.white,
@@ -97,10 +101,16 @@ class _MainPageState extends State<MainPage>
             if (Constant.currentUser != null) {
               var cartProducts =
                   await sl.get<DataSource>().getAddToCartProducts();
-              context.read<AddToCartCubit>().products = cartProducts;
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const ShoppingBagScreen(),
-              ));
+
+              cartProducts.fold((l) {
+                context.read<AddToCartCubit>().products = l;
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const ShoppingBagScreen(),
+                ));
+              }, (r) {
+                Toast.show('Something went wrong please try again',
+                    duration: Toast.lengthLong);
+              });
             } else {
               context.read<MainPageCubit>().showRegisterMessage(context);
             }
@@ -151,14 +161,18 @@ class _MainPageState extends State<MainPage>
               icon: const Icon(Icons.favorite_border),
               onPressed: () async {
                 // log(DateTime.now().millisecondsSinceEpoch.toString());
-                List<Map<String, dynamic>> borders =
-                    await sl.get<DataSource>().getBorders();
-                if (context.mounted) {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => WishListScreen(
-                            borders: borders,
-                          )));
-                }
+                var res = await sl.get<DataSource>().getBorders();
+                res.fold((borders) {
+                  if (context.mounted) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => WishListScreen(
+                              borders: borders,
+                            )));
+                  }
+                }, (r) {
+                  Toast.show('Something went wrong please try again',
+                      duration: Toast.lengthLong);
+                });
               }),
         )
       ],

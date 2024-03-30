@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/gogole_map.dart';
 import 'package:shop_app/injection.dart';
+import 'package:toast/toast.dart';
 
 import '../../../data_source/data_source_paths.dart';
 import '../cubit/check_out_cubit.dart';
@@ -132,12 +133,16 @@ class FirstStep extends StatelessWidget {
                                 const Icon(Icons.delete, color: Colors.white),
                           ),
                           onDismissed: (value) async {
-                            String add = await sl
+                            var res = await sl
                                 .get<DataSource>()
                                 .deleteAddress(address);
-                            if (context.mounted) {
+                            res.fold((add) {
                               context.read<CheckOutCubit>().changeAddress(add);
-                            }
+                            }, (r) {
+                              ToastContext().init(context);
+                              Toast.show(
+                                  'Something went wrong please try again');
+                            });
                           },
                           key: Key(address.addressName),
                           child: CheckOutAddressCard(

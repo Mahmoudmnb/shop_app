@@ -1,11 +1,12 @@
 import 'dart:developer';
 
 import 'package:appwrite/models.dart';
+import 'package:dartz/dartz.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shop_app/injection.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../core/constant.dart';
+import '../../../injection.dart';
 import '../featurs/check_out/models/address_model.dart';
 import '../featurs/home/models/product_model.dart';
 import '../featurs/products_view/models/review_model.dart';
@@ -18,18 +19,21 @@ class UpdateDeleteLocalDataSource {
     db.rawUpdate('UPDATE AddToCartTable SET quantity=$quantity WHERE id==$id');
   }
 
-  Future<void> updateAddress(
+  Future<bool> updateAddress(
       AddressModel address, String oldAddressName) async {
     Database db = await openDatabase(Constant.locationsDataBasePath);
     try {
-      await sl.get<DataSource>().updateLocationInCloud(address);
-      var i = await db.rawUpdate(
-          "UPDATE locations SET firstName='${address.fullName}',lastName='${address.fullName}',phoneNumber='${address.phoneNumber}',emailAddress='${address.emailAddress}',addressName='${address.addressName}',longitude_code='${address.longitude}',latitude_code='${address.latitude}',city='${address.city}',country='${address.country}',address='${address.address}' WHERE addressName== '$oldAddressName'");
-      log(i.toString());
+      if (await sl.get<DataSource>().updateLocationInCloud(address)) {
+        await db.rawUpdate(
+            "UPDATE locations SET firstName='${address.fullName}',lastName='${address.fullName}',phoneNumber='${address.phoneNumber}',emailAddress='${address.emailAddress}',addressName='${address.addressName}',longitude_code='${address.longitude}',latitude_code='${address.latitude}',city='${address.city}',country='${address.country}',address='${address.address}' WHERE addressName== '$oldAddressName'");
+      } else {
+        return false;
+      }
+      return true;
     } catch (e) {
       log(e.toString());
+      return false;
     }
-    db.close();
   }
 
   Future<void> updateProductToNotDiscountUpdated(String productName) async {
@@ -59,86 +63,121 @@ class UpdateDeleteLocalDataSource {
     log('done');
   }
 
-  Future<Map<String, List<Document>>> updateDataBase() async {
+  Future<Either<Map<String, List<Document>>, bool>> updateDataBase() async {
     var data = sl.get<SharedPreferences>().getString('lastUpdate');
+    Map<String, dynamic> personalData = {};
     if (data != null) {
-      var p = await sl.get<DataSource>().getUpdatedProducts(data);
-      List<Document> newProducts = p['newProducts'] ?? [];
-      List<Document> updatedProducts = p['updatedProducts'] ?? [];
+      var res = await sl.get<DataSource>().getUpdatedProducts(data);
+      bool s = res.fold((l) {
+        personalData = l;
+        return true;
+      }, (r) {
+        return false;
+      });
+      if (!s) {
+        return Right(false);
+      }
+      List<Document> newProducts = personalData['newProducts'] ?? [];
+      List<Document> updatedProducts = personalData['updatedProducts'] ?? [];
       if (newProducts.isNotEmpty) {
-        await sl
+        if (!await sl
             .get<DataSource>()
-            .insertProductsIntoLocalDataBase(newProducts, true);
+            .insertProductsIntoLocalDataBase(newProducts, true)) {
+          return Right(false);
+        }
       }
       if (updatedProducts.isNotEmpty) {
         await updateProducts(updatedProducts);
       }
-      log(p.toString());
-      return p;
     }
-    return {};
+    return Left({});
   }
 
-  Future<void> updateProducts(List<Document> products) async {
+  Future<bool> updateProducts(List<Document> products) async {
     Database db = await openDatabase(Constant.productDataBasePath);
-    String names = '';
-    for (var element in products) {
-      log(element.data.toString());
-      names += "'${element.data['name']}'|";
-    }
-    var len = names.length;
-    names = names.substring(0, len - 1);
-    var oldProducts = await sl.get<DataSource>().getProductsByNames(names);
-    int index = 0;
-    for (var element in products) {
-      ProductModel newProduct = ProductModel.fromMap(element.data);
-      if (element.data['isAvailable']) {
-        db.rawUpdate("""
+    try {
+      String names = '';
+      for (var element in products) {
+        log(element.data.toString());
+        names += "'${element.data['name']}'|";
+      }
+      var len = names.length;
+      names = names.substring(0, len - 1);
+      var oldProducts = [];
+      var res = await sl.get<DataSource>().getProductsByNames(names);
+      bool s = res.fold((l) {
+        oldProducts = l;
+        return true;
+      }, (r) {
+        return false;
+      });
+      if (!s) {
+        return false;
+      }
+      int index = 0;
+      for (var element in products) {
+        ProductModel newProduct = ProductModel.fromMap(element.data);
+        if (element.data['isAvailable']) {
+          db.rawUpdate("""
     UPDATE products SET name = ?, discription = ?, makerCompany = ?,sizes = ?,
     colors = ?,  date = ?, category = ? , price = ? ,discount = ?, isDiscountUpdated=?
      WHERE name = ? """, [
-          newProduct.name,
-          newProduct.discription,
-          newProduct.makerCompany,
-          newProduct.sizes,
-          newProduct.colors,
-          newProduct.date,
-          newProduct.category,
-          newProduct.price,
-          newProduct.disCount,
-          ProductModel.fromMap(oldProducts[index]).disCount ==
-                  newProduct.disCount
-              ? false
-              : true,
-          newProduct.name,
-        ]);
-      } else {
-        var d = await sl
-            .get<DataSource>()
-            .getProductsByNames("'${newProduct.name}'");
-        Database recommendedDb =
-            await openDatabase(Constant.recommendedProductsDataBasePath);
-        await recommendedDb.rawDelete(
-            "DELETE FROM recommended WHERE productId = ${ProductModel.fromMap(d[0]).id}");
-        await db.rawDelete(
-            "DELETE FROM products WHERE name = '${newProduct.name}'");
-      }
-      Database cartDb = await openDatabase(Constant.addToCartTable);
-      cartDb.rawUpdate(
-          """UPDATE AddToCartTable SET imgUrl = ?, productName = ? , price = ? , companyMaker = ?
-        WHERE productName = ? """,
-          [
-            newProduct.imgUrl.split('|')[0],
             newProduct.name,
-            newProduct.disCount > 0
-                ? (1 - newProduct.disCount / 100) * newProduct.price
-                : newProduct.price,
+            newProduct.discription,
             newProduct.makerCompany,
-            newProduct.name
+            newProduct.sizes,
+            newProduct.colors,
+            newProduct.date,
+            newProduct.category,
+            newProduct.price,
+            newProduct.disCount,
+            ProductModel.fromMap(oldProducts[index]).disCount ==
+                    newProduct.disCount
+                ? false
+                : true,
+            newProduct.name,
           ]);
-      index++;
+        } else {
+          var d = [];
+          var res = await sl
+              .get<DataSource>()
+              .getProductsByNames("'${newProduct.name}'");
+          var s = res.fold((l) {
+            d = l;
+            return true;
+          }, (r) {
+            return false;
+          });
+          if (!s) {
+            return false;
+          }
+          Database recommendedDb =
+              await openDatabase(Constant.recommendedProductsDataBasePath);
+          await recommendedDb.rawDelete(
+              "DELETE FROM recommended WHERE productId = ${ProductModel.fromMap(d[0]).id}");
+          await db.rawDelete(
+              "DELETE FROM products WHERE name = '${newProduct.name}'");
+        }
+        Database cartDb = await openDatabase(Constant.addToCartTable);
+        cartDb.rawUpdate(
+            """UPDATE AddToCartTable SET imgUrl = ?, productName = ? , price = ? , companyMaker = ?
+        WHERE productName = ? """,
+            [
+              newProduct.imgUrl.split('|')[0],
+              newProduct.name,
+              newProduct.disCount > 0
+                  ? (1 - newProduct.disCount / 100) * newProduct.price
+                  : newProduct.price,
+              newProduct.makerCompany,
+              newProduct.name
+            ]);
+        index++;
+      }
+      log('done updating products');
+      return true;
+    } catch (e) {
+      return false;
     }
-    log('done updating products');
   }
 
   //! delete section
@@ -150,24 +189,31 @@ class UpdateDeleteLocalDataSource {
         'UPDATE borderProducts SET borderId=1 WHERE borderId=$borderId');
   }
 
-  Future<String> deleteAddress(AddressModel address) async {
-    await sl.get<DataSource>().deleteLocationFromCloud(address);
+  Future<Either<String, bool>> deleteAddress(AddressModel address) async {
     Database db = await openDatabase(Constant.locationsDataBasePath);
-    await db.rawDelete(
-        'DELETE FROM locations WHERE addressName="${address.addressName}"');
-    var data = await sl.get<DataSource>().getLocations();
-    String? defaultLocation =
-        sl.get<SharedPreferences>().getString('defaultLocation');
-    if (data.isNotEmpty) {
-      if (defaultLocation != null && defaultLocation == address.addressName) {
-        await sl.get<SharedPreferences>().setString(
-            'defaultLocation', AddressModel.fromMap(data[0]).addressName);
-        return AddressModel.fromMap(data[0]).addressName;
+    bool isSuccess =
+        await sl.get<DataSource>().deleteLocationFromCloud(address);
+    if (isSuccess) {
+      await db.rawDelete(
+          'DELETE FROM locations WHERE addressName="${address.addressName}"');
+      var data = await sl.get<DataSource>().getLocations();
+      String? defaultLocation =
+          sl.get<SharedPreferences>().getString('defaultLocation');
+      if (data.isNotEmpty) {
+        if (defaultLocation != null && defaultLocation == address.addressName) {
+          await sl.get<SharedPreferences>().setString(
+              'defaultLocation', AddressModel.fromMap(data[0]).addressName);
+          return Left(AddressModel.fromMap(data[0]).addressName);
+        } else {
+          return Left(defaultLocation ?? '');
+        }
+      } else {
+        await sl.get<SharedPreferences>().remove('defaultLocation');
+        return Left('');
       }
     } else {
-      await sl.get<SharedPreferences>().remove('defaultLocation');
+      return Right(false);
     }
-    return defaultLocation ?? '';
   }
 
   Future<void> deleteWordFormSearchHistory(String word) async {

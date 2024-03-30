@@ -102,9 +102,17 @@ class _AuthFormState extends State<AuthForm> {
                   String password = Data.password;
                   if (await InternetInfo.isconnected()) {
                     if (isSignUP) {
-                      signUp(email.trim(), password.trim(), name.trim());
+                      bool isSuccess = await signUp(
+                          email.trim(), password.trim(), name.trim());
+                      if (isSuccess) {
+                        await widget.goToHomePage();
+                      }
                     } else {
-                      signIn(email.trim(), password.trim());
+                      bool isSuccess =
+                          await signIn(email.trim(), password.trim());
+                      if (isSuccess) {
+                        await widget.goToHomePage();
+                      }
                     }
                   } else {
                     Toast.show('Check you internet connection',
@@ -140,7 +148,8 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 
-  signIn(String email, String password) async {
+  Future<bool> signIn(String email, String password) async {
+    bool isScuccess = false;
     changeButtonLoadingState(true);
     Client client = Client();
     client = Client()
@@ -159,13 +168,22 @@ class _AuthFormState extends State<AuthForm> {
       if (true) {
         String name = data.documents[0].data['name'];
         if (data.documents[0].data['imgUrl'] != null) {
-          Uint8List profileImage = await sl
+          Uint8List profileImage = Uint8List(0);
+          var res = await sl
               .get<DataSource>()
               .downloadProfileImage(data.documents[0].data['imgUrl']);
+          var s = res.fold((l) {
+            profileImage = l;
+            return true;
+          }, (r) => false);
+          if (!s) {
+            return false;
+          }
           await File('${Constant.baseUrl}profileImage.jpg')
               .writeAsBytes(profileImage);
         }
         Constant.currentUser = UserModel(
+            phoneNumber: data.documents[0].data['phone_number'],
             email: email,
             name: name,
             password: password,
@@ -176,7 +194,6 @@ class _AuthFormState extends State<AuthForm> {
         sl
             .get<SharedPreferences>()
             .setString('currentUser', Constant.currentUser!.toJson());
-        await widget.goToHomePage();
         context.read<EmailTextBloc>().add(ChangeEmailText(emailText: ''));
         changeButtonLoadingState(false);
         log('done');
@@ -186,6 +203,7 @@ class _AuthFormState extends State<AuthForm> {
       //       'Sorry but this account is used in other device please log out for the other device and try again',
       //       duration: Toast.lengthLong);
       // }
+      isScuccess = true;
     } on AppwriteException catch (e) {
       log(e.toString());
       if (e.message != null &&
@@ -197,13 +215,17 @@ class _AuthFormState extends State<AuthForm> {
         Toast.show('unkown error please try again');
       }
       changeButtonLoadingState(false);
+      isScuccess = false;
     } on SocketException catch (_) {
       changeButtonLoadingState(false);
       Toast.show('Your internet is week please check your internet connection');
+      isScuccess = false;
     } catch (e) {
       log(e.toString());
+      Toast.show('Something went wrong please try again later');
+      isScuccess = false;
     }
-
+    return isScuccess;
     // changeButtonLoadingState(true);
     // SupabaseClient supabase = Supabase.instance.client;
     // try {
@@ -226,7 +248,8 @@ class _AuthFormState extends State<AuthForm> {
     // }
   }
 
-  signUp(String email, String password, String name) async {
+  Future<bool> signUp(String email, String password, String name) async {
+    bool isSuccess = false;
     changeButtonLoadingState(true);
     String id = const Uuid().v1();
     Client client = Client();
@@ -247,24 +270,29 @@ class _AuthFormState extends State<AuthForm> {
           collectionId: '655da771422b6ac710aa',
           documentId: id,
           data: {'email': email, 'name': name, 'password': password});
-      await widget.goToHomePage();
       context.read<EmailTextBloc>().add(ChangeEmailText(emailText: ''));
       changeButtonLoadingState(false);
-      log('done');
+      log('done log in');
+      isSuccess = true;
     } on AppwriteException catch (e) {
       log(e.toString());
-      if (e.message != null && e.message!.contains('user_already_exists')) {
+      if (e.toString().contains('user_already_exists')) {
         Toast.show('user already exists for this email');
       } else {
         Toast.show('unkown error please try again');
       }
       changeButtonLoadingState(false);
+      isSuccess = false;
     } on SocketException {
       changeButtonLoadingState(false);
       Toast.show('Your internet is week please check your internet connection');
+      isSuccess = false;
     } catch (e) {
+      isSuccess = false;
+      Toast.show('Something went wrong please try again later');
       log(e.toString());
     }
+    return isSuccess;
     //! this is for supabase signUp
     // try {
     // SupabaseClient supabase = Supabase.instance.client;

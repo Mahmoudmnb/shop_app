@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:toast/toast.dart';
 
 import '../../../../../core/constant.dart';
 import '../../../../../injection.dart';
@@ -149,13 +150,23 @@ class HomeDrawer extends StatelessWidget {
                   title: 'Wishlist',
                   onTap: () async {
                     Scaffold.of(context).closeDrawer();
-                    List<Map<String, dynamic>> borders =
-                        await sl.get<DataSource>().getBorders();
-                    if (context.mounted) {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => WishListScreen(
-                                borders: borders,
-                              )));
+
+                    List<Map<String, dynamic>> borders = [];
+                    var res = await sl.get<DataSource>().getBorders();
+                    bool s = res.fold((l) {
+                      borders = l;
+                      return true;
+                    }, (r) => false);
+                    if (!s) {
+                      ToastContext().init(context);
+                      Toast.show('Something went wrong please try again');
+                    } else {
+                      if (context.mounted) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => WishListScreen(
+                                  borders: borders,
+                                )));
+                      }
                     }
                   },
                 ),

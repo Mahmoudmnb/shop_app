@@ -117,6 +117,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
 
   @override
   Widget build(BuildContext context) {
+    ToastContext().init(context);
     String? defaultLocation =
         sl.get<SharedPreferences>().getString('defaultLocation');
     if (widget.type != 'Edit') {
@@ -326,21 +327,39 @@ class _AddNewAddressState extends State<AddNewAddress> {
                                   } else {
                                     if (widget.type == 'Edit') {
                                       address.id = widget.data['id'];
-                                      await sl.get<DataSource>().updateAddress(
-                                          address, widget.data['addressName']);
+                                      bool isSuccess = await sl
+                                          .get<DataSource>()
+                                          .updateAddress(address,
+                                              widget.data['addressName']);
+                                      if (!isSuccess) {
+                                        Toast.show(
+                                            'Someting went wrong please try again');
+                                      } else {
+                                        var addressList = await sl
+                                            .get<DataSource>()
+                                            .getLocations();
+                                        if (context.mounted) {
+                                          Navigator.of(context).pushReplacement(
+                                              MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      ShoppingAddress(
+                                                          addressList:
+                                                              addressList)));
+                                        }
+                                      }
                                     } else {
                                       await context
                                           .read<CheckOutCubit>()
                                           .addNewAdress(address);
-                                    }
-                                    var addressList = await sl
-                                        .get<DataSource>()
-                                        .getLocations();
-                                    if (context.mounted) {
-                                      Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                              builder: (_) => ShoppingAddress(
-                                                  addressList: addressList)));
+                                      var addressList = await sl
+                                          .get<DataSource>()
+                                          .getLocations();
+                                      if (context.mounted) {
+                                        Navigator.of(context).pushReplacement(
+                                            MaterialPageRoute(
+                                                builder: (_) => ShoppingAddress(
+                                                    addressList: addressList)));
+                                      }
                                     }
                                   }
                                 }
@@ -371,7 +390,6 @@ class _AddNewAddressState extends State<AddNewAddress> {
                               context
                                   .read<CheckOutCubit>()
                                   .setIsUpdateAddLocationButtonLoading = false;
-                              ToastContext().init(context);
                               Toast.show('check your internet connection');
                             }
                           });

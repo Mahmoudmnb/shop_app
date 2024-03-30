@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:appwrite/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -172,6 +173,7 @@ class ShoppingBagScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ToastContext().init(context);
     return SafeArea(
       child: ScreenUtilInit(
         designSize: const Size(393, 852),
@@ -250,9 +252,18 @@ class ShoppingBagScreen extends StatelessWidget {
                                       await InternetInfo.isconnected();
                                   if (context.mounted) {
                                     if (isConnected) {
-                                      var data = await sl
+                                      Map<String, List<Document>> data = {};
+                                      var res = await sl
                                           .get<DataSource>()
                                           .updateDataBase();
+                                      var s = res.fold((l) {
+                                        data = l;
+                                        return true;
+                                      }, (r) => false);
+                                      if (!s) {
+                                        Toast.show(
+                                            'Something went wrong please try again');
+                                      }
                                       await sl
                                           .get<SharedPreferences>()
                                           .setString(
@@ -333,7 +344,6 @@ class ShoppingBagScreen extends StatelessWidget {
                                       context
                                           .read<AddToCartCubit>()
                                           .setIsProceedButtonLoading = false;
-                                      ToastContext().init(context);
                                       Toast.show(
                                           'Check you internet connection');
                                     }

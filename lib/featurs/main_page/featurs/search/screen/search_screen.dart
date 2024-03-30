@@ -7,7 +7,6 @@ import '../../../data_source/data_source.dart';
 import '../cubit/sreach_cubit.dart';
 import '../widgets/category_card.dart';
 import '../widgets/end_drawer.dart';
-import '../widgets/popular_search.dart';
 import '../widgets/recent_search.dart';
 import 'search_results_screen.dart';
 
@@ -165,7 +164,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 cubit: cubit,
                               ),
                               SizedBox(height: 30.h),
-                              PopularSearch(cubit: cubit),
+                              // PopularSearch(cubit: cubit),
                             ]),
                           )
                         : Container(

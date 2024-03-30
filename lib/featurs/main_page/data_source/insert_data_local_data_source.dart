@@ -14,8 +14,16 @@ import '../featurs/products_view/models/review_model.dart';
 import 'data_source.dart';
 
 class InsertDataLocalDataSource {
-  Future<void> setRecommendedProducts() async {
-    var data = await sl.get<DataSource>().getRecommendedproductsFromCloud();
+  Future<bool> setRecommendedProducts() async {
+    var data = [];
+    var res = await sl.get<DataSource>().getRecommendedproductsFromCloud();
+    bool s = res.fold((l) {
+      data = l;
+      return true;
+    }, (r) => false);
+    if (!s) {
+      return false;
+    }
     List<int> productsIds = [];
     for (var element in data) {
       var temp = element.data['orders_ids'];
@@ -39,59 +47,78 @@ class InsertDataLocalDataSource {
       }
     }
     Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
-    for (var i = 0; i < finalProductIds.length; i++) {
-      var l = await sl.get<DataSource>().getProductById(finalProductIds[i]);
-      log(l.toString());
-      if (l.isNotEmpty) {
-        db.rawInsert(
-            'INSERT INTO recommended(productId,freq) VALUES (${finalProductIds[i]},${freq[i]})');
+    try {
+      for (var i = 0; i < finalProductIds.length; i++) {
+        var l = await sl.get<DataSource>().getProductById(finalProductIds[i]);
+        log(l.toString());
+        if (l.isNotEmpty) {
+          db.rawInsert(
+              'INSERT INTO recommended(productId,freq) VALUES (${finalProductIds[i]},${freq[i]})');
+        }
       }
+      log('done inserting recommended products');
+      return true;
+    } catch (e) {
+      return false;
     }
-    log('done inserting recommended products');
   }
 
-  Future<void> insertPersonalDataInDataBase() async {
-    Map<String, dynamic> personalData =
-        await sl.get<DataSource>().getPersonalDataFromCloud();
-    if (personalData['defaultLocation'] != null &&
-        personalData['defaultLocation'] != '') {
-      sl
-          .get<SharedPreferences>()
-          .setString('defaultLocation', personalData['defaultLocation']);
+  Future<bool> insertPersonalDataInDataBase() async {
+    Map<String, dynamic> personalData = {};
+    var result = await sl.get<DataSource>().getPersonalDataFromCloud();
+    var s = result.fold((l) {
+      personalData = l;
+      return true;
+    }, (r) {
+      return false;
+    });
+    if (!s) {
+      return false;
     }
-    if (personalData['cartProducts'] != null &&
-        personalData['cartProducts'] != '') {
-      var temp = personalData['cartProducts'].toString().split('|');
-      for (var element in temp) {
-        var data = jsonDecode(element);
+    try {
+      if (personalData['defaultLocation'] != null &&
+          personalData['defaultLocation'] != '') {
         await sl
-            .get<DataSource>()
-            .addToCart(AddToCartProductModel.fromMap(data));
+            .get<SharedPreferences>()
+            .setString('defaultLocation', personalData['defaultLocation']);
       }
-    }
-    if (personalData['borders'] != null && personalData['borders'] != '') {
-      var temp = personalData['borders'].toString().split('|');
-      for (var element in temp) {
-        var data = jsonDecode(element);
-        await sl.get<DataSource>().addBorder(data['borderName']);
+      if (personalData['cartProducts'] != null &&
+          personalData['cartProducts'] != '') {
+        var temp = personalData['cartProducts'].toString().split('|');
+        for (var element in temp) {
+          var data = jsonDecode(element);
+          await sl
+              .get<DataSource>()
+              .addToCart(AddToCartProductModel.fromMap(data));
+        }
       }
-    }
-    if (personalData['borderProducts'] != null &&
-        personalData['borderProducts'] != '') {
-      var temp = personalData['borderProducts'].toString().split('|');
-      for (var element in temp) {
-        var data = jsonDecode(element);
-        await sl
-            .get<DataSource>()
-            .addProductToBorder(data['productId'], data['borderId']);
+      if (personalData['borders'] != null && personalData['borders'] != '') {
+        var temp = personalData['borders'].toString().split('|');
+        for (var element in temp) {
+          var data = jsonDecode(element);
+          await sl.get<DataSource>().addBorder(data['borderName']);
+        }
       }
+      if (personalData['borderProducts'] != null &&
+          personalData['borderProducts'] != '') {
+        var temp = personalData['borderProducts'].toString().split('|');
+        for (var element in temp) {
+          var data = jsonDecode(element);
+          await sl
+              .get<DataSource>()
+              .addProductToBorder(data['productId'], data['borderId']);
+        }
+      }
+      // await sl.get<DataSource>().getBorders();
+      // await sl.get<DataSource>().getAllFavoritProducts();
+      // await sl.get<DataSource>().getAddToCartProducts();
+      return true;
+    } catch (e) {
+      return false;
     }
-    await sl.get<DataSource>().getBorders();
-    await sl.get<DataSource>().getAllFavoritProducts();
-    await sl.get<DataSource>().getAddToCartProducts();
   }
 
-  Future<void> addDataToReviewTableFromCloue(List<Document> reviews) async {
+  Future<bool> addDataToReviewTableFromCloue(List<Document> reviews) async {
     try {
       Database db = await openDatabase(Constant.reviewsDataBasePath);
 
@@ -105,26 +132,24 @@ class InsertDataLocalDataSource {
           'productId': element.data['productId'],
           'email': element.data['email'],
         };
-        try {
-          await db.insert('reviews', data);
-        } catch (e) {
-          log(e.toString());
-        }
+        await db.insert('reviews', data);
       }
       log('done inserting data in local dataBase');
+      return true;
     } on PlatformException catch (e) {
       log(e.toString());
+      return false;
     }
   }
 
-  Future<void> addReviewToProduct(ReviewModel review) async {
+  Future<bool> addReviewToProduct(ReviewModel review) async {
     Database db = await openDatabase(Constant.reviewsDataBasePath);
-    if (review.userImage != null) {
-      db.rawInsert(
-          'INSERT INTO reviews(description, stars, date, userName, userImage, productId,email) VALUES("${review.description}",${review.stars},"${review.date}","${review.userName}","${review.userImage}",${review.productId},"${review.email}")');
-    } else {
+    try {
       db.rawInsert(
           'INSERT INTO reviews(description, stars, date, userName, productId,email) VALUES("${review.description}",${review.stars},"${review.date}","${review.userName}",${review.productId},"${review.email}")');
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -140,7 +165,7 @@ class InsertDataLocalDataSource {
     //     'INSERT INTO borderProducts(productId,borderId) VALUES($productId,$borderId)');
   }
 
-  Future<void> addOrder(
+  Future<bool> addOrder(
     List<int> ordersIds,
     double totalPrice,
     String orderDate,
@@ -154,24 +179,26 @@ class InsertDataLocalDataSource {
     String sizes,
     String amounts,
   ) async {
-    String ids = '';
-    for (var i = 0; i < ordersIds.length; i++) {
-      if (i == ordersIds.length - 1) {
-        ids += ordersIds[i].toString();
-      } else {
-        ids += '${ordersIds[i]}|';
-      }
-    }
-
     Database db = await openDatabase(Constant.ordersDataBasePath);
+    bool isSuccess = false;
     try {
+      String ids = '';
+      for (var i = 0; i < ordersIds.length; i++) {
+        if (i == ordersIds.length - 1) {
+          ids += ordersIds[i].toString();
+        } else {
+          ids += '${ordersIds[i]}|';
+        }
+      }
       db.rawDelete('DELETE FROM orders');
       await db.rawInsert(
           '''INSERT INTO orders(email, ordersIds, createdAt, totalPrice, deliveryAddress, shoppingMethod, orderId, trackingNumber, latitude, longitude,colors,sizes,quntities) VALUES
         ("${Constant.currentUser!.email}", "$ids", "$orderDate",$totalPrice,"$deliveryAddress","$shoppingMethod",$orderId,"$trakingNumber","$latitude","$longitude","$colors","$sizes","$amounts")''');
+      isSuccess = true;
     } catch (e) {
       log(e.toString());
     }
+    return isSuccess;
   }
 
   Future<void> setSearchHistory(String searchWord) async {
@@ -206,7 +233,7 @@ class InsertDataLocalDataSource {
     }
   }
 
-  Future<void> insertProductsIntoLocalDataBase(
+  Future<bool> insertProductsIntoLocalDataBase(
       List<Document> products, bool isNew) async {
     try {
       Database db = await openDatabase(Constant.productDataBasePath);
@@ -227,15 +254,15 @@ class InsertDataLocalDataSource {
           'isFavorate': 0,
           // 'isDiscountUpdated': element.data['discount'] >= 0 ? 1 : 0
         };
-        try {
-          await db.insert('products', data);
-        } catch (e) {
-          log(e.toString());
-        }
+        await db.insert('products', data);
       }
       log('done inserting data in local dataBase');
+      return true;
     } on PlatformException catch (e) {
       log(e.toString());
+      return false;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -277,47 +304,58 @@ class InsertDataLocalDataSource {
     }
   }
 
-  Future<void> insertDataInOrderTableFromCloud(List<Document> orders) async {
-    for (var element in orders) {
-      Map<String, dynamic> order = element.data;
-      List<String> ordersIds = order['orders_ids']
-          .toString()
-          .substring(1, order['orders_ids'].toString().length - 1)
-          .split(',');
-      List<int> finalOrdersIds = [];
-      String colors = '';
-      String sizes = '';
-      String amounts = '';
-      for (var element in order['colors']) {
-        colors += element + '|';
-      }
-      colors.replaceRange(colors.length, colors.length, '');
+  Future<bool> insertDataInOrderTableFromCloud(List<Document> orders) async {
+    bool isSuccess = false;
+    try {
+      for (var element in orders) {
+        Map<String, dynamic> order = element.data;
+        List<String> ordersIds = order['orders_ids']
+            .toString()
+            .substring(1, order['orders_ids'].toString().length - 1)
+            .split(',');
+        List<int> finalOrdersIds = [];
+        String colors = '';
+        String sizes = '';
+        String amounts = '';
+        for (var element in order['colors']) {
+          colors += element + '|';
+        }
+        colors.replaceRange(colors.length, colors.length, '');
 
-      for (var element in order['sizes']) {
-        sizes += element + '|';
+        for (var element in order['sizes']) {
+          sizes += element + '|';
+        }
+        sizes.replaceRange(sizes.length, sizes.length, '');
+        for (var element in order['amounts']) {
+          amounts += '$element|';
+        }
+        amounts.replaceRange(amounts.length, amounts.length, '');
+        for (var element in ordersIds) {
+          finalOrdersIds.add(int.parse(element));
+        }
+        bool s = await addOrder(
+            finalOrdersIds,
+            order['total_price'] * 1.0,
+            order['created_at'],
+            order['delivery_address'],
+            order['shopping_method'],
+            order['id'],
+            order['\$id'],
+            order['latitude'],
+            order['longitude'],
+            colors,
+            sizes,
+            amounts);
+        if (!s) {
+          isSuccess = false;
+          return false;
+        }
+        log('done');
       }
-      sizes.replaceRange(sizes.length, sizes.length, '');
-      for (var element in order['amounts']) {
-        amounts += '$element|';
-      }
-      amounts.replaceRange(amounts.length, amounts.length, '');
-      for (var element in ordersIds) {
-        finalOrdersIds.add(int.parse(element));
-      }
-      await addOrder(
-          finalOrdersIds,
-          order['total_price'] * 1.0,
-          order['created_at'],
-          order['delivery_address'],
-          order['shopping_method'],
-          order['id'],
-          order['\$id'],
-          order['latitude'],
-          order['longitude'],
-          colors,
-          sizes,
-          amounts);
-      log('done');
+      isSuccess = true;
+    } catch (e) {
+      log(e.toString());
     }
+    return isSuccess;
   }
 }

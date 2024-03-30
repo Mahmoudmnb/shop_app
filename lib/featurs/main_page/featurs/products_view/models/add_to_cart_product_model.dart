@@ -39,7 +39,7 @@ class AddToCartProductModel {
 
   factory AddToCartProductModel.fromMap(Map<String, dynamic> map) {
     return AddToCartProductModel(
-        productId: map['productId'] as int,
+        productId: map['productId'] ?? 0,
         orderId: map['order_id'] as int,
         id: map['id'] as int,
         productName: map['productName'] as String,

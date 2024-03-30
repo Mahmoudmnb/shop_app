@@ -2,13 +2,14 @@ import 'dart:developer';
 
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shop_app/core/constant.dart';
-import 'package:shop_app/featurs/auth/models/user_model.dart';
 
+import '../../../core/constant.dart';
 import '../../../injection.dart';
+import '../../auth/models/user_model.dart';
 import '../featurs/check_out/models/address_model.dart';
 import '../featurs/products_view/models/review_model.dart';
 import 'data_source.dart';
@@ -45,24 +46,29 @@ class RemoteDataSource {
     }
   }
 
-  Future<Uint8List> downloadProfileImage(String cloudImageUrl) async {
+  Future<Either<Uint8List, bool>> downloadProfileImage(
+      String cloudImageUrl) async {
     Storage storage = Storage(client);
-    Uint8List profileImage = await storage.getFileDownload(
-        bucketId: '65969d60114e6c041d20', fileId: cloudImageUrl);
-    log(profileImage.toString());
-    return profileImage;
+    try {
+      Uint8List profileImage = await storage.getFileDownload(
+          bucketId: '65969d60114e6c041d20', fileId: cloudImageUrl);
+      return Left(profileImage);
+    } catch (e) {
+      return Right(false);
+    }
   }
 
-  Future<List<Document>> downloadLoactionsFromCloud() async {
+  Future<Either<List<Document>, bool>> downloadLoactionsFromCloud() async {
     Databases databases = Databases(client);
-    var locations = await databases.listDocuments(
-      databaseId: '65585f55e896c3e87515',
-      collectionId: "65ec7d873aa0c21fdeab",
-      queries: [
-        Query.equal('owner_email', Constant.currentUser!.email),
-      ],
-    );
+
     try {
+      var locations = await databases.listDocuments(
+        databaseId: '65585f55e896c3e87515',
+        collectionId: "65ec7d873aa0c21fdeab",
+        queries: [
+          Query.equal('owner_email', Constant.currentUser!.email),
+        ],
+      );
       for (var element in locations.documents) {
         var d = element.data;
         await sl.get<DataSource>().addNewLocation(
@@ -80,16 +86,16 @@ class RemoteDataSource {
                 address: d['address']),
             'update');
       }
+      log('done gettting locations');
+      return Left(locations.documents);
     } catch (e) {
       log(e.toString());
+      return Right(false);
     }
-    log('done gettting locations');
-    return locations.documents;
   }
 
-  Future<void> updateLocationInCloud(AddressModel address) async {
+  Future<bool> updateLocationInCloud(AddressModel address) async {
     Databases db = Databases(client);
-    log(address.id.toString());
     try {
       db.updateDocument(
           databaseId: '65585f55e896c3e87515',
@@ -108,12 +114,14 @@ class RemoteDataSource {
             'owner_email': Constant.currentUser!.email
           });
       log('done updating address data');
+      return true;
     } catch (e) {
       log(e.toString());
+      return false;
     }
   }
 
-  Future<void> deleteLocationFromCloud(AddressModel address) async {
+  Future<bool> deleteLocationFromCloud(AddressModel address) async {
     Databases db = Databases(client);
     try {
       db.deleteDocument(
@@ -122,8 +130,10 @@ class RemoteDataSource {
         documentId: address.id!,
       );
       log('done deleting location');
+      return true;
     } on AppwriteException catch (e) {
       log(e.message.toString());
+      return false;
     }
   }
 
@@ -169,11 +179,10 @@ class RemoteDataSource {
     return newReviews.documents;
   }
 
-  Future<Map<String, List<Document>>> getUpdatedProducts(
+  Future<Either<Map<String, List<Document>>, bool>> getUpdatedProducts(
       String lastDate) async {
     List<Document> finalNewProducts = [];
     List<Document> finalUpdatedProducts = [];
-
     Databases databases = Databases(client);
     try {
       var newProducts = await databases.listDocuments(
@@ -185,7 +194,6 @@ class RemoteDataSource {
         ],
       );
       finalNewProducts = newProducts.documents;
-
       var updatedProducts = await databases.listDocuments(
         databaseId: '65585f55e896c3e87515',
         collectionId: "655860259ae4b331bee6",
@@ -195,16 +203,17 @@ class RemoteDataSource {
       );
       finalNewProducts = newProducts.documents;
       finalUpdatedProducts = updatedProducts.documents;
+      return Left({
+        'newProducts': finalNewProducts,
+        'updatedProducts': finalUpdatedProducts
+      });
     } on AppwriteException catch (e) {
       log(e.message.toString());
+      return Right(false);
     }
-    return {
-      'newProducts': finalNewProducts,
-      'updatedProducts': finalUpdatedProducts
-    };
   }
 
-  Future<List<Document>> getRecommendedproductsFromCloud() async {
+  Future<Either<List<Document>, bool>> getRecommendedproductsFromCloud() async {
     List<Document> data = [];
     Databases databases = Databases(client);
     try {
@@ -213,13 +222,14 @@ class RemoteDataSource {
         collectionId: "65590c089231c74891b3",
       );
       data = result.documents;
+      return Left(data);
     } on AppwriteException catch (e) {
       log(e.message.toString());
+      return Right(false);
     }
-    return data;
   }
 
-  Future<Map<String, dynamic>> getPersonalData() async {
+  Future<Either<Map<String, dynamic>, bool>> getPersonalData() async {
     Map<String, dynamic> data = {};
     Databases databases = Databases(client);
     try {
@@ -230,23 +240,23 @@ class RemoteDataSource {
       );
       var temp = result.documents;
       data = temp[0].data;
+      return Left(data);
     } on AppwriteException catch (e) {
       log(e.message.toString());
+      return Right(false);
     }
-    return data;
   }
 
-  Future<void> uploadProfileSettings(
+  Future<bool> uploadProfileSettings(
       String borderProducts, String cartProducts, String borders) async {
     Databases db = Databases(client);
-
-    var data = await db.listDocuments(
-      databaseId: '655da767bc3f1651db70',
-      collectionId: '655da771422b6ac710aa',
-      queries: [Query.equal('email', Constant.currentUser!.email)],
-    );
-    final userData = data.documents;
     try {
+      var data = await db.listDocuments(
+        databaseId: '655da767bc3f1651db70',
+        collectionId: '655da771422b6ac710aa',
+        queries: [Query.equal('email', Constant.currentUser!.email)],
+      );
+      final userData = data.documents;
       db.updateDocument(
           databaseId: '655da767bc3f1651db70',
           collectionId: '655da771422b6ac710aa',
@@ -258,15 +268,15 @@ class RemoteDataSource {
             'defaultLocation':
                 sl.get<SharedPreferences>().getString('defaultLocation')
           });
+      return true;
     } catch (e) {
       log(e.toString());
+      return false;
     }
-    log('done');
   }
 
-  Future<void> rateApp(String descrition, double rate) async {
+  Future<bool> rateApp(String descrition, double rate) async {
     Databases db = Databases(client);
-    log(rate.toString());
     try {
       await db.createDocument(
           databaseId: '65585f55e896c3e87515',
@@ -277,83 +287,86 @@ class RemoteDataSource {
             'rate': rate,
             'email': Constant.currentUser!.email
           });
+      return true;
     } catch (e) {
       log(e.toString());
+      return false;
     }
-    log('done');
   }
 
-  Future<void> changePassword(String newPassword) async {
+  Future<bool> changePassword(String newPassword) async {
     Databases db = Databases(client);
-    var data = await db.listDocuments(
-      databaseId: '655da767bc3f1651db70',
-      collectionId: '655da771422b6ac710aa',
-      queries: [Query.equal('email', Constant.currentUser!.email)],
-    );
-    final userData = data.documents;
-    var d = await db.updateDocument(
+    try {
+      var data = await db.listDocuments(
         databaseId: '655da767bc3f1651db70',
         collectionId: '655da771422b6ac710aa',
-        documentId: userData[0].$id,
-        data: {'password': newPassword});
-    UserModel user = UserModel(
-        email: Constant.currentUser!.email,
-        name: Constant.currentUser!.name,
-        password: newPassword);
-    Constant.currentUser = user;
-    sl.get<SharedPreferences>().setString('currentUser', user.toJson());
-    log(d.data.toString());
+        queries: [Query.equal('email', Constant.currentUser!.email)],
+      );
+      final userData = data.documents;
+      await db.updateDocument(
+          databaseId: '655da767bc3f1651db70',
+          collectionId: '655da771422b6ac710aa',
+          documentId: userData[0].$id,
+          data: {'password': newPassword});
+      UserModel user = UserModel(
+          email: Constant.currentUser!.email,
+          name: Constant.currentUser!.name,
+          password: newPassword);
+      Constant.currentUser = user;
+      await sl.get<SharedPreferences>().setString('currentUser', user.toJson());
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
-  Future<void> uploadImage(XFile image) async {
+  Future<bool> uploadImage(XFile image) async {
     final storage = Storage(client);
-    if (Constant.currentUser!.imgUrl != null) {
-      try {
+    try {
+      if (Constant.currentUser!.cloudImgUrl != null) {
         await storage.deleteFile(
             bucketId: '65969d60114e6c041d20',
             fileId: Constant.currentUser!.cloudImgUrl!);
-      } catch (e) {
-        log(e.toString());
       }
-    }
-    var d = await storage.createFile(
-      onProgress: (value) {
-        log('hi');
-        log(value.progress.toString());
-      },
-      bucketId: '65969d60114e6c041d20',
-      fileId: ID.unique(),
-      file: InputFile.fromPath(
-          path: image.path, filename: '${Constant.currentUser!.email}.jpg'),
-    );
-    Databases db = Databases(client);
-    var temp = await db.listDocuments(
-        databaseId: '655da767bc3f1651db70',
-        collectionId: '655da771422b6ac710aa');
-    List<Document> users = temp.documents;
-    String dId = '';
-    for (var element in users) {
-      if (element.data['email'] == Constant.currentUser!.email) {
-        log(element.data.toString());
-        dId = element.$id;
-        break;
+      var d = await storage.createFile(
+        bucketId: '65969d60114e6c041d20',
+        fileId: ID.unique(),
+        file: InputFile.fromPath(
+            path: image.path, filename: '${Constant.currentUser!.email}.jpg'),
+      );
+      Databases db = Databases(client);
+      var temp = await db.listDocuments(
+          databaseId: '655da767bc3f1651db70',
+          collectionId: '655da771422b6ac710aa');
+      List<Document> users = temp.documents;
+      String dId = '';
+      for (var element in users) {
+        if (element.data['email'] == Constant.currentUser!.email) {
+          log(element.data.toString());
+          dId = element.$id;
+          break;
+        }
       }
+      db.updateDocument(
+          databaseId: '655da767bc3f1651db70',
+          collectionId: '655da771422b6ac710aa',
+          documentId: dId,
+          data: {
+            'imgUrl': d.$id
+            // 'https://cloud.appwrite.io/v1/storage/buckets/65969d60114e6c041d20/files/$id/view?project=655083f2b78dc8c2d628&mode=admin'
+          });
+      Constant.currentUser!.cloudImgUrl = d.$id;
+      sl
+          .get<SharedPreferences>()
+          .setString('currentUser', Constant.currentUser!.toJson());
+      return true;
+    } catch (e) {
+      log(e.toString());
+      return false;
     }
-    db.updateDocument(
-        databaseId: '655da767bc3f1651db70',
-        collectionId: '655da771422b6ac710aa',
-        documentId: dId,
-        data: {
-          'imgUrl': d.$id
-          // 'https://cloud.appwrite.io/v1/storage/buckets/65969d60114e6c041d20/files/$id/view?project=655083f2b78dc8c2d628&mode=admin'
-        });
-    Constant.currentUser!.cloudImgUrl = d.$id;
-    sl
-        .get<SharedPreferences>()
-        .setString('currentUser', Constant.currentUser!.toJson());
   }
 
-  Future<List<Document>> getProducts() async {
+  Future<Either<List<Document>, bool>> getProducts() async {
     List<Document> data = [];
     Databases databases = Databases(client);
     try {
@@ -362,15 +375,16 @@ class RemoteDataSource {
           collectionId: "655860259ae4b331bee6",
           queries: [Query.equal('isAvailable', true)]);
       data = result.documents;
+      var finalData =
+          data.where((element) => element.data['isAvailable']).toList();
+      return Left(finalData);
     } on AppwriteException catch (e) {
       log(e.message.toString());
+      return Right(false);
     }
-    var finalData =
-        data.where((element) => element.data['isAvailable']).toList();
-    return finalData;
   }
 
-  Future<void> addOrderToCloudDataBase(
+  Future<bool> addOrderToCloudDataBase(
       List<Map<String, dynamic>> orderProducts,
       double totalPrice,
       String deliveryAddress,
@@ -405,12 +419,8 @@ class RemoteDataSource {
         collectionId: "65590c089231c74891b3",
       );
       data = result.documents;
-    } on AppwriteException catch (e) {
-      log(e.message.toString());
-    }
-    id = data.length;
-    String orderDate = Constant.dateToString(DateTime.now());
-    try {
+      id = data.length;
+      String orderDate = Constant.dateToString(DateTime.now());
       await db.createDocument(
           databaseId: '65590bfc54fa42e08afd',
           collectionId: '65590c089231c74891b3',
@@ -442,23 +452,18 @@ class RemoteDataSource {
             colorsForLocal,
             sizesForLocal,
             amountsForLocal);
-        log(value.data.toString());
-        log('created');
       });
+      return true;
     } on AppwriteException catch (e) {
-      if (e.message != null &&
-          e.message!
-              .contains('Document with the requested ID already exists')) {
-        addOrderToCloudDataBase(orderProducts, totalPrice, deliveryAddress,
-            shoppingMethod, latitude, longitude);
-      }
       log(e.message.toString());
+      return false;
     }
   }
 
-  Future<void> getOrdersFromCloud() async {
+  Future<bool> getOrdersFromCloud() async {
     List<Document> orders = [];
     Databases databases = Databases(client);
+    bool isSuccess = false;
     try {
       var result = await databases.listDocuments(
         databaseId: '65590bfc54fa42e08afd',
@@ -466,13 +471,19 @@ class RemoteDataSource {
         queries: [Query.equal('email', Constant.currentUser!.email)],
       );
       orders = result.documents;
+      var s =
+          await sl.get<DataSource>().insertDataInOrderTableFromCloud(orders);
+      if (!s) {
+        isSuccess = false;
+      }
+      isSuccess = true;
     } on AppwriteException catch (e) {
       log(e.message.toString());
     }
-    sl.get<DataSource>().insertDataInOrderTableFromCloud(orders);
+    return isSuccess;
   }
 
-  Future<void> getReviewsFromCloud() async {
+  Future<bool> getReviewsFromCloud() async {
     List<Document> orders = [];
     Databases databases = Databases(client);
     try {
@@ -481,14 +492,20 @@ class RemoteDataSource {
         collectionId: "65966b22308a7832fddc",
       );
       orders = result.documents;
+      if (!await sl
+          .get<DataSource>()
+          .insertDataInReviewTableFromCloud(orders)) {
+        return false;
+      }
+      log('done getting reviews');
+      return true;
     } on AppwriteException catch (e) {
       log(e.message.toString());
+      return false;
     }
-    sl.get<DataSource>().insertDataInReviewTableFromCloud(orders);
-    log('done getting reviews');
   }
 
-  Future<void> addReviewToCloud(ReviewModel reviewModel) async {
+  Future<bool> addReviewToCloud(ReviewModel reviewModel) async {
     Databases db = Databases(client);
     Map<String, dynamic> data = {};
     if (reviewModel.userImage == null) {
@@ -517,9 +534,9 @@ class RemoteDataSource {
           collectionId: '65966b22308a7832fddc',
           documentId: ID.unique(),
           data: data);
-      log('done');
-    } on AppwriteException catch (e) {
-      log(e.message.toString());
+      return true;
+    } on AppwriteException catch (_) {
+      return false;
     }
   }
 }

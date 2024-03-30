@@ -8,6 +8,7 @@ import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
 import 'package:shop_app/featurs/main_page/main_page.dart';
 import 'package:shop_app/injection.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:toast/toast.dart';
 
 import '../../home/models/product_model.dart';
 import '../../home/pages/home_pages.dart';
@@ -88,6 +89,9 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ToastContext().init(context);
+    context.read<ProductCubit>().indexOfColor = 0;
+    context.read<ProductCubit>().indexOfSize = 0;
     return PopScope(
       canPop: false,
       onPopInvoked: (value) {
@@ -154,19 +158,27 @@ class _ProductScreenState extends State<ProductScreen> {
                                     .get<DataSource>()
                                     .deleteFromPorderBroducts(product.id);
                               } else {
-                                List<Map<String, dynamic>> borders =
+                                var res =
                                     await sl.get<DataSource>().getBorders();
-                                if (context.mounted) {
-                                  context.read<ProductCubit>().selectedBorder =
-                                      'All items';
-                                  context
-                                      .read<ProductCubit>()
-                                      .selectedBorderIndex = 0;
-                                  context
-                                      .read<ProductCubit>()
-                                      .createModelBottomSheet(
-                                          context, borders, product);
-                                }
+                                res.fold((l) {
+                                  List<Map<String, dynamic>> borders = l;
+                                  if (context.mounted) {
+                                    context
+                                        .read<ProductCubit>()
+                                        .selectedBorder = 'All items';
+                                    context
+                                        .read<ProductCubit>()
+                                        .selectedBorderIndex = 0;
+                                    context
+                                        .read<ProductCubit>()
+                                        .createModelBottomSheet(
+                                            context, borders, product);
+                                  }
+                                }, (r) {
+                                  Toast.show(
+                                      'Something went wrong please try again',
+                                      duration: Toast.lengthLong);
+                                });
                               }
                             },
                           );
@@ -341,12 +353,17 @@ class _ProductScreenState extends State<ProductScreen> {
         }
       }
     } else if (widget.fromPage == 'WishList') {
-      List<Map<String, dynamic>> borders =
-          await sl.get<DataSource>().getBorders();
-      if (context.mounted) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => WishListScreen(borders: borders)));
-      }
+      var res = await sl.get<DataSource>().getBorders();
+      res.fold((l) {
+        List<Map<String, dynamic>> borders = l;
+        if (context.mounted) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => WishListScreen(borders: borders)));
+        }
+      }, (r) {
+        Toast.show('Something went wrong please try again',
+            duration: Toast.lengthLong);
+      });
     } else if (widget.fromPage == 'BorderProducts') {
       List<Map<String, dynamic>> products = [];
       List<Map<String, dynamic>> border =
@@ -367,9 +384,7 @@ class _ProductScreenState extends State<ProductScreen> {
       if (Navigator.of(context).canPop()) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => MainPage()));
+              context, MaterialPageRoute(builder: (_) => MainPage()));
         });
       }
     }

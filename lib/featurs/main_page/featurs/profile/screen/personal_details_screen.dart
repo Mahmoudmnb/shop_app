@@ -45,6 +45,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
 
   @override
   Widget build(BuildContext context) {
+    ToastContext().init(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -216,7 +217,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ],
             ),
             SizedBox(
-                height: 50.h,
+                height: 70.h,
                 width: 393.w,
                 child: TextField(
                   maxLength: 50,
@@ -320,20 +321,28 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                                                           .isconnected();
                                                   if (context.mounted) {
                                                     if (isConnected) {
-                                                      await context
-                                                          .read<ProfileCubit>()
-                                                          .changePassword(
-                                                              controller.text
-                                                                  .trim());
-                                                      isLoading = false;
-                                                      if (context.mounted) {
-                                                        Navigator.of(context)
-                                                            .pop();
+                                                      var isSuccess =
+                                                          await context
+                                                              .read<
+                                                                  ProfileCubit>()
+                                                              .changePassword(
+                                                                  controller
+                                                                      .text
+                                                                      .trim());
+                                                      if (isSuccess) {
+                                                        if (context.mounted) {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        }
+                                                      } else {
+                                                        Toast.show(
+                                                            'Something went wrog please try again',
+                                                            duration: Toast
+                                                                .lengthLong);
                                                       }
+                                                      isLoading = false;
                                                     } else {
                                                       isLoading = false;
-                                                      ToastContext()
-                                                          .init(context);
                                                       Toast.show(
                                                           'Check you internet');
                                                       setStatee(() {});

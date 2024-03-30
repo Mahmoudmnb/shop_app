@@ -362,8 +362,8 @@ class _SeeAllProductsPageState extends State<SeeAllProductsPage> {
                                             AssetImage(product.imgUrl
                                                 .split('|')[0]
                                                 .trim()),
-                                          height: 206.h.toInt(),
-                                          width: 141.w.toInt(),
+                                            height: 206.h.toInt(),
+                                            width: 141.w.toInt(),
                                           ),
                                           fit: BoxFit.cover,
                                         ),

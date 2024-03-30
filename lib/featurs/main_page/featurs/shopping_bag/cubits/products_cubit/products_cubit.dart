@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,7 +15,12 @@ class AddToCartCubit extends Cubit<AddToCartState> {
         .get<DataSource>()
         .removeItemFromAddToCartProducts(id)
         .then((value) async {
-      products = await sl.get<DataSource>().getAddToCartProducts();
+      products = [];
+      var res = await sl.get<DataSource>().getAddToCartProducts();
+      res.fold((l) {
+        products = l;
+        return true;
+      }, (r) => false);
       emit(ProductsRemoveElement());
     });
   }
@@ -42,9 +45,14 @@ class AddToCartCubit extends Cubit<AddToCartState> {
     return total;
   }
 
-  Future<void> getAddToCartProducts() async {
-    products = await sl.get<DataSource>().getAddToCartProducts();
-    log(products.toString());
+  Future<bool> getAddToCartProducts() async {
+    products = [];
+    var res = await sl.get<DataSource>().getAddToCartProducts();
+    bool s = res.fold((l) {
+      products = l;
+      return true;
+    }, (r) => false);
+    return s;
   }
 
   bool _isProceedButtonLoading = false;

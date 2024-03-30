@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dartz/dartz.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../core/constant.dart';
@@ -8,17 +9,19 @@ import '../featurs/home/models/product_model.dart';
 import 'data_source_paths.dart';
 
 class GetDataLocalDataSource {
-  Future<List<Map<String, dynamic>>> getProductsByNames(String names) async {
+  Future<Either<List<Map<String, dynamic>>, bool>> getProductsByNames(
+      String names) async {
     Database db = await openDatabase(Constant.productDataBasePath);
     List<Map<String, dynamic>> products = [];
     names = names.replaceAll('|', ',');
     try {
       products =
           await db.rawQuery("SELECT * FROM products WHERE name IN($names)");
+      return Left(products);
     } catch (e) {
       log(e.toString());
+      return Right(false);
     }
-    return products;
   }
 
   Future<List<Map<String, dynamic>>> getNewestProducts() async {
@@ -69,9 +72,13 @@ class GetDataLocalDataSource {
     return data;
   }
 
-  Future<List<Map<String, dynamic>>> getBorderProducts() async {
+  Future<Either<List<Map<String, dynamic>>, bool>> getBorderProducts() async {
     Database db = await openDatabase(Constant.broderProductsDataBasePath);
-    return db.rawQuery('SELECT * FROM borderProducts');
+    try {
+      return Left(await db.rawQuery('SELECT * FROM borderProducts'));
+    } catch (e) {
+      return Right(false);
+    }
   }
 
   Future<List<Map<String, dynamic>>> getBorderByName(String borderName) async {
@@ -82,9 +89,13 @@ class GetDataLocalDataSource {
     return borders;
   }
 
-  Future<List<Map<String, dynamic>>> getBorders() async {
+  Future<Either<List<Map<String, dynamic>>, bool>> getBorders() async {
     Database db = await openDatabase(Constant.borderDataBasePath);
-    return db.rawQuery('SELECT * FROM borders');
+    try {
+      return Left(await db.rawQuery('SELECT * FROM borders'));
+    } catch (e) {
+      return right(false);
+    }
   }
 
   Future<List<Map<String, dynamic>>> getSearchHistory() async {
@@ -136,15 +147,16 @@ class GetDataLocalDataSource {
     return data[0];
   }
 
-  Future<List<Map<String, dynamic>>> getAddToCartProduct() async {
+  Future<Either<List<Map<String, dynamic>>, bool>> getAddToCartProduct() async {
     Database db = await openDatabase(Constant.addToCartTable);
     List<Map<String, dynamic>> products = [];
     try {
       products = await db.rawQuery('SELECT * FROM AddToCartTable');
+      return Left(products);
     } catch (e) {
       log(e.toString());
+      return Right(false);
     }
-    return products;
   }
 
   Future<List<Map<String, dynamic>>> getLocations() async {

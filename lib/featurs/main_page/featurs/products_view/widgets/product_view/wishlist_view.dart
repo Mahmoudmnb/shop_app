@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/injection.dart';
+import 'package:toast/toast.dart';
 
 import '../../../../data_source/data_source.dart';
 import '../../../home/models/product_model.dart';
@@ -24,6 +25,7 @@ class WishListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ToastContext().init(context);
     return SizedBox(
       height: 513.h,
       child: Column(
@@ -180,23 +182,30 @@ class WishListView extends StatelessWidget {
                                                 .get<DataSource>()
                                                 .addBorder(
                                                     borderNameCon.text.trim());
-                                            borders = await sl
+                                            var res = await sl
                                                 .get<DataSource>()
                                                 .getBorders();
-                                            if (context.mounted) {
-                                              context
-                                                      .read<ProductCubit>()
-                                                      .selectedBorder =
-                                                  borderNameCon.text.trim();
-                                              context
-                                                      .read<ProductCubit>()
-                                                      .selectedBorderIndex =
-                                                  borders.length - 1;
-                                              Navigator.of(context).pop();
-                                              context
-                                                  .read<ProductCubit>()
-                                                  .updateBordersList();
-                                            }
+                                            res.fold((l) {
+                                              borders = l;
+                                              if (context.mounted) {
+                                                context
+                                                        .read<ProductCubit>()
+                                                        .selectedBorder =
+                                                    borderNameCon.text.trim();
+                                                context
+                                                        .read<ProductCubit>()
+                                                        .selectedBorderIndex =
+                                                    borders.length - 1;
+                                                Navigator.of(context).pop();
+                                                context
+                                                    .read<ProductCubit>()
+                                                    .updateBordersList();
+                                              }
+                                            }, (r) {
+                                              Toast.show(
+                                                  'Something went wrong please try again',
+                                                  duration: Toast.lengthLong);
+                                            });
                                           }
                                         },
                                         validator: (value) {
@@ -271,7 +280,13 @@ class WishListView extends StatelessWidget {
                               builder: (_, snapshoot) {
                                 List<Map<String, dynamic>> data = [];
                                 if (snapshoot.hasData) {
-                                  data = snapshoot.data!;
+                                  snapshoot.data!.fold((l) {
+                                    data = l;
+                                  }, (r) {
+                                    Toast.show(
+                                        'Something went wrong please try again',
+                                        duration: Toast.lengthLong);
+                                  });
                                 } else {
                                   data = borders;
                                 }
@@ -298,23 +313,33 @@ class WishListView extends StatelessWidget {
                                                           snapshoot
                                                               .data!.length,
                                                       onTap: () async {
-                                                        var newBorders = await sl
+                                                        var res = await sl
                                                             .get<DataSource>()
                                                             .getBorders();
-                                                        if (context.mounted) {
-                                                          context
-                                                              .read<
-                                                                  ProductCubit>()
-                                                              .selectedBorderIndex = index;
-                                                          context
-                                                              .read<
-                                                                  ProductCubit>()
-                                                              .changeSelectedBorderName(
-                                                                  newBorders[
-                                                                          index]
-                                                                      [
-                                                                      'borderName']);
-                                                        }
+                                                        res.fold((l) {
+                                                          var newBorders = l;
+                                                          if (context.mounted) {
+                                                            context
+                                                                .read<
+                                                                    ProductCubit>()
+                                                                .selectedBorderIndex = index;
+                                                            context
+                                                                .read<
+                                                                    ProductCubit>()
+                                                                .changeSelectedBorderName(
+                                                                    newBorders[
+                                                                            index]
+                                                                        [
+                                                                        'borderName']);
+                                                          }
+                                                        }, (r) {
+                                                          ToastContext()
+                                                              .init(context);
+                                                          Toast.show(
+                                                              'Something went wrong please try again',
+                                                              duration: Toast
+                                                                  .lengthLong);
+                                                        });
                                                       },
                                                       border: data[index],
                                                       product: product,

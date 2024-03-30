@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -87,6 +89,7 @@ class WishListScreen extends StatelessWidget {
                                     itemCount: borders.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
+                                      log(borders.toString());
                                       return index == 0
                                           ? SizedBox(height: 15.h)
                                           : FutureBuilder(
@@ -95,6 +98,8 @@ class WishListScreen extends StatelessWidget {
                                                   .getProductsInBorder(
                                                       borders[index]['id']),
                                               builder: (context, snapshot) {
+                                                log('message');
+                                                log(snapshot.data.toString());
                                                 return snapshot.hasData
                                                     ? Dismissible(
                                                         key: ValueKey<int>(
