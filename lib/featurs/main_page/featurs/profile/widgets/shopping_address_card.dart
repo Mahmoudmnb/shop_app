@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/featurs/main_page/featurs/check_out/cubit/check_out_cubit.dart';
 
 import '../../../../../injection.dart';
 import '../../check_out/models/address_model.dart';
@@ -78,6 +79,7 @@ class ShoppingAddressCard extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (_) => AddNewAddress(
+                              checkOutCubit: context.read<CheckOutCubit>(),
                               type: 'Edit',
                               data: addressModel.toMap(),
                               fromPage: 'Profile')));

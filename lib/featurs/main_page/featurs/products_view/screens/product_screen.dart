@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/main_page/data_source/data_source.dart';
-import 'package:shop_app/featurs/main_page/main_page.dart';
-import 'package:shop_app/injection.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:toast/toast.dart';
 
+import '../../../../../injection.dart';
+import '../../../data_source/data_source.dart';
+import '../../../main_page.dart';
 import '../../home/models/product_model.dart';
 import '../../home/pages/home_pages.dart';
 import '../../search/cubit/sreach_cubit.dart';

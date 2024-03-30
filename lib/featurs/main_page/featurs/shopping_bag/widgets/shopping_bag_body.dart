@@ -9,7 +9,8 @@ import 'info_card.dart';
 import 'product_item.dart';
 
 class ShoppingBagBody extends StatelessWidget {
-  const ShoppingBagBody({super.key});
+  final AddToCartCubit addToCartCubit;
+  const ShoppingBagBody({super.key, required this.addToCartCubit});
 
   @override
   Widget build(BuildContext context) {
@@ -106,8 +107,7 @@ class ShoppingBagBody extends StatelessWidget {
                       return BlocBuilder<ItemProductCubit, ItemProductState>(
                         builder: (context, state) {
                           return InfoCard(
-                              productPrice:
-                                  context.read<AddToCartCubit>().totalPrice(),
+                              productPrice: addToCartCubit.totalPrice(),
                               shipping: 10);
                         },
                       );

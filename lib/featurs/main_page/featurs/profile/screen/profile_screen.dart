@@ -22,19 +22,26 @@ import 'profile_order_screen.dart';
 import 'shopping_address.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final ProfileCubit profileCubit;
+  const ProfileScreen({super.key, required this.profileCubit});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late ProfileCubit profileCubit;
+  @override
+  void initState() {
+    profileCubit = widget.profileCubit;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     ToastContext().init(context);
     if (Constant.currentUser != null) {
-      context.read<ProfileCubit>().profileImagePath =
-          Constant.currentUser!.imgUrl;
+      profileCubit.profileImagePath = Constant.currentUser!.imgUrl;
     }
     return Scaffold(
         backgroundColor: Colors.white,
@@ -82,10 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   decoration: BoxDecoration(
                                       color: Colors.black,
                                       borderRadius: BorderRadius.circular(12)),
-                                  child: context
-                                              .read<ProfileCubit>()
-                                              .profileImagePath ==
-                                          null
+                                  child: profileCubit.profileImagePath == null
                                       ? SizedBox(
                                           height: 100.h,
                                           width: 100.h,
@@ -108,8 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               image: ResizeImage(
                                                   height: 100.h.toInt(),
                                                   width: 100.h.toInt(),
-                                                  FileImage(File(context
-                                                      .read<ProfileCubit>()
+                                                  FileImage(File(profileCubit
                                                       .profileImagePath!)))),
                                         ),
                                 ),
@@ -139,14 +142,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   () {
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PersonalDetails(),
-                                    ))
-                                        .then((value) {
-                                      // context
-                                      //     .read<MainPageCubit>()
-                                      //     .updateProfilePageData();
-                                    });
+                                      builder: (context) => PersonalDetails(
+                                          profileCubit: profileCubit),
+                                    ));
                                   },
                                 ),
                                 buildListTile(
@@ -173,10 +171,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   "assets/images/card.png",
                                   "My Cart",
                                   () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (_) =>
-                                                const ShoppingBagScreen()));
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (_) => ShoppingBagScreen(
+                                                  addToCartCubit: context
+                                                      .read<AddToCartCubit>(),
+                                                )));
                                   },
                                 ),
                                 buildListTile(
@@ -208,9 +208,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ));
                                       }
                                     }, (r) {
-                                      Toast.show(
-                                          'Something went wrong please try again',
-                                          duration: Toast.lengthLong);
+                                      if (context.mounted) {
+                                        Toast.show(
+                                            'Something went wrong please try again',
+                                            duration: Toast.lengthLong);
+                                      }
                                     });
                                   },
                                 ),
@@ -225,9 +227,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             .opinionController =
                                         TextEditingController();
                                     context.read<OrdersCubit>().character = 50;
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (_) => const RatePage()));
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (_) => RatePage(
+                                                  ordersCubit: context
+                                                      .read<OrdersCubit>(),
+                                                )));
                                   },
                                 ),
                               ]),
@@ -238,12 +243,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(10),
                                 onTap: () async {
-                                  if (!context
-                                      .read<ProfileCubit>()
-                                      .isLogOutLoading) {
-                                    context
-                                        .read<ProfileCubit>()
-                                        .setIsLogOutLoading(true);
+                                  if (!profileCubit.isLogOutLoading) {
+                                    profileCubit.setIsLogOutLoading(true);
                                     InternetInfo.isconnected()
                                         .then((value) async {
                                       XFile? image;
@@ -256,13 +257,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         } else {
                                           image = null;
                                         }
-                                        var isSuccess = await context
-                                            .read<ProfileCubit>()
-                                            .logOut(image);
+                                        var isSuccess =
+                                            await profileCubit.logOut(image);
                                         if (isSuccess) {
                                           if (context.mounted) {
-                                            context
-                                                .read<ProfileCubit>()
+                                            profileCubit
                                                 .setIsLogOutLoading(false);
                                             Constant.currentUser = null;
                                             context
@@ -270,20 +269,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 .fetchData();
                                           }
                                         } else {
-                                          context
-                                              .read<ProfileCubit>()
+                                          profileCubit
                                               .setIsLogOutLoading(false);
-                                          Toast.show(
-                                              'Something went wrong please try again',
-                                              duration: Toast.lengthLong);
+                                          if (context.mounted) {
+                                            Toast.show(
+                                                'Something went wrong please try again',
+                                                duration: Toast.lengthLong);
+                                          }
                                         }
                                       } else {
-                                        context
-                                            .read<ProfileCubit>()
-                                            .setIsLogOutLoading(false);
-                                        Toast.show(
-                                            'Check your internet connection',
-                                            duration: Toast.lengthLong);
+                                        profileCubit.setIsLogOutLoading(false);
+                                        if (context.mounted) {
+                                          Toast.show(
+                                              'Check your internet connection',
+                                              duration: Toast.lengthLong);
+                                        }
                                       }
                                     });
                                   }
@@ -298,9 +298,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   child:
                                       BlocBuilder<ProfileCubit, ProfileState>(
                                     builder: (context, state) {
-                                      return context
-                                              .read<ProfileCubit>()
-                                              .isLogOutLoading
+                                      return profileCubit.isLogOutLoading
                                           ? const Center(
                                               child: CircularProgressIndicator(
                                                 color: Colors.white,

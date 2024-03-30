@@ -16,7 +16,8 @@ import '../../../data_source/data_source.dart';
 import '../cubit/profile_cubit.dart';
 
 class PersonalDetails extends StatefulWidget {
-  const PersonalDetails({super.key});
+  final ProfileCubit profileCubit;
+  const PersonalDetails({super.key, required this.profileCubit});
 
   @override
   State<PersonalDetails> createState() => _PersonalDetailsState();
@@ -26,12 +27,15 @@ class _PersonalDetailsState extends State<PersonalDetails> {
   TextEditingController fullNameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  late GlobalKey<FormState> formKey;
+
   String? imgUrl;
   @override
   void initState() {
     fullNameController.text = Constant.currentUser!.name;
     phoneNumberController.text = Constant.currentUser!.phoneNumber ?? '';
     emailController.text = Constant.currentUser!.email;
+    formKey = GlobalKey<FormState>();
     super.initState();
   }
 
@@ -46,6 +50,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
   @override
   Widget build(BuildContext context) {
     ToastContext().init(context);
+    context.read<ProfileCubit>().changeIsSaveButtonLoading(false);
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -165,7 +170,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               ],
             ),
             SizedBox(height: 80.h),
-            const Row(
+            Row(
               children: [
                 Expanded(
                     child: Text(
@@ -175,64 +180,86 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 )),
               ],
             ),
-            SizedBox(
-                width: 393.w,
-                height: 50.h,
-                child: TextField(
-                  maxLength: 50,
-                  cursorColor: Colors.black,
-                  onTapOutside: (value) {
-                    FocusScope.of(context).unfocus();
-                  },
-                  controller: fullNameController,
-                )),
-            SizedBox(height: 24.h),
-            const SizedBox(
-              width: double.infinity,
-              child: Text(
-                "Email",
-                textAlign: TextAlign.start,
-                style:
-                    TextStyle(color: Color(0xFFA5A5A5), fontFamily: 'DM Sans'),
+            Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  SizedBox(
+                      width: 393.w,
+                      height: 50.h,
+                      child: TextFormField(
+                        validator: (value) {
+                          if (value != null && value.length <= 3) {
+                            return 'Full name should be more than three litters';
+                          }
+                          return null;
+                        },
+                        maxLength: 50,
+                        cursorColor: Colors.black,
+                        onTapOutside: (value) {
+                          FocusScope.of(context).unfocus();
+                        },
+                        controller: fullNameController,
+                      )),
+                  SizedBox(height: 24.h),
+                  const SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      "Email",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          color: Color(0xFFA5A5A5), fontFamily: 'DM Sans'),
+                    ),
+                  ),
+                  TextField(
+                    readOnly: true,
+                    maxLength: 50,
+                    cursorColor: Colors.black,
+                    onTapOutside: (value) {
+                      FocusScope.of(context).unfocus();
+                    },
+                    controller: emailController,
+                  ),
+                  SizedBox(height: 25.h),
+                  const Row(
+                    children: [
+                      Expanded(
+                          child: Text(
+                        "Phone Number",
+                        style: TextStyle(
+                            color: Color(0xFFA5A5A5), fontFamily: 'DM Sans'),
+                      )),
+                    ],
+                  ),
+                  SizedBox(
+                      height: 70.h,
+                      width: 393.w,
+                      child: TextFormField(
+                        validator: (value) {
+                          log(value.toString());
+                          if (value != null &&
+                              value != '' &&
+                              (value.length <= 9 || !value.startsWith('+'))) {
+                            return 'invalid phone number';
+                          }
+                          return null;
+                        },
+                        maxLength: 50,
+                        cursorColor: Colors.black,
+                        onTapOutside: (value) {
+                          FocusScope.of(context).unfocus();
+                        },
+                        keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(
+                            hintStyle: const TextStyle(color: Colors.grey),
+                            hintText: phoneNumberController.text == ''
+                                ? 'No Phone number'
+                                : ''),
+                        controller: phoneNumberController,
+                      )),
+                ],
               ),
             ),
-            TextField(
-              readOnly: true,
-              maxLength: 50,
-              cursorColor: Colors.black,
-              onTapOutside: (value) {
-                FocusScope.of(context).unfocus();
-              },
-              controller: emailController,
-            ),
-            SizedBox(height: 25.h),
-            const Row(
-              children: [
-                Expanded(
-                    child: Text(
-                  "Phone Number",
-                  style: TextStyle(
-                      color: Color(0xFFA5A5A5), fontFamily: 'DM Sans'),
-                )),
-              ],
-            ),
-            SizedBox(
-                height: 70.h,
-                width: 393.w,
-                child: TextField(
-                  maxLength: 50,
-                  cursorColor: Colors.black,
-                  onTapOutside: (value) {
-                    FocusScope.of(context).unfocus();
-                  },
-                  keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(
-                      hintStyle: const TextStyle(color: Colors.grey),
-                      hintText: phoneNumberController.text == ''
-                          ? 'No Phone number'
-                          : ''),
-                  controller: phoneNumberController,
-                )),
             Row(children: [
               const Spacer(),
               TextButton(
@@ -373,44 +400,47 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                     style: TextStyle(fontSize: 18, color: Colors.black),
                   ))
             ]),
-            SizedBox(height: 80.h),
+            SizedBox(height: 70.h),
             InkWell(
               borderRadius: BorderRadius.circular(10),
               onTap: () async {
-                ToastContext().init(context);
-                context.read<ProfileCubit>().changeIsSaveButtonLoading(true);
-                bool isConnected = await InternetInfo.isconnected();
-                if (isConnected) {
-                  UserModel user = UserModel(
-                      cloudImgUrl: Constant.currentUser!.cloudImgUrl,
-                      phoneNumber: phoneNumberController.text != ''
-                          ? phoneNumberController.text.trim()
-                          : null,
-                      imgUrl: imgUrl,
-                      email: emailController.text.trim(),
-                      name: fullNameController.text.trim(),
-                      password: Constant.currentUser!.password);
-                  bool isSuccess =
-                      await sl.get<DataSource>().updatePersonalData(user);
-                  if (isSuccess) {
-                    Constant.currentUser = user;
-                    await sl
-                        .get<SharedPreferences>()
-                        .setString('currentUser', user.toJson());
-                    context
-                        .read<ProfileCubit>()
-                        .changeIsSaveButtonLoading(false);
-                    if (context.mounted) {
-                      Navigator.pop(context);
+                if (formKey.currentState!.validate()) {
+                  widget.profileCubit.changeIsSaveButtonLoading(true);
+                  bool isConnected = await InternetInfo.isconnected();
+                  if (isConnected) {
+                    UserModel user = UserModel(
+                        cloudImgUrl: Constant.currentUser!.cloudImgUrl,
+                        phoneNumber: phoneNumberController.text != ''
+                            ? phoneNumberController.text.trim()
+                            : null,
+                        imgUrl: imgUrl,
+                        email: emailController.text.trim(),
+                        name: fullNameController.text.trim(),
+                        password: Constant.currentUser!.password);
+                    bool isSuccess =
+                        await sl.get<DataSource>().updatePersonalData(user);
+                    if (isSuccess) {
+                      Constant.currentUser = user;
+                      await sl
+                          .get<SharedPreferences>()
+                          .setString('currentUser', user.toJson());
+                      widget.profileCubit.changeIsSaveButtonLoading(false);
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
+                    } else {
+                      if (context.mounted) {
+                        Toast.show('Something went wrong please try again',
+                            duration: Toast.lengthLong);
+                      }
                     }
                   } else {
-                    Toast.show('Something went wrong please try again',
-                        duration: Toast.lengthLong);
+                    widget.profileCubit.changeIsSaveButtonLoading(false);
+                    if (context.mounted) {
+                      Toast.show('Check your internet connection',
+                          duration: Toast.lengthLong);
+                    }
                   }
-                } else {
-                  context.read<ProfileCubit>().changeIsSaveButtonLoading(false);
-                  Toast.show('Check your internet connection',
-                      duration: Toast.lengthLong);
                 }
               },
               child: Ink(

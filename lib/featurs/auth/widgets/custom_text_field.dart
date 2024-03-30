@@ -41,6 +41,7 @@ class CustomTextField extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         maxLength: 50,
+                        maxLines: 1,
                         onTapOutside: (event) {
                           FocusScope.of(context).unfocus();
                         },
@@ -183,8 +184,8 @@ class CustomTextField extends StatelessWidget {
       value = newValue.trim();
     }
     if (hintText == 'Enter your name' && isSignUp) {
-      if (value == null || value.isEmpty || value.length <= 6) {
-        return 'Name shold be more than six chrachters';
+      if (value == null || value.isEmpty || value.length <= 3) {
+        return 'Name shold be more than three chrachters';
       }
     } else if (hintText == 'Email address') {
       if (value == null || !value.contains('@') || !value.endsWith('.com')) {

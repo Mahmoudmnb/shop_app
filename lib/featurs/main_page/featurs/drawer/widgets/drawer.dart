@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/featurs/main_page/featurs/profile/cubit/profile_cubit.dart';
 import 'package:toast/toast.dart';
 
 import '../../../../../core/constant.dart';
@@ -11,6 +12,7 @@ import '../../../../../injection.dart';
 import '../../../cubit/main_page_cubit.dart';
 import '../../../data_source/data_source.dart';
 import '../../setting.dart';
+import '../../shopping_bag/cubits/products_cubit/products_cubit.dart';
 import '../../shopping_bag/screens/shopping_bag_screen.dart';
 import '../../wishlist/screens/wishlist_screen.dart';
 import '../cubit/drawer_cubit.dart';
@@ -21,8 +23,14 @@ import 'profile.dart';
 class HomeDrawer extends StatelessWidget {
   final TabController tabController;
   final PageController pageController;
+  final ProfileCubit profileCubit;
+  final DrawerCubit drawerCubit;
   const HomeDrawer(
-      {super.key, required this.tabController, required this.pageController});
+      {super.key,
+      required this.tabController,
+      required this.pageController,
+      required this.drawerCubit,
+      required this.profileCubit});
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +144,8 @@ class HomeDrawer extends StatelessWidget {
                     Scaffold.of(context).closeDrawer();
                     if (Constant.currentUser != null) {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => const ShoppingBagScreen()));
+                          builder: (_) => ShoppingBagScreen(
+                              addToCartCubit: context.read<AddToCartCubit>())));
                     } else {
                       context
                           .read<MainPageCubit>()
@@ -197,7 +206,10 @@ class HomeDrawer extends StatelessWidget {
                         height: Constant.currentUser == null ? 80.h : 10.h);
                   },
                 ),
-                const CustomButton(),
+                CustomButton(
+                  profileCubit: profileCubit,
+                  drawerCubit: drawerCubit,
+                ),
               ],
             ),
           ),

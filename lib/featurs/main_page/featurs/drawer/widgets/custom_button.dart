@@ -11,7 +11,10 @@ import '../../profile/cubit/profile_cubit.dart';
 import '../cubit/drawer_cubit.dart';
 
 class CustomButton extends StatelessWidget {
-  const CustomButton({super.key});
+  final ProfileCubit profileCubit;
+  final DrawerCubit drawerCubit;
+  const CustomButton(
+      {super.key, required this.profileCubit, required this.drawerCubit});
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +33,8 @@ class CustomButton extends StatelessWidget {
         ),
         onPressed: () async {
           if (Constant.currentUser != null) {
-            if (!context.read<ProfileCubit>().isLogOutLoading) {
-              context.read<ProfileCubit>().setIsLogOutLoading(true);
+            if (!profileCubit.isLogOutLoading) {
+              profileCubit.setIsLogOutLoading(true);
               bool isConnected = await InternetInfo.isconnected();
               if (isConnected) {
                 XFile? image;
@@ -40,20 +43,24 @@ class CustomButton extends StatelessWidget {
                 } else {
                   image = null;
                 }
-                if (!await context.read<ProfileCubit>().logOut(image)) {
-                  Toast.show('Something went wrong please try again',
-                      duration: Toast.lengthLong);
+                if (!await profileCubit.logOut(image)) {
+                  if (context.mounted) {
+                    Toast.show('Something went wrong please try again',
+                        duration: Toast.lengthLong);
+                  }
                 } else {
                   if (context.mounted) {
-                    context.read<ProfileCubit>().setIsLogOutLoading(false);
+                    profileCubit.setIsLogOutLoading(false);
                     Constant.currentUser = null;
-                    context.read<DrawerCubit>().refreshDrawer();
+                    drawerCubit.refreshDrawer();
                   }
                 }
               } else {
-                context.read<ProfileCubit>().setIsLogOutLoading(false);
-                Toast.show('Check your internet connection',
-                    duration: Toast.lengthLong);
+                profileCubit.setIsLogOutLoading(false);
+                if (context.mounted) {
+                  Toast.show('Check your internet connection',
+                      duration: Toast.lengthLong);
+                }
               }
             }
           } else {
@@ -66,7 +73,7 @@ class CustomButton extends StatelessWidget {
         },
         child: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
-            return context.read<ProfileCubit>().isLogOutLoading
+            return profileCubit.isLogOutLoading
                 ? SizedBox(
                     height: 30.h,
                     child: const CircularProgressIndicator(

@@ -13,7 +13,6 @@ Future<void> init() async {
       () => GetDataLocalDataSource());
   sl.registerLazySingleton<InsertDataLocalDataSource>(
       () => InsertDataLocalDataSource());
-
   sl.registerLazySingleton<DataSource>(() => DataSource(
         updateDeleteLocalDataSource: sl.get<UpdateDeleteLocalDataSource>(),
         insertDataLocalDataSource: sl.get<InsertDataLocalDataSource>(),

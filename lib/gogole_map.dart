@@ -149,6 +149,8 @@ class GoogleMapScreenState extends State<GoogleMapScreen> {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   AddNewAddress(
+                                                    checkOutCubit: context
+                                                        .read<CheckOutCubit>(),
                                                     type: 'Add',
                                                     data: data,
                                                     fromPage: widget.fromPage,

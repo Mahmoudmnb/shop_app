@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/core/constant.dart';
+import 'package:shop_app/featurs/main_page/featurs/profile/cubit/profile_cubit.dart';
 import 'package:toast/toast.dart';
 
 import '../../injection.dart';
@@ -101,11 +102,12 @@ class _MainPageState extends State<MainPage>
             if (Constant.currentUser != null) {
               var cartProducts =
                   await sl.get<DataSource>().getAddToCartProducts();
-
               cartProducts.fold((l) {
                 context.read<AddToCartCubit>().products = l;
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const ShoppingBagScreen(),
+                  builder: (context) => ShoppingBagScreen(
+                    addToCartCubit: context.read<AddToCartCubit>(),
+                  ),
                 ));
               }, (r) {
                 Toast.show('Something went wrong please try again',
@@ -208,6 +210,8 @@ class _MainPageState extends State<MainPage>
             child: HomeDrawer(
               tabController: tabController,
               pageController: pageController,
+              drawerCubit: context.read<DrawerCubit>(),
+              profileCubit: context.read<ProfileCubit>(),
             )),
       ),
       body: WillPopScope(
@@ -232,6 +236,7 @@ class _MainPageState extends State<MainPage>
                 ],
               ),
             );
+            log(key.toString());
             return key;
           } else {
             tabController.animateTo(0);
@@ -261,7 +266,9 @@ class _MainPageState extends State<MainPage>
                 }),
             const SearchScreen(),
             const MyOrdersScreen(),
-            const ProfileScreen(),
+            ProfileScreen(
+              profileCubit: context.read<ProfileCubit>(),
+            ),
           ],
         ),
       ),

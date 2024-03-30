@@ -14,7 +14,8 @@ import '../widgets/build_back_arrow.dart';
 
 class RatePage extends StatelessWidget {
   final int? productId;
-  const RatePage({super.key, this.productId});
+  final OrdersCubit ordersCubit;
+  const RatePage({super.key, this.productId, required this.ordersCubit});
   @override
   Widget build(BuildContext context) {
     ToastContext().init(context);
@@ -73,9 +74,9 @@ class RatePage extends StatelessWidget {
                     builder: (context, state) {
                       return SmoothStarRating(
                         color: Colors.yellow,
-                        rating: context.watch<OrdersCubit>().rating,
+                        rating: ordersCubit.rating,
                         onRatingChanged: (value) {
-                          context.read<OrdersCubit>().changeRating(value);
+                          ordersCubit.changeRating(value);
                         },
                       );
                     },
@@ -105,10 +106,9 @@ class RatePage extends StatelessWidget {
                             FocusScope.of(context).unfocus();
                           },
                           onChanged: (value) {
-                            context.read<OrdersCubit>().numofcharcters();
+                            ordersCubit.numofcharcters();
                           },
-                          controller:
-                              context.watch<OrdersCubit>().opinionController,
+                          controller: ordersCubit.opinionController,
                           maxLines: 5,
                           decoration: InputDecoration(
                               counter: Container(),
@@ -125,7 +125,7 @@ class RatePage extends StatelessWidget {
                           padding: EdgeInsets.only(right: 10.w),
                           width: double.infinity,
                           child: Text(
-                            '${context.watch<OrdersCubit>().character} characters',
+                            '${ordersCubit.character} characters',
                             textAlign: TextAlign.end,
                             style: const TextStyle(color: Color(0xFF919191)),
                           ),
@@ -166,30 +166,24 @@ class RatePage extends StatelessWidget {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(10),
                   onTap: () async {
-                    if (!context.read<OrdersCubit>().isLoading) {
-                      if (context
-                              .read<OrdersCubit>()
-                              .opinionController
-                              .text
-                              .trim() ==
-                          '') {
-                        Toast.show(
-                            'sorry, but you have to write you opnion before send back',
-                            duration: Toast.lengthLong);
+                    if (!ordersCubit.isLoading) {
+                      if (ordersCubit.opinionController.text.trim() == '') {
+                        if (context.mounted) {
+                          Toast.show(
+                              'sorry, but you have to write you opnion before send back',
+                              duration: Toast.lengthLong);
+                        }
                       } else {
                         bool isSuccess = false;
-                        context.read<OrdersCubit>().changeIsLoading(true);
+                        ordersCubit.changeIsLoading(true);
                         InternetInfo.isconnected().then((value) async {
                           if (value) {
                             if (productId != null) {
                               ReviewModel reiviewModel = ReviewModel(
                                   email: Constant.currentUser!.email,
-                                  description: context
-                                      .read<OrdersCubit>()
-                                      .opinionController
-                                      .text
-                                      .trim(),
-                                  stars: context.read<OrdersCubit>().rating,
+                                  description:
+                                      ordersCubit.opinionController.text.trim(),
+                                  stars: ordersCubit.rating,
                                   date: DateTime.now()
                                       .millisecondsSinceEpoch
                                       .toString(),
@@ -204,33 +198,29 @@ class RatePage extends StatelessWidget {
                                     .get<DataSource>()
                                     .addReiviewToProduct(reiviewModel);
                               } else {
-                                Toast.show(
-                                    'Something went wrong please try again',
-                                    duration: Toast.lengthLong);
+                                if (context.mounted) {
+                                  Toast.show(
+                                      'Something went wrong please try again',
+                                      duration: Toast.lengthLong);
+                                }
                               }
                               if (context.mounted) {
-                                context
-                                    .read<OrdersCubit>()
-                                    .changeIsLoading(false);
+                                ordersCubit.changeIsLoading(false);
                               }
                             } else {
                               isSuccess = await sl.get<DataSource>().rateApp(
-                                    context
-                                        .read<OrdersCubit>()
-                                        .opinionController
-                                        .text
-                                        .trim(),
-                                    context.read<OrdersCubit>().rating,
+                                    ordersCubit.opinionController.text.trim(),
+                                    ordersCubit.rating,
                                   );
                               if (context.mounted) {
-                                context
-                                    .read<OrdersCubit>()
-                                    .changeIsLoading(false);
+                                ordersCubit.changeIsLoading(false);
                               }
                               if (!isSuccess) {
-                                Toast.show(
-                                    'Something went wrong please try again',
-                                    duration: Toast.lengthLong);
+                                if (context.mounted) {
+                                  Toast.show(
+                                      'Something went wrong please try again',
+                                      duration: Toast.lengthLong);
+                                }
                               }
                             }
                             if (context.mounted) {
@@ -239,8 +229,11 @@ class RatePage extends StatelessWidget {
                               }
                             }
                           } else {
-                            context.read<OrdersCubit>().changeIsLoading(false);
-                            Toast.show('check your internet');
+                            ordersCubit.changeIsLoading(false);
+                            if (context.mounted) {
+                              Toast.show('check your internet connection',
+                                  duration: Toast.lengthLong);
+                            }
                           }
                         });
                       }
@@ -254,7 +247,7 @@ class RatePage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10)),
                     child: BlocBuilder<OrdersCubit, OrdersState>(
                       builder: (context, state) {
-                        return context.read<OrdersCubit>().isLoading
+                        return ordersCubit.isLoading
                             ? const Center(
                                 child: CircularProgressIndicator(
                                 color: Colors.white,
