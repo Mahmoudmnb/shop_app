@@ -166,6 +166,8 @@ class _AuthFormState extends State<AuthForm> {
       //! this was for make sure no one had loged in before in other device
       // if (!data.documents[0].data['loged_in']) {
       if (true) {
+        String fileName = Uuid().v1.toString();
+
         String name = data.documents[0].data['name'];
         if (data.documents[0].data['imgUrl'] != null) {
           Uint8List profileImage = Uint8List(0);
@@ -179,7 +181,7 @@ class _AuthFormState extends State<AuthForm> {
           if (!s) {
             return false;
           }
-          await File('${Constant.baseUrl}profileImage.jpg')
+          await File('${Constant.baseUrl + fileName}.jpg')
               .writeAsBytes(profileImage);
         }
         Constant.currentUser = UserModel(
@@ -190,7 +192,7 @@ class _AuthFormState extends State<AuthForm> {
             cloudImgUrl: data.documents[0].data['imgUrl'],
             imgUrl: data.documents[0].data['imgUrl'] == null
                 ? null
-                : '${Constant.baseUrl}profileImage.jpg');
+                : '${Constant.baseUrl + fileName}.jpg');
         sl
             .get<SharedPreferences>()
             .setString('currentUser', Constant.currentUser!.toJson());

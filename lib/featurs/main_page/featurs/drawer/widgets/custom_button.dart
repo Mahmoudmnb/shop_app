@@ -39,7 +39,7 @@ class CustomButton extends StatelessWidget {
               if (isConnected) {
                 XFile? image;
                 if (Constant.currentUser!.imgUrl != null) {
-                  image == XFile('${Constant.baseUrl}profileImage.jpg');
+                  image == XFile(Constant.currentUser!.imgUrl!);
                 } else {
                   image = null;
                 }

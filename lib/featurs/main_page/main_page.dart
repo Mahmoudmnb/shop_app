@@ -23,7 +23,10 @@ import 'featurs/shopping_bag/screens/shopping_bag_screen.dart';
 import 'featurs/wishlist/screens/wishlist_screen.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  final PageController? pageController;
+  final TabController? tabController;
+
+  const MainPage({super.key, this.pageController, this.tabController});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -62,8 +65,9 @@ class _MainPageState extends State<MainPage>
       }, (r) {});
       setState(() {});
     });
-    tabController = TabController(length: 4, vsync: this);
-    pageController = PageController();
+    tabController =
+        widget.tabController ?? TabController(length: 4, vsync: this);
+    pageController = widget.pageController ?? PageController();
     super.initState();
   }
 
@@ -267,6 +271,8 @@ class _MainPageState extends State<MainPage>
             const SearchScreen(),
             const MyOrdersScreen(),
             ProfileScreen(
+              pageController: pageController,
+              tabController: tabController,
               profileCubit: context.read<ProfileCubit>(),
             ),
           ],

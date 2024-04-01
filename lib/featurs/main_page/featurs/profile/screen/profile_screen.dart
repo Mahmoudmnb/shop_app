@@ -23,7 +23,13 @@ import 'shopping_address.dart';
 
 class ProfileScreen extends StatefulWidget {
   final ProfileCubit profileCubit;
-  const ProfileScreen({super.key, required this.profileCubit});
+  final PageController pageController;
+  final TabController tabController;
+  const ProfileScreen(
+      {super.key,
+      required this.profileCubit,
+      required this.pageController,
+      required this.tabController});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -112,8 +118,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               image: ResizeImage(
                                                   height: 100.h.toInt(),
                                                   width: 100.h.toInt(),
-                                                  FileImage(File(profileCubit
-                                                      .profileImagePath!)))),
+                                                  FileImage(File(Constant
+                                                      .currentUser!.imgUrl!)))),
                                         ),
                                 ),
                                 SizedBox(height: 8.h),
@@ -139,10 +145,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   context,
                                   "assets/images/proficon.png",
                                   "Personal Details",
-                                  () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
+                                  () async {
+                                    await Navigator.of(context)
+                                        .pushReplacement(MaterialPageRoute(
                                       builder: (context) => PersonalDetails(
+                                          tabController: widget.tabController,
+                                          pageController: widget.pageController,
                                           profileCubit: profileCubit),
                                     ));
                                   },
@@ -249,11 +257,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         .then((value) async {
                                       XFile? image;
                                       if (value) {
-                                        if (File(
-                                                '${Constant.baseUrl}profileImage.jpg')
+                                        if (File(Constant.currentUser!.imgUrl!)
                                             .existsSync()) {
                                           image = XFile(
-                                              '${Constant.baseUrl}profileImage.jpg');
+                                              Constant.currentUser!.imgUrl!);
                                         } else {
                                           image = null;
                                         }

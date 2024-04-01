@@ -100,7 +100,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       if (!await sl.get<DataSource>().uploadImage(image)) {
         return false;
       }
-      await File('${Constant.baseUrl}profileImage.jpg').delete();
+      await File(Constant.currentUser!.imgUrl!).delete();
     }
     var isSuccess =
         await sl.get<DataSource>().uploadProfileSettings(proBor, cartPro, bor);
