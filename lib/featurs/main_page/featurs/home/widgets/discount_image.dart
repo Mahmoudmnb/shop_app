@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -18,6 +20,7 @@ class DisCountImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log(imageUrl.split('|')[0].toString());
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -30,9 +33,12 @@ class DisCountImage extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
                   fit: BoxFit.fill,
-                  image: ResizeImage(width: 100.w.toInt(),AssetImage(
-                    imageUrl.split('|')[0],
-                  )))),
+                  image: ResizeImage(
+                    width: 100.w.toInt(),
+                    AssetImage(
+                      imageUrl.split('|')[0],
+                    ),
+                  ))),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

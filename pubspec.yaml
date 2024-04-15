@@ -30,6 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cached_network_image:
+  network_image:
+  http:
   dartz:
   animated_text_kit:
   animations:
@@ -57,7 +60,6 @@ dependencies:
   uuid: ^4.2.1
   star_rating:
   smooth_star_rating_null_safety: ^1.0.4+2
-
   image_picker: ^1.0.5
   better_open_file:
 

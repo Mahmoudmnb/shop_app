@@ -188,8 +188,7 @@ class HomePage extends StatelessWidget {
                 child: TrendyImage(
                   makerCompany: trindyProducts[index]['makerCompany'],
                   imageUrl: trindyProducts[index]['imgUrl'].split('|')[0],
-                  price: (trindyProducts[index]['price'] as int)
-                      .toStringAsFixed(1),
+                  price: (trindyProducts[index]['price']).toStringAsFixed(1),
                   productName: trindyProducts[index]['name'],
                 ),
               ),
@@ -232,7 +231,6 @@ class HomePage extends StatelessWidget {
                                 context
                                     .read<ProductCubit>()
                                     .getReviws(product.id);
-
                                 Navigator.of(context).push(MaterialPageRoute(
                                   builder: (_) => ProductScreen(
                                     searchCubit:
