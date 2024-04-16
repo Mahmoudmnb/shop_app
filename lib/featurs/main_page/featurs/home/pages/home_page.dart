@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,7 +11,6 @@ import '../blocs/discount/discount_products_bloc.dart';
 import '../models/product_model.dart';
 import '../widgets/collections_spacer.dart';
 import '../widgets/discount_image.dart';
-import '../widgets/recommended_image.dart';
 import '../widgets/trendy_image.dart';
 import 'home_pages.dart';
 
