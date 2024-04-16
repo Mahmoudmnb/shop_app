@@ -4,7 +4,6 @@ import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:http/http.dart' as http;
 import 'package:shop_app/core/constant.dart';
 import 'package:toast/toast.dart';
 
@@ -21,6 +20,7 @@ import 'featurs/profile/screen/profile_screen.dart';
 import 'featurs/search/screen/search_screen.dart';
 import 'featurs/shopping_bag/cubits/products_cubit/products_cubit.dart';
 import 'featurs/shopping_bag/screens/shopping_bag_screen.dart';
+import 'featurs/wishlist/screens/wishlist_screen.dart';
 
 class MainPage extends StatefulWidget {
   final PageController? pageController;
@@ -167,26 +167,28 @@ class _MainPageState extends State<MainPage>
               icon: const Icon(Icons.favorite_border),
               onPressed: () async {
                 // log(DateTime.now().millisecondsSinceEpoch.toString());
-                try {
-                  await http.get(
-                      Uri.parse('http://localhost/project/rest_api.php'),
-                      headers: {'Content-Type': 'application/json'});
-                } catch (e) {
-                  log(e.toString());
-                }
+                //* this is for testing local api
+                // try {
+                //   var data = await http.get(
+                //       Uri.parse('http://10.0.2.2/project/rest_api.php?id=19'),
+                //       headers: {'Content-Type': 'application/json'});
+                //   log(data.body.toString());
+                // } catch (e) {
+                //   log(e.toString());
+                // }
 
-                // var res = await sl.get<DataSource>().getBorders();
-                // res.fold((borders) {
-                //   if (context.mounted) {
-                //     Navigator.of(context).push(MaterialPageRoute(
-                //         builder: (context) => WishListScreen(
-                //               borders: borders,
-                //             )));
-                //   }
-                // }, (r) {
-                //   Toast.show('Something went wrong please try again',
-                //       duration: Toast.lengthLong);
-                // });
+                var res = await sl.get<DataSource>().getBorders();
+                res.fold((borders) {
+                  if (context.mounted) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => WishListScreen(
+                              borders: borders,
+                            )));
+                  }
+                }, (r) {
+                  Toast.show('Something went wrong please try again',
+                      duration: Toast.lengthLong);
+                });
               }),
         )
       ],

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -212,53 +214,54 @@ class HomePage extends StatelessWidget {
               },
               collectoinTitle: 'Recommended'),
           SizedBox(height: 15.h),
-          FutureBuilder(
-              future: sl.get<DataSource>().getRecommendedProducts(),
-              builder: (context, snpashoot) {
-                return snpashoot.hasData
-                    ? SizedBox(
-                        height: 78.h,
-                        child: ListView.builder(
-                          keyboardDismissBehavior:
-                              ScrollViewKeyboardDismissBehavior.onDrag,
-                          itemCount: snpashoot.data!.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            ProductModel product =
-                                ProductModel.fromMap(snpashoot.data![index]);
-                            return GestureDetector(
-                              onTap: () {
-                                context
-                                    .read<ProductCubit>()
-                                    .getReviws(product.id);
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => ProductScreen(
-                                    searchCubit:
-                                        BlocProvider.of<SearchCubit>(context),
-                                    fromPage: 'Home',
-                                    categoryName: 'Home',
-                                    fromPageTitle: 'Home',
-                                    searchWord: '',
-                                    product: product,
-                                    cubit:
-                                        BlocProvider.of<ProductCubit>(context),
-                                  ),
-                                ));
-                              },
-                              child: RecommendedImage(
-                                companyMaker: product.makerCompany,
-                                imageUrl: product.imgUrl.split('|')[0],
-                                productPrice: '${product.price} \$',
-                                productNamge: product.name,
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                    : const SizedBox.shrink();
-              }),
-          SizedBox(height: 15.h),
-          //! new products
+          // FutureBuilder(
+          //     future: sl.get<DataSource>().getRecommendedProducts(),
+          //     builder: (context, snpashoot) {
+          //       return snpashoot.hasData
+          //           ? SizedBox(
+          //               height: 78.h,
+          //               child: ListView.builder(
+          //                 keyboardDismissBehavior:
+          //                     ScrollViewKeyboardDismissBehavior.onDrag,
+          //                 itemCount: snpashoot.data!.length,
+          //                 scrollDirection: Axis.horizontal,
+          //                 itemBuilder: (context, index) {
+          //                   ProductModel product =
+          //                       ProductModel.fromMap(snpashoot.data![index]);
+          //                   return GestureDetector(
+          //                     onTap: () {
+          //                       context
+          //                           .read<ProductCubit>()
+          //                           .getReviws(product.id);
+          //                       Navigator.of(context).push(MaterialPageRoute(
+          //                         builder: (_) => ProductScreen(
+          //                           searchCubit:
+          //                               BlocProvider.of<SearchCubit>(context),
+          //                           fromPage: 'Home',
+          //                           categoryName: 'Home',
+          //                           fromPageTitle: 'Home',
+          //                           searchWord: '',
+          //                           product: product,
+          //                           cubit:
+          //                               BlocProvider.of<ProductCubit>(context),
+          //                         ),
+          //                       ));
+          //                     },
+          //                     child: RecommendedImage(
+          //                       companyMaker: product.makerCompany,
+          //                       imageUrl: product.imgUrl.split('|')[0],
+          //                       productPrice: '${product.price} \$',
+          //                       productNamge: product.name,
+          //                     ),
+          //                   );
+          //                 },
+          //               ),
+          //             )
+          //           : const SizedBox.shrink();
+          //     }),
+
+          // SizedBox(height: 15.h),
+          // //! new products
           BlocBuilder<DiscountProductsBloc, DiscountProductsState>(
             builder: (context, state) {
               bool isFounded = false;
@@ -299,7 +302,8 @@ class HomePage extends StatelessWidget {
                   collectoinTitle: 'New');
             },
           ),
-          SizedBox(height: 15.h),
+
+          // SizedBox(height: 15.h),
           FutureBuilder(
               future: sl.get<DataSource>().getNewestProducts(),
               builder: (_, snapshoot) {
@@ -358,8 +362,13 @@ class HomePage extends StatelessWidget {
                   return const SizedBox.shrink();
                 }
               }),
-          // CollectionsSpacer(onTap: () {}, collectoinTitle: 'New'),
-          // // ! Top collection
+
+          // CollectionsSpacer(
+          //   onTap: () {},
+          //   collectoinTitle: 'New',
+          //   isNew: false,
+          // ),
+          // ! Top collection
           // SizedBox(height: 15.h),
           // const TopCollectionImage(),
           SizedBox(height: 15.h),

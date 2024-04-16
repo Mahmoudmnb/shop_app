@@ -168,7 +168,7 @@ class AuthPage extends StatelessWidget {
                       builder: (context, state) {
                         bool isLoading = false;
                         if (state is IsSkipButtonLoading) {
-                          isLoading = isLoading = state.isLoading;
+                          isLoading = state.isLoading;
                         }
                         return Row(
                           children: [

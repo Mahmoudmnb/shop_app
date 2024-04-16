@@ -257,8 +257,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         .then((value) async {
                                       XFile? image;
                                       if (value) {
-                                        if (File(Constant.currentUser!.imgUrl!)
-                                            .existsSync()) {
+                                        if (Constant.currentUser!.imgUrl !=
+                                                null &&
+                                            File(Constant.currentUser!.imgUrl!)
+                                                .existsSync()) {
                                           image = XFile(
                                               Constant.currentUser!.imgUrl!);
                                         } else {

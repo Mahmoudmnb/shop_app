@@ -96,6 +96,13 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/products_images/Jackets/
+    - assets/products_images/Pants/
+    - assets/products_images/Shirts/
+    - assets/products_images/Shorts/
+    - assets/products_images/Sportwears/
+    - assets/products_images/Suits/
+    - assets/products_images/T-Shirts/
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

@@ -36,7 +36,8 @@ class DisCountImage extends StatelessWidget {
                   image: ResizeImage(
                     width: 100.w.toInt(),
                     AssetImage(
-                      imageUrl.split('|')[0],
+                      imageUrl.split('|')[0].replaceAll("'", "\'"),
+                      // 'assets/products_images/Suits/Groom\'s Suitgraphy-93.jpg'
                     ),
                   ))),
           child: Column(

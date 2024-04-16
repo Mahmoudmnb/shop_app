@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +13,6 @@ import 'package:shop_app/injection.dart';
 import 'package:toast/toast.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../main_page/data_source/data_source_paths.dart';
 import '../blocs/auth_blocs.dart';
 import '../data.dart';
 import 'auth_widgets.dart';
@@ -106,12 +104,14 @@ class _AuthFormState extends State<AuthForm> {
                           email.trim(), password.trim(), name.trim());
                       if (isSuccess) {
                         await widget.goToHomePage();
+                        changeButtonLoadingState(false);
                       }
                     } else {
                       bool isSuccess =
                           await signIn(email.trim(), password.trim());
                       if (isSuccess) {
                         await widget.goToHomePage();
+                        changeButtonLoadingState(false);
                       }
                     }
                   } else {
@@ -166,38 +166,37 @@ class _AuthFormState extends State<AuthForm> {
       //! this was for make sure no one had loged in before in other device
       // if (!data.documents[0].data['loged_in']) {
       if (true) {
-        String fileName = Uuid().v1.toString();
-
+        // String fileName = Uuid().v1.toString();
         String name = data.documents[0].data['name'];
-        if (data.documents[0].data['imgUrl'] != null) {
-          Uint8List profileImage = Uint8List(0);
-          var res = await sl
-              .get<DataSource>()
-              .downloadProfileImage(data.documents[0].data['imgUrl']);
-          var s = res.fold((l) {
-            profileImage = l;
-            return true;
-          }, (r) => false);
-          if (!s) {
-            return false;
-          }
-          await File('${Constant.baseUrl + fileName}.jpg')
-              .writeAsBytes(profileImage);
-        }
+        // if (data.documents[0].data['imgUrl'] != null) {
+        //   Uint8List profileImage = Uint8List(0);
+        //   var res = await sl
+        //       .get<DataSource>()
+        //       .downloadProfileImage(data.documents[0].data['imgUrl']);
+        //   var s = res.fold((l) {
+        //     profileImage = l;
+        //     return true;
+        //   }, (r) => false);
+        //   if (!s) {
+        //     return false;
+        //   }
+        //   await File('${Constant.baseUrl + fileName}.jpg')
+        //       .writeAsBytes(profileImage);
+        // }
         Constant.currentUser = UserModel(
-            phoneNumber: data.documents[0].data['phone_number'],
-            email: email,
-            name: name,
-            password: password,
-            cloudImgUrl: data.documents[0].data['imgUrl'],
-            imgUrl: data.documents[0].data['imgUrl'] == null
-                ? null
-                : '${Constant.baseUrl + fileName}.jpg');
-        sl
+          phoneNumber: data.documents[0].data['phone_number'],
+          email: email,
+          name: name,
+          password: password,
+          // cloudImgUrl: data.documents[0].data['imgUrl'],
+          // imgUrl: data.documents[0].data['imgUrl'] == null
+          //     ? null
+          //     : '${Constant.baseUrl + fileName}.jpg',
+        );
+        await sl
             .get<SharedPreferences>()
             .setString('currentUser', Constant.currentUser!.toJson());
         context.read<EmailTextBloc>().add(ChangeEmailText(emailText: ''));
-        changeButtonLoadingState(false);
         log('done');
       }
       // else {
@@ -273,7 +272,6 @@ class _AuthFormState extends State<AuthForm> {
           documentId: id,
           data: {'email': email, 'name': name, 'password': password});
       context.read<EmailTextBloc>().add(ChangeEmailText(emailText: ''));
-      changeButtonLoadingState(false);
       log('done log in');
       isSuccess = true;
     } on AppwriteException catch (e) {

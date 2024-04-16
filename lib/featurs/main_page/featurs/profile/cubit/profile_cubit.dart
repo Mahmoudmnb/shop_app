@@ -97,10 +97,12 @@ class ProfileCubit extends Cubit<ProfileState> {
     bor = bor.isEmpty ? '' : bor.substring(0, bor.length - 1);
     proBor = proBor.isEmpty ? '' : proBor.substring(0, proBor.length - 1);
     if (image != null) {
-      if (!await sl.get<DataSource>().uploadImage(image)) {
-        return false;
+      // if (!await sl.get<DataSource>().uploadImage(image)) {
+      //   return false;
+      // }
+      if (Constant.currentUser!.imgUrl != null) {
+        await File(Constant.currentUser!.imgUrl!).delete();
       }
-      await File(Constant.currentUser!.imgUrl!).delete();
     }
     var isSuccess =
         await sl.get<DataSource>().uploadProfileSettings(proBor, cartPro, bor);

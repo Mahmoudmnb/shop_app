@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../injection.dart';
 import 'steper_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -57,6 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
       logoOpacity = 0;
       setState(() {});
       timer.cancel();
+      sl.get<SharedPreferences>().setBool('isFirstTime', true);
     });
   }
 
