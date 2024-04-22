@@ -35,25 +35,35 @@ class RecommendedImage extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 4),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                companyMaker,
-                style: TextStyle(fontSize: 16.sp, fontFamily: 'Tenor Sans'),
-              ),
-              Text(productNamge,
+          SizedBox(
+            width: 180,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  companyMaker,
                   style: TextStyle(
+                      fontSize: 16.sp,
                       fontFamily: 'Tenor Sans',
-                      fontSize: 13.sp,
-                      color: const Color(0xff929292))),
-              Text(productPrice,
-                  style: TextStyle(
-                      fontFamily: 'Tenor Sans',
-                      fontSize: 11.sp,
-                      color: const Color(0xff6D6D6D)))
-            ],
+                      overflow: TextOverflow.ellipsis),
+                ),
+                Expanded(
+                  child: Text(productNamge,
+                      style: TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          fontFamily: 'Tenor Sans',
+                          fontSize: 12.sp,
+                          color: const Color(0xff929292))),
+                ),
+                Text(productPrice,
+                    style: TextStyle(
+                        fontFamily: 'Tenor Sans',
+                        fontSize: 11.sp,
+                        overflow: TextOverflow.ellipsis,
+                        color: const Color(0xff6D6D6D)))
+              ],
+            ),
           )
         ],
       ),

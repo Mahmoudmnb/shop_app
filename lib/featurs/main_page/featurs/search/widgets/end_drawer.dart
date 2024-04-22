@@ -107,7 +107,7 @@ class EndDrawer extends StatelessWidget {
                                 },
                               ),
                               DropdownMenuItem(
-                                value: "suits",
+                                value: "Suits",
                                 child: const Text('Suits'),
                                 onTap: () {
                                   // Category = 'Main';
@@ -115,49 +115,49 @@ class EndDrawer extends StatelessWidget {
                               ),
                               DropdownMenuItem(
                                 value: "shirt",
-                                child: const Text('Shirt'),
+                                child: const Text('shirt'),
                                 onTap: () {
                                   // Category = 'Sweetes';
                                 },
                               ),
                               DropdownMenuItem(
-                                value: "pants",
+                                value: "Pants",
                                 child: const Text("Pants"),
                                 onTap: () {
                                   // Category = 'Aprrtie';
                                 },
                               ),
                               DropdownMenuItem(
-                                value: "sweaters",
+                                value: "Sweaters",
                                 child: const Text("Sweaters"),
                                 onTap: () {
                                   // Category = 'Aprrtie';
                                 },
                               ),
                               DropdownMenuItem(
-                                value: "t-shirts",
-                                child: const Text("T-Shirts"),
+                                value: "T-shirt",
+                                child: const Text("T-shirt"),
                                 onTap: () {
                                   // Category = 'Aprrtie';
                                 },
                               ),
                               DropdownMenuItem(
-                                value: "jackets",
+                                value: "Jackets",
                                 child: const Text("Jackets"),
                                 onTap: () {
                                   // Category = 'Aprrtie';
                                 },
                               ),
                               DropdownMenuItem(
-                                value: "shorts",
+                                value: "Shorts",
                                 child: const Text("Shorts"),
                                 onTap: () {
                                   // Category = 'Aprrtie';
                                 },
                               ),
                               DropdownMenuItem(
-                                value: "sportswear",
-                                child: const Text("SportsWear"),
+                                value: "Sportwears",
+                                child: const Text("Sportwears"),
                                 onTap: () {
                                   // Category = 'Aprrtie';
                                 },

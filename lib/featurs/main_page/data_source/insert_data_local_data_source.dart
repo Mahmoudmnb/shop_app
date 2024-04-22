@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:appwrite/models.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/featurs/main_page/featurs/home/models/product_model.dart';
 import 'package:shop_app/injection.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -15,6 +16,7 @@ import 'data_source.dart';
 
 class InsertDataLocalDataSource {
   Future<bool> setRecommendedProducts() async {
+    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
     var data = [];
     var res = await sl.get<DataSource>().getRecommendedproductsFromCloud();
     bool s = res.fold((l) {
@@ -23,6 +25,16 @@ class InsertDataLocalDataSource {
     }, (r) => false);
     if (!s) {
       return false;
+    }
+    if (data.isEmpty) {
+      Database dbb = await openDatabase(Constant.productDataBasePath);
+      var d = await dbb.rawQuery('SELECT * FROM products');
+      int len = d.length > 10 ? 10 : d.length;
+      for (var i = 0; i < len; i++) {
+        db.rawInsert(
+            "INSERT INTO recommended(productId,freq) VALUES (${ProductModel.fromMap(d[i]).id},${0})");
+      }
+      return true;
     }
     List<int> productsIds = [];
     for (var element in data) {
@@ -46,14 +58,13 @@ class InsertDataLocalDataSource {
         }
       }
     }
-    Database db = await openDatabase(Constant.recommendedProductsDataBasePath);
     try {
       for (var i = 0; i < finalProductIds.length; i++) {
         var l = await sl.get<DataSource>().getProductById(finalProductIds[i]);
         log(l.toString());
         if (l.isNotEmpty) {
           db.rawInsert(
-              'INSERT INTO recommended(productId,freq) VALUES (${finalProductIds[i]},${freq[i]})');
+              "INSERT INTO recommended(productId,freq) VALUES (${finalProductIds[i]},${freq[i]})");
         }
       }
       log('done inserting recommended products');
@@ -146,7 +157,7 @@ class InsertDataLocalDataSource {
     Database db = await openDatabase(Constant.reviewsDataBasePath);
     try {
       db.rawInsert(
-          'INSERT INTO reviews(description, stars, date, userName, productId,email) VALUES("${review.description}",${review.stars},"${review.date}","${review.userName}",${review.productId},"${review.email}")');
+          "INSERT INTO reviews(description, stars, date, userName, productId,email) VALUES('${review.description}',${review.stars},'${review.date}','${review.userName}',${review.productId},'${review.email}')");
       return true;
     } catch (e) {
       return false;
@@ -155,7 +166,7 @@ class InsertDataLocalDataSource {
 
   Future<void> addBorder(String borderName) async {
     Database db = await openDatabase(Constant.borderDataBasePath);
-    db.rawInsert('INSERT INTO borders(borderName) VALUES("$borderName")');
+    db.rawInsert("INSERT INTO borders(borderName) VALUES('$borderName')");
   }
 
   Future<void> addProductToBorder(int productId, int borderId) async {
@@ -190,7 +201,6 @@ class InsertDataLocalDataSource {
           ids += '${ordersIds[i]}|';
         }
       }
-      db.rawDelete('DELETE FROM orders');
       await db.rawInsert(
           '''INSERT INTO orders(email, ordersIds, createdAt, totalPrice, deliveryAddress, shoppingMethod, orderId, trackingNumber, latitude, longitude,colors,sizes,quntities) VALUES
         ("${Constant.currentUser!.email}", "$ids", "$orderDate",$totalPrice,"$deliveryAddress","$shoppingMethod",$orderId,"$trakingNumber","$latitude","$longitude","$colors","$sizes","$amounts")''');
@@ -205,7 +215,7 @@ class InsertDataLocalDataSource {
     Database db = await openDatabase(Constant.searchHistoryDataBasePath);
     try {
       List<Map<String, dynamic>> result = await db
-          .rawQuery("SELECT * FROM searchHistory WHERE word == '$searchWord' ");
+          .rawQuery("SELECT * FROM searchHistory WHERE word == '$searchWord'");
       if (result.isEmpty) {
         db.insert('searchHistory', {'word': searchWord, 'count': 1});
       } else {
@@ -288,15 +298,18 @@ class InsertDataLocalDataSource {
     Database db = await openDatabase(Constant.addToCartTable);
     try {
       List<Map<String, dynamic>> data = await db.rawQuery(
-          'SELECT * FROM AddToCartTable WHERE  productName=="${addToCartTableModel.productName}" AND order_id==${addToCartTableModel.orderId} AND price == ${addToCartTableModel.price} AND companyMaker == "${addToCartTableModel.companyMaker}" AND color == "${addToCartTableModel.color}" AND  size == "${addToCartTableModel.size}"');
+          '''SELECT * FROM AddToCartTable WHERE  productName=="${addToCartTableModel.productName}" AND order_id==${addToCartTableModel.orderId} AND price == ${addToCartTableModel.price} AND companyMaker == "${addToCartTableModel.companyMaker}" AND color == "${addToCartTableModel.color}" AND  size == "${addToCartTableModel.size}"''');
       if (data.isNotEmpty) {
         int q = data[0]['quantity'];
         q += addToCartTableModel.quantity;
         db.rawUpdate(
-            'UPDATE AddToCartTable SET quantity=$q WHERE order_id==${addToCartTableModel.orderId}');
+            '''UPDATE AddToCartTable SET quantity=$q WHERE order_id==${addToCartTableModel.orderId}''');
       } else {
         db.rawInsert(
-          "INSERT INTO AddToCartTable (imgUrl, quantity, productName, price,companyMaker, color, size, order_id , productId) VALUES ('${addToCartTableModel.imgUrl}', ${addToCartTableModel.quantity},'${addToCartTableModel.productName}',${addToCartTableModel.price},'${addToCartTableModel.companyMaker}','${addToCartTableModel.color}','${addToCartTableModel.size}',${addToCartTableModel.orderId},${addToCartTableModel.productId})",
+          """INSERT INTO AddToCartTable (imgUrl, quantity, productName, price,companyMaker, color, size, order_id , productId) VALUES 
+          ('${addToCartTableModel.imgUrl}', ${addToCartTableModel.quantity},'${addToCartTableModel.productName}',
+          ${addToCartTableModel.price},'${addToCartTableModel.companyMaker}','${addToCartTableModel.color}',
+          '${addToCartTableModel.size}',${addToCartTableModel.orderId},${addToCartTableModel.productId})""",
         );
       }
     } catch (e) {

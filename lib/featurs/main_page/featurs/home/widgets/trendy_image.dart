@@ -23,12 +23,12 @@ class TrendyImage extends StatelessWidget {
           width: 108.w,
           height: 131.h,
           alignment: Alignment.center,
-          margin: EdgeInsets.symmetric(horizontal: 8.w),
+          margin: EdgeInsets.symmetric(horizontal: 3.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
               fit: BoxFit.fill,
-              //! maybe the image isn't واضحة but this the solution 
+              //! maybe the image isn't واضحة but this the solution
               image: ResizeImage(
                 width: 100.w.toInt(),
                 AssetImage(imageUrl.split('|')[0]),
@@ -40,34 +40,40 @@ class TrendyImage extends StatelessWidget {
           width: 110.w,
           child: Row(
             children: [
-              Text(
-                ' $makerCompany',
-                style: TextStyle(
-                    fontFamily: 'DM Sans',
-                    color: const Color(0xff393939),
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold),
-                overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: Text(
+                  ' $makerCompany',
+                  style: TextStyle(
+                      fontFamily: 'DM Sans',
+                      color: const Color(0xff393939),
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              const Spacer(),
-              Text(
-                '$price\$',
-                style: TextStyle(
-                    fontFamily: 'DM Sans',
-                    color: const Color(0xffD57676),
-                    fontSize: 10.sp),
-                overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: Text(
+                  '$price\$',
+                  style: TextStyle(
+                      fontFamily: 'DM Sans',
+                      color: const Color(0xffD57676),
+                      fontSize: 10.sp),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
         ),
-        Text(
-          ' $productName',
-          style: TextStyle(
-              fontFamily: 'DM Sans',
-              color: const Color(0xff828282),
-              fontSize: 11.sp),
-          overflow: TextOverflow.ellipsis,
+        SizedBox(
+          width: 110,
+          child: Text(
+            ' $productName',
+            style: TextStyle(
+                fontFamily: 'DM Sans',
+                color: const Color(0xff828282),
+                fontSize: 11.sp),
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ],
     );

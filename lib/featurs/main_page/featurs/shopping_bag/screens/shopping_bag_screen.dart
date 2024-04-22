@@ -66,7 +66,7 @@ class ShoppingBagScreen extends StatelessWidget {
       if (productNamesForColors == '' &&
           productNamesForSizes == '' &&
           productNamesForDeletedProducts == '') {
-        addToCartCubit.getLocations().then((value) {
+        sl.get<DataSource>().getLocations().then((value) {
           addToCartCubit.setIsProceedButtonLoading = false;
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => FirstStep(
@@ -181,178 +181,189 @@ class ShoppingBagScreen extends StatelessWidget {
         splitScreenMode: true,
         minTextAdapt: true,
         builder: (context, _) => Scaffold(
-          // backgroundColor: Colors.white,
-          body: Column(
-            children: [
-              const CustomAppBar(title: 'Shopping Bag'),
-              Padding(
-                padding: EdgeInsets.only(right: 25.w, left: 25.w, top: 7.h),
-                child: const Divider(color: Color(0xFFC6C6C6), height: 0),
-              ),
-              addToCartCubit.products.isEmpty
-                  ? Expanded(
-                      //! this padding to put the image and the text in the center
-                      //! by looking at screen :)
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 50.h),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image(
-                              image: ResizeImage(
-                                const AssetImage(
-                                    'assets/images/empty_cart.png'),
-                                width: 150.w.toInt(),
-                                height: 150.w.toInt(),
+            // backgroundColor: Colors.white,
+            body: BlocBuilder<AddToCartCubit, AddToCartState>(
+          builder: (context, state) {
+            return Column(
+              children: [
+                const CustomAppBar(title: 'Shopping Bag'),
+                Padding(
+                  padding: EdgeInsets.only(right: 25.w, left: 25.w, top: 7.h),
+                  child: const Divider(color: Color(0xFFC6C6C6), height: 0),
+                ),
+                addToCartCubit.products.isEmpty
+                    ? Expanded(
+                        //! this padding to put the image and the text in the center
+                        //! by looking at screen :)
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 50.h),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image(
+                                image: ResizeImage(
+                                  const AssetImage(
+                                      'assets/images/empty_cart.png'),
+                                  width: 150.w.toInt(),
+                                  height: 150.w.toInt(),
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 5.h),
-                            Text('Your cart is empty',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'DM Sans',
-                                    fontSize: 18.sp)),
-                          ],
+                              SizedBox(height: 5.h),
+                              Text('Your cart is empty',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'DM Sans',
+                                      fontSize: 18.sp)),
+                            ],
+                          ),
                         ),
-                      ),
-                    )
-                  : Expanded(
-                      child: Stack(
-                        children: [
-                          ShoppingBagBody(addToCartCubit: addToCartCubit),
-                          Positioned(
-                            bottom: 0,
-                            child: CustomButton(
-                              title:
-                                  BlocBuilder<AddToCartCubit, AddToCartState>(
-                                builder: (context, state) {
-                                  return addToCartCubit
-                                          .getIsProceedButtonLoading
-                                      ? const CircularProgressIndicator(
-                                          color: Colors.white)
-                                      : const Text(
-                                          'Proceed to checkout',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontFamily: 'Poppins',
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        );
-                                },
-                              ),
-                              onPressed: () async {
-                                bool key = false;
-                                if (!addToCartCubit.getIsProceedButtonLoading) {
-                                  addToCartCubit.setIsProceedButtonLoading =
-                                      true;
-                                  bool isConnected =
-                                      await InternetInfo.isconnected();
-                                  if (isConnected) {
-                                    Map<String, List<Document>> data = {};
-                                    var res = await sl
-                                        .get<DataSource>()
-                                        .updateDataBase();
-                                    var s = res.fold((l) {
-                                      data = l;
-                                      return true;
-                                    }, (r) => false);
-                                    if (!s) {
-                                      if (context.mounted) {
-                                        addToCartCubit
-                                            .setIsProceedButtonLoading = false;
-                                        Toast.show(
-                                            'Something went wrong please try again',
-                                            duration: Toast.lengthLong);
+                      )
+                    : Expanded(
+                        child: Stack(
+                          children: [
+                            ShoppingBagBody(addToCartCubit: addToCartCubit),
+                            Positioned(
+                              bottom: 0,
+                              child: CustomButton(
+                                title:
+                                    BlocBuilder<AddToCartCubit, AddToCartState>(
+                                  builder: (context, state) {
+                                    return addToCartCubit
+                                            .getIsProceedButtonLoading
+                                        ? const CircularProgressIndicator(
+                                            color: Colors.white)
+                                        : const Text(
+                                            'Proceed to checkout',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontFamily: 'Poppins',
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          );
+                                  },
+                                ),
+                                onPressed: () async {
+                                  bool key = false;
+                                  if (!addToCartCubit
+                                      .getIsProceedButtonLoading) {
+                                    addToCartCubit.setIsProceedButtonLoading =
+                                        true;
+                                    bool isConnected =
+                                        await InternetInfo.isconnected();
+                                    if (isConnected) {
+                                      Map<String, List<Document>> data = {};
+                                      var res = await sl
+                                          .get<DataSource>()
+                                          .updateDataBase();
+                                      var s = res.fold((l) {
+                                        data = l;
+                                        return true;
+                                      }, (r) => false);
+                                      if (!s) {
+                                        if (context.mounted) {
+                                          addToCartCubit
+                                                  .setIsProceedButtonLoading =
+                                              false;
+                                          Toast.show(
+                                              'Something went wrong please try again',
+                                              duration: Toast.lengthLong);
+                                        }
                                       }
-                                    }
-                                    await sl.get<SharedPreferences>().setString(
-                                        'lastUpdate',
-                                        DateTime.now()
-                                            .millisecondsSinceEpoch
-                                            .toString());
-                                    if (context.mounted) {
-                                      if (data['updatedProducts'] != null &&
-                                          data['updatedProducts']!.isNotEmpty) {
-                                        var d = data['updatedProducts']!;
-                                        var oldProducts =
-                                            addToCartCubit.products;
-                                        key = false;
-                                        for (var i = 0;
-                                            i < oldProducts.length;
-                                            i++) {
-                                          for (var element in d) {
-                                            if (element.data['isAvailable']) {
-                                              AddToCartProductModel oldProduct =
-                                                  AddToCartProductModel.fromMap(
-                                                      oldProducts[i]);
-                                              ProductModel newProduct =
-                                                  ProductModel.fromMap(
-                                                      element.data);
-                                              var newPrice = newProduct
-                                                          .disCount >
-                                                      0
-                                                  ? (1 -
-                                                          newProduct.disCount /
-                                                              100) *
-                                                      newProduct.price
-                                                  : newProduct.price;
-                                              if (oldProduct.price !=
-                                                      newPrice &&
-                                                  oldProduct.productName ==
-                                                      newProduct.name) {
-                                                key = true;
-                                                addToCartCubit
-                                                        .setIsProceedButtonLoading =
-                                                    false;
-                                                if (context.mounted) {
-                                                  showMessage(context,
-                                                      'Some prices are changed please take a look at the new prices before continue');
+                                      await sl
+                                          .get<SharedPreferences>()
+                                          .setString(
+                                              'lastUpdate',
+                                              DateTime.now()
+                                                  .millisecondsSinceEpoch
+                                                  .toString());
+                                      if (context.mounted) {
+                                        if (data['updatedProducts'] != null &&
+                                            data['updatedProducts']!
+                                                .isNotEmpty) {
+                                          var d = data['updatedProducts']!;
+                                          var oldProducts =
+                                              addToCartCubit.products;
+                                          key = false;
+                                          for (var i = 0;
+                                              i < oldProducts.length;
+                                              i++) {
+                                            for (var element in d) {
+                                              if (element.data['isAvailable']) {
+                                                AddToCartProductModel
+                                                    oldProduct =
+                                                    AddToCartProductModel
+                                                        .fromMap(
+                                                            oldProducts[i]);
+                                                ProductModel newProduct =
+                                                    ProductModel.fromMap(
+                                                        element.data);
+                                                var newPrice = newProduct
+                                                            .disCount >
+                                                        0
+                                                    ? (1 -
+                                                            newProduct
+                                                                    .disCount /
+                                                                100) *
+                                                        newProduct.price
+                                                    : newProduct.price;
+                                                if (oldProduct.price !=
+                                                        newPrice &&
+                                                    oldProduct.productName ==
+                                                        newProduct.name) {
+                                                  key = true;
+                                                  addToCartCubit
+                                                          .setIsProceedButtonLoading =
+                                                      false;
+                                                  if (context.mounted) {
+                                                    showMessage(context,
+                                                        'Some prices are changed please take a look at the new prices before continue');
+                                                  }
+                                                  break;
                                                 }
-                                                break;
+                                              } else {
+                                                // showMessage(context,
+                                                //     'product ${element.data['name']} is done please deleted form you cart and try again');
+                                                // key = true;
                                               }
-                                            } else {
-                                              // showMessage(context,
-                                              //     'product ${element.data['name']} is done please deleted form you cart and try again');
-                                              // key = true;
                                             }
                                           }
-                                        }
-                                        await addToCartCubit
-                                            .getAddToCartProducts();
-                                        if (context.mounted) {
-                                          addToCartCubit.fetchData();
-                                        }
-                                        if (!key) {
+                                          await addToCartCubit
+                                              .getAddToCartProducts();
+                                          if (context.mounted) {
+                                            addToCartCubit.fetchData();
+                                          }
+                                          if (!key) {
+                                            if (context.mounted) {
+                                              goToNextPage(context);
+                                            }
+                                          }
+                                          log('data updated');
+                                        } else {
                                           if (context.mounted) {
                                             goToNextPage(context);
                                           }
                                         }
-                                        log('data updated');
-                                      } else {
-                                        if (context.mounted) {
-                                          goToNextPage(context);
-                                        }
+                                      }
+                                    } else {
+                                      addToCartCubit.setIsProceedButtonLoading =
+                                          false;
+                                      if (context.mounted) {
+                                        Toast.show(
+                                            'Check you internet connection',
+                                            duration: Toast.lengthLong);
                                       }
                                     }
-                                  } else {
-                                    addToCartCubit.setIsProceedButtonLoading =
-                                        false;
-                                    if (context.mounted) {
-                                      Toast.show(
-                                          'Check you internet connection',
-                                          duration: Toast.lengthLong);
-                                    }
                                   }
-                                }
-                              },
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-            ],
-          ),
-        ),
+              ],
+            );
+          },
+        )),
       ),
     );
   }

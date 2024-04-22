@@ -331,12 +331,13 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                                           alignment: const Alignment(.80, -.89),
                                           children: [
                                             Image(
-                                              image: ResizeImage(height: 206.h.toInt(),
-                                              width: 141.w.toInt(),AssetImage(product.imgUrl
-                                                  .split('|')[0]
-                                                  .trim())),
+                                              image: ResizeImage(
+                                                  height: 206.h.toInt(),
+                                                  width: 141.w.toInt(),
+                                                  AssetImage(product.imgUrl
+                                                      .split('|')[0]
+                                                      .trim())),
                                               fit: BoxFit.cover,
-                                              
                                             ),
                                             Positioned(
                                               right: 2.w,

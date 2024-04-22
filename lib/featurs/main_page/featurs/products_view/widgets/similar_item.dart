@@ -35,20 +35,21 @@ class _SimilarItemState extends State<SimilarItem> {
         Positioned(
             right: 35.w,
             top: 10.w,
-            child: CustomIconButton(
-              size: 20,
-              icon: Icon(
-                isFavorate ? Icons.favorite : Icons.favorite_outline_rounded,
-                color: const Color(0xFFFF6E6E),
-              ),
-              onPressed: () {
-                widget.productCubit.setFavorateProductInDataBase(
-                    widget.product.id, !widget.product.isFavorite);
-                setState(() {
-                  isFavorate = !isFavorate;
-                });
-              },
-            )),
+            child: Container(
+                height: 33.h,
+                width: 33.h,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                    color: Colors.white, shape: BoxShape.circle),
+                child: isFavorate
+                    ? const Icon(
+                        Icons.favorite,
+                        color: Color(0xffFF6E6E),
+                      )
+                    : const Icon(
+                        Icons.favorite,
+                        color: Color(0xffD8D8D8),
+                      ))),
       ],
     );
   }

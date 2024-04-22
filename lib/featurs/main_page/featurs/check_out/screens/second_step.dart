@@ -205,6 +205,7 @@ class CheckOutScreen2 extends StatelessWidget {
                                 },
                               );
                             }
+                            log(totalPrice.toString());
                             context
                                 .read<CheckOutCubit>()
                                 .changeIsLoading(false);

@@ -23,10 +23,10 @@ class CategoryCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         searchCubit.reset(searchWord, false);
-        searchCubit.selectedCategory = categroyName.toLowerCase();
+        searchCubit.selectedCategory = categroyName;
         context
             .read<SearchCubit>()
-            .searchInCategory(null, categroyName.toLowerCase())
+            .searchInCategory(null, categroyName)
             .then((value) {
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => CategoryViewPage(

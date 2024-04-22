@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,27 +35,6 @@ class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
   late PageController pageController;
-  testRealTime() {
-    try {
-      final client = Client()
-          .setEndpoint('https://cloud.appwrite.io/v1')
-          .setProject(Constant.appWriteProjectId);
-
-      final realtime = Realtime(client);
-
-// Subscribe to files channel  'databases.A.collections.A.documents.A'
-
-      final subscription = realtime.subscribe([
-        'databases.655da767bc3f1651db70.collections.655da771422b6ac710aa.documents'
-      ]);
-      subscription.stream.listen((event) {
-        log(event.payload.toString());
-      });
-    } catch (e) {
-      log(e.toString());
-    }
-  }
-
   @override
   void initState() {
     sl.get<DataSource>().getAddToCartProducts().then((value) {
@@ -166,7 +144,7 @@ class _MainPageState extends State<MainPage>
           child: IconButton(
               icon: const Icon(Icons.favorite_border),
               onPressed: () async {
-                // log(DateTime.now().millisecondsSinceEpoch.toString());
+                log(DateTime.now().millisecondsSinceEpoch.toString());
                 //* this is for testing local api
                 // try {
                 //   var data = await http.get(

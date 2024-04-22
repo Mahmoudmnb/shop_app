@@ -11,6 +11,7 @@ import '../blocs/discount/discount_products_bloc.dart';
 import '../models/product_model.dart';
 import '../widgets/collections_spacer.dart';
 import '../widgets/discount_image.dart';
+import '../widgets/recommended_image.dart';
 import '../widgets/trendy_image.dart';
 import 'home_pages.dart';
 
@@ -24,7 +25,7 @@ class HomePage extends StatelessWidget {
     //     .read<DiscountProductsBloc>()
     //     .add(GetDiscountProducts(discountProducts: disCountProducts));
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 2),
       child: ListView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: [
@@ -211,53 +212,52 @@ class HomePage extends StatelessWidget {
               },
               collectoinTitle: 'Recommended'),
           SizedBox(height: 15.h),
-          // FutureBuilder(
-          //     future: sl.get<DataSource>().getRecommendedProducts(),
-          //     builder: (context, snpashoot) {
-          //       return snpashoot.hasData
-          //           ? SizedBox(
-          //               height: 78.h,
-          //               child: ListView.builder(
-          //                 keyboardDismissBehavior:
-          //                     ScrollViewKeyboardDismissBehavior.onDrag,
-          //                 itemCount: snpashoot.data!.length,
-          //                 scrollDirection: Axis.horizontal,
-          //                 itemBuilder: (context, index) {
-          //                   ProductModel product =
-          //                       ProductModel.fromMap(snpashoot.data![index]);
-          //                   return GestureDetector(
-          //                     onTap: () {
-          //                       context
-          //                           .read<ProductCubit>()
-          //                           .getReviws(product.id);
-          //                       Navigator.of(context).push(MaterialPageRoute(
-          //                         builder: (_) => ProductScreen(
-          //                           searchCubit:
-          //                               BlocProvider.of<SearchCubit>(context),
-          //                           fromPage: 'Home',
-          //                           categoryName: 'Home',
-          //                           fromPageTitle: 'Home',
-          //                           searchWord: '',
-          //                           product: product,
-          //                           cubit:
-          //                               BlocProvider.of<ProductCubit>(context),
-          //                         ),
-          //                       ));
-          //                     },
-          //                     child: RecommendedImage(
-          //                       companyMaker: product.makerCompany,
-          //                       imageUrl: product.imgUrl.split('|')[0],
-          //                       productPrice: '${product.price} \$',
-          //                       productNamge: product.name,
-          //                     ),
-          //                   );
-          //                 },
-          //               ),
-          //             )
-          //           : const SizedBox.shrink();
-          //     }),
-
-          // SizedBox(height: 15.h),
+          FutureBuilder(
+              future: sl.get<DataSource>().getRecommendedProducts(),
+              builder: (context, snpashoot) {
+                return snpashoot.hasData
+                    ? SizedBox(
+                        height: 78.h,
+                        child: ListView.builder(
+                          keyboardDismissBehavior:
+                              ScrollViewKeyboardDismissBehavior.onDrag,
+                          itemCount: snpashoot.data!.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            ProductModel product =
+                                ProductModel.fromMap(snpashoot.data![index]);
+                            return GestureDetector(
+                              onTap: () {
+                                context
+                                    .read<ProductCubit>()
+                                    .getReviws(product.id);
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => ProductScreen(
+                                    searchCubit:
+                                        BlocProvider.of<SearchCubit>(context),
+                                    fromPage: 'Home',
+                                    categoryName: 'Home',
+                                    fromPageTitle: 'Home',
+                                    searchWord: '',
+                                    product: product,
+                                    cubit:
+                                        BlocProvider.of<ProductCubit>(context),
+                                  ),
+                                ));
+                              },
+                              child: RecommendedImage(
+                                companyMaker: product.makerCompany,
+                                imageUrl: product.imgUrl.split('|')[0],
+                                productPrice: '${product.price} \$',
+                                productNamge: product.name,
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    : const SizedBox.shrink();
+              }),
+          SizedBox(height: 15.h),
           // //! new products
           BlocBuilder<DiscountProductsBloc, DiscountProductsState>(
             builder: (context, state) {
@@ -299,7 +299,6 @@ class HomePage extends StatelessWidget {
                   collectoinTitle: 'New');
             },
           ),
-
           // SizedBox(height: 15.h),
           FutureBuilder(
               future: sl.get<DataSource>().getNewestProducts(),

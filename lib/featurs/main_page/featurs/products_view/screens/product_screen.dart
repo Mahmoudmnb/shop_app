@@ -160,6 +160,7 @@ class _ProductScreenState extends State<ProductScreen> {
                               } else {
                                 var res =
                                     await sl.get<DataSource>().getBorders();
+                                log(res.toString());
                                 res.fold((l) {
                                   List<Map<String, dynamic>> borders = l;
                                   if (context.mounted) {

@@ -42,7 +42,6 @@ class ShoppingBagBody extends StatelessWidget {
                                           BlocProvider.of<AddToCartCubit>(
                                                   context)
                                               .products[index]);
-
                                   return Padding(
                                     padding: EdgeInsets.only(bottom: 28.h),
                                     child: Dismissible(

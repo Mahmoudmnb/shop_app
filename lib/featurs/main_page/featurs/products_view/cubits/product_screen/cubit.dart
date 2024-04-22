@@ -82,7 +82,6 @@ class ProductCubit extends Cubit<ProductStates> {
     String color = product.colors.split('|')[indexOfColor];
     String size = product.sizes.split('|')[indexOfSize];
     String imgUrl = product.imgUrl.split('|')[0];
-    log(amountOfProduct.toString());
     sl
         .get<DataSource>()
         .addToCart(AddToCartProductModel(

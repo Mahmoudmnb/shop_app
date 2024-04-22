@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../home/models/product_model.dart';
@@ -29,6 +30,7 @@ class SimilarProductsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<ProductCubit>().getSimilarProducts(product);
     return Container(
       width: 393.w,
       color: const Color(0xFFFAFAFA),
@@ -70,7 +72,6 @@ class SimilarProductsCard extends StatelessWidget {
                           ),
                         ),
                         onPressed: () async {
-                          log('See All');
                           cubit.getProductById(product.id).then((product) {
                             cubit
                                 .getSimilarProducts(
@@ -146,10 +147,10 @@ class SimilarProductsCard extends StatelessWidget {
                         itemBuilder: (_, int index) {
                           ProductModel product = ProductModel.fromMap(
                               cubit.similarProducts[index]);
-                              //! I make edit this widget
-                              //! to can similar_card click on it and go to his product_view
-                              //! and you have to fix it
-                              //! vvvvvvvvvvvvvvvvvv Here vvvvvvvvvvvvvvvvvvvvvvvv
+                          //! I make edit this widget
+                          //! to can similar_card click on it and go to his product_view
+                          //! and you have to fix it
+                          //! vvvvvvvvvvvvvvvvvv Here vvvvvvvvvvvvvvvvvvvvvvvv
                           return GestureDetector(
                             onTap: () {
                               log(product.name);
@@ -176,7 +177,6 @@ class SimilarProductsCard extends StatelessWidget {
                               //     ));
                               //   });
                               // });
-                            
                             },
                             child: CustomCard(
                               width: 136.5.w,

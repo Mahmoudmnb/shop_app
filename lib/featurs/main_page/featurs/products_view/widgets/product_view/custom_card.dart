@@ -41,8 +41,8 @@ class CustomCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SizedBox(
-                          width: 90.w,
+                        Expanded(
+                          // width: 90.w,
                           child: Text(
                             product.name,
                             style: TextStyle(
@@ -56,7 +56,6 @@ class CustomCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 2),
                         Text(
                           '${product.price} \$',
                           style: TextStyle(

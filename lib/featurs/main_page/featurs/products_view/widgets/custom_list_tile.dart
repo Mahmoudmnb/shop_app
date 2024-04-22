@@ -47,7 +47,7 @@ class CustomListTile extends StatelessWidget {
           width: 45.w,
           child: CircleAvatar(
             backgroundColor: const Color(0xFFD9D9D9),
-            backgroundImage: imgUrl != null ? AssetImage(imgUrl!) : null,
+            // backgroundImage: imgUrl != null ? AssetImage(imgUrl!) : null,
             child: imgUrl == null ? getLettersOfName() : null,
           ),
         ),

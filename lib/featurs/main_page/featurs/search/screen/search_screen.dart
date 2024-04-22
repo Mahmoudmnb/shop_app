@@ -197,7 +197,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                           mainAxisSpacing: 5),
                                   children: [
                                     CategoryCard(
-                                      categroyName: 'T-Shirts',
+                                      categroyName: 'T-shirt',
                                       categoryImageUrl:
                                           'assets/icons/shirt.png',
                                       searchCubit: cubit,
@@ -211,7 +211,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       searchWord: searchController.text,
                                     ),
                                     CategoryCard(
-                                      categroyName: 'Shirts',
+                                      categroyName: 'Shirt',
                                       categoryImageUrl:
                                           'assets/icons/T-shirts.png',
                                       searchCubit: cubit,
@@ -246,7 +246,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       searchWord: searchController.text,
                                     ),
                                     CategoryCard(
-                                      categroyName: 'Sportswear',
+                                      categroyName: 'Sportwears',
                                       categoryImageUrl:
                                           'assets/icons/Sportswear.png',
                                       searchCubit: cubit,

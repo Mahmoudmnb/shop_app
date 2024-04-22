@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/featurs/main_page/featurs/shopping_bag/cubits/products_cubit/products_cubit.dart';
 
 import '../cubits/item_product_cubit/item_product_cubit.dart';
+import '../cubits/products_cubit/products_cubit.dart';
 
 class ProductItem extends StatelessWidget {
   ProductItem(
@@ -130,7 +130,7 @@ class ProductItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '$price\$',
+                  '${price.toStringAsFixed(2)}\$',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16.sp,
