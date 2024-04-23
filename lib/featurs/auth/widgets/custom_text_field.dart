@@ -192,7 +192,7 @@ class CustomTextField extends StatelessWidget {
         return 'Invalid email';
       }
     } else if (hintText == 'Password') {
-      if (value == null || value.isEmpty || value.length <= 6) {
+      if (value == null || value.isEmpty || value.length < 8) {
         return 'password shold be more than six chrachters';
       }
     } else if (hintText == 'Confirm Password' && isSignUp) {
