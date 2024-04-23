@@ -382,12 +382,10 @@ class _ProductScreenState extends State<ProductScreen> {
                 borderName: widget.categoryName!, borderProducts: products)));
       }
     } else if (widget.fromPage == 'Home') {
-      if (Navigator.of(context).canPop()) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => MainPage()));
-        });
-      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => MainPage()));
+      });
     }
   }
 }

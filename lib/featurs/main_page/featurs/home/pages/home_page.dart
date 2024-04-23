@@ -117,7 +117,8 @@ class HomePage extends StatelessWidget {
                                   context
                                       .read<ProductCubit>()
                                       .getReviws(product.id);
-                                  Navigator.of(context).push(MaterialPageRoute(
+                                  Navigator.of(context)
+                                      .pushReplacement(MaterialPageRoute(
                                     builder: (_) => ProductScreen(
                                       searchCubit:
                                           BlocProvider.of<SearchCubit>(context),
@@ -173,7 +174,7 @@ class HomePage extends StatelessWidget {
                   ProductModel trendyProduct =
                       ProductModel.fromMap(trindyProducts[index]);
                   context.read<ProductCubit>().getReviws(trendyProduct.id);
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (_) => ProductScreen(
                       searchCubit: BlocProvider.of<SearchCubit>(context),
                       fromPage: 'Home',
@@ -231,7 +232,8 @@ class HomePage extends StatelessWidget {
                                 context
                                     .read<ProductCubit>()
                                     .getReviws(product.id);
-                                Navigator.of(context).push(MaterialPageRoute(
+                                Navigator.of(context)
+                                    .pushReplacement(MaterialPageRoute(
                                   builder: (_) => ProductScreen(
                                     searchCubit:
                                         BlocProvider.of<SearchCubit>(context),
@@ -331,7 +333,8 @@ class HomePage extends StatelessWidget {
                             context
                                 .read<ProductCubit>()
                                 .getReviws(productModel.id);
-                            Navigator.of(context).push(MaterialPageRoute(
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
                               builder: (_) => ProductScreen(
                                 searchCubit:
                                     BlocProvider.of<SearchCubit>(context),
@@ -358,7 +361,6 @@ class HomePage extends StatelessWidget {
                   return const SizedBox.shrink();
                 }
               }),
-
           // CollectionsSpacer(
           //   onTap: () {},
           //   collectoinTitle: 'New',
